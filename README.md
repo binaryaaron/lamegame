@@ -27,6 +27,10 @@ can turn it into a working submission for Joel once complete.
 Also, here is an intro to [Markdown](http://daringfireball.net/projects/markdown/syntax), 
 the syntax for this readme file
 
+... also, here are a few refs for game development:
+
+* [Game design concepts](https://learn.canvas.net/courses/3)
+* [Game programming patterns](http://gameprogrammingpatterns.com/contents.html)
 
 ## General breakdown of responsibilities 
 
