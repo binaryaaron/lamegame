@@ -62,7 +62,7 @@ Health pick ups.
   blah blah
 
 * Paige
- graphics
+ Graphics implementation to represent game state. This is to be run on the local machine of each player in lwgl. I will add and ipmlement models, textures, and lighting for the game. I will also focus on player controls and user input on a graphical interface.
 
 
 
