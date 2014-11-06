@@ -35,7 +35,9 @@ the syntax for this readme file
 
 ### ... and any other references can go... here!
 * [A nice opengl thing](https://github.com/Fluttershy/rin.java)
+
 ## General breakdown of responsibilities 
+# Initial Game Idea: Asteroids!!
 
 Asteroids/Space shooter, multiplayer space shooter with asteroids (breakable/physics).
 
