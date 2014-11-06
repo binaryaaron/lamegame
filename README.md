@@ -45,8 +45,9 @@ Health pick ups.
 ## General breakdown of responsibilities
 
 * Robert (Dan)
-  blah blah blah
-
+  * OpenGL 3.2 / Interface
+  * Audio 
+  * Moral support
 
 * Weston Ortiz
   * General physics / game interaction
@@ -64,6 +65,13 @@ Health pick ups.
 ## Server / backend
 
 ##  Graphics
+* Display
+* Lighting
+* Sound
+* Texture wrapping
+* Model importing
+* Potential model making
+* Debug interface
 
 ##  Physics/Gameplay
 * World Collisions
