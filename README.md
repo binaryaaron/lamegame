@@ -1,5 +1,4 @@
-lamegame
-========
+# lamegame
 
 Final project for cs351. Name can change.
 
@@ -64,8 +63,10 @@ Health pick ups.
   blah blah
 
 * Paige
-  blah blah
-
+ Graphics implementation to represent game state. This is to be run on the
+ local machine of each player in lwgl. I will add and ipmlement models,
+ textures, and lighting for the game. I will also focus on player controls and
+ user input on a graphical interface.
 
 
 ### Aaron
@@ -106,4 +107,3 @@ the game physics and AI engines.
 
 ## Integration / testing / design
 
-new line
