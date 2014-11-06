@@ -36,7 +36,7 @@ the syntax for this readme file
 * [A nice opengl thing](https://github.com/Fluttershy/rin.java)
 
 ## General breakdown of responsibilities 
-# Initial Game Idea: Asteroids!!
+# Initial Game Idea:
 
 Asteroids/Space shooter, multiplayer space shooter with asteroids (breakable/physics).
 
@@ -60,7 +60,9 @@ Health pick ups.
   * Collisions / network related logic for keeping collisions correct on client side, while server does most of the collision checking (hits/pickups)
 
 * Hans
-  blah blah
+  * Server and client communication
+  * Containers for client game-state update
+  * Game physics
 
 * Paige
  Graphics implementation to represent game state. This is to be run on the
