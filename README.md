@@ -50,8 +50,9 @@ Health pick ups.
 ## General breakdown of responsibilities
 
 * Robert (Dan)
-  * OpenGL 3.2 / Interface
-  * Audio 
+  * OpenGL 3.2/ LWJGL 3.2 
+  * Graphics in general
+  * Audio / OpenAL
   * Moral support
 
 * Weston Ortiz
