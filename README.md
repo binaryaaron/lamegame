@@ -85,6 +85,9 @@ the game physics and AI engines.
 ## Server / backend
 
 ##  Graphics
+*Player ship, projectile, and evironment models and textures
+*camera perspective for each player
+*Scene lighting
 
 ##  Physics/Gameplay
 * World Collisions
