@@ -5,14 +5,14 @@ Final project for cs351. Name can change.
 
 Contributors:
 * Robert Nicholson rnicholson@unm.edu
-* Weston Ortiz weston@wortiz.com
-* Hans 
+* [Weston Ortiz](https://github.com/wortiz) weston@wortiz.com
+* Hans
 * Paige
 * [Aaron Gonzales](http://github.com/xysmas)
 
 
 Read up on git workflows for this project - we should make heavy use of feature
-branches and pull requests in development. 
+branches and pull requests in development.
 
 Here are a few resources for git workflows:
 
@@ -24,7 +24,7 @@ I say we sort of decide on a workflow on Thursday when we start typing up
 Our project outline. If you want, please feel free to edit this readme and i
 can turn it into a working submission for Joel once complete.
 
-Also, here is an intro to [Markdown](http://daringfireball.net/projects/markdown/syntax), 
+Also, here is an intro to [Markdown](http://daringfireball.net/projects/markdown/syntax),
 the syntax for this readme file
 
 ... also, here are a few refs for game development:
@@ -32,35 +32,48 @@ the syntax for this readme file
 * [Game design concepts](https://learn.canvas.net/courses/3)
 * [Game programming patterns](http://gameprogrammingpatterns.com/contents.html)
 
-## General breakdown of responsibilities 
+# Initial Game Idea
+
+Asteroids/Space shooter, multiplayer space shooter with asteroids (breakable/physics).
+
+Ships fight against each other.
+
+Power-ups or alternative weapons to pick up (fly through).
+
+Health pick ups.
+
+## General breakdown of responsibilities
 
 * Robert (Dan)
   blah blah blah
 
 
-* Weston
-  blah blah blah
-
+* Weston Ortiz
+  * General physics / game interaction
+  * Helping with the server, general integration, and communication
+  * Collisions / network related logic for keeping collisions correct on client side, while server does most of the collision checking (hits/pickups)
 
 * Hans
-  blah blah 
+  blah blah
 
 * Paige
   blah blah
 
 
-
 # Feature areas
 ## Server / backend
 
-
-
-
 ##  Graphics
 
-
 ##  Physics/Gameplay
-  
-
+* World Collisions
+* Game Board
+* Asteroid explosion logic
+* Projectile collisions
+* AI or Game AI for moving asteroids
+* Possible AI ships
+* Game data objects
 
 ## Integration / testing / design
+
+new line
