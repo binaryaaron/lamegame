@@ -32,7 +32,7 @@ the syntax for this readme file
 * [Game design concepts](https://learn.canvas.net/courses/3)
 * [Game programming patterns](http://gameprogrammingpatterns.com/contents.html)
 
-# Initial Game Idea
+# Initial Game Idea MERGE CONFLICT
 
 Asteroids/Space shooter, multiplayer space shooter with asteroids (breakable/physics).
 
