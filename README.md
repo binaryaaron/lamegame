@@ -62,7 +62,7 @@ Health pick ups.
   blah blah
 
 * Paige
-  blah blah
+ graphics
 
 
 
