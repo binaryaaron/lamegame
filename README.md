@@ -32,6 +32,11 @@ the syntax for this readme file
 * [Game design concepts](https://learn.canvas.net/courses/3)
 * [Game programming patterns](http://gameprogrammingpatterns.com/contents.html)
 
+
+### ... and any other references can go... here!
+* [A nice opengl thing](https://github.com/Fluttershy/rin.java)
+
+## General breakdown of responsibilities 
 # Initial Game Idea: Asteroids!!
 
 Asteroids/Space shooter, multiplayer space shooter with asteroids (breakable/physics).
@@ -59,6 +64,22 @@ Health pick ups.
 
 * Paige
   blah blah
+
+
+
+### Aaron
+A major component of this project will be integrating the various features and
+subfeatures with each other in an efficient way and providing assistance on
+complicated features when needed. Efficient software design and best-practice
+OO design priciples can ensure that this happens, including proper abstraction,
+interfaces, unit and integration tests, versioning control, code reviews,
+and so on. Aaron's role in this project will be to act as the person who
+manages all of the above and will be available for spot help on any features
+that need more man hours, and any extra time will be spent contributing to
+the game physics and AI engines.  
+   
+
+
 
 
 # Feature areas
