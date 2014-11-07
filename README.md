@@ -46,43 +46,6 @@ Power-ups or alternative weapons to pick up (fly through).
 
 Health pick ups.
 
-## General breakdown of responsibilities
-
-* Robert (Dan)
-  * OpenGL 3.2/ LWJGL 3.2 
-  * Graphics in general
-  * Audio / OpenAL
-  * Moral support
-
-* Weston Ortiz
-  * General physics / game interaction
-  * Helping with the server, general integration, and communication
-  * Collisions / network related logic for keeping collisions correct on client side, while server does most of the collision checking (hits/pickups)
-
-* Hans
-  * Server and client communication
-  * Containers for client game-state update
-  * Game physics
-
-* Paige
- Graphics implementation to represent game state. This is to be run on the
- local machine of each player in lwgl. I will add and ipmlement models,
- textures, and lighting for the game. I will also focus on player controls and
- user input on a graphical interface.
-
-
-### Aaron
-A major component of this project will be integrating the various features and
-subfeatures with each other in an efficient way and providing assistance on
-complicated features when needed. Efficient software design and best-practice
-OO design priciples can ensure that this happens, including proper abstraction,
-interfaces, unit and integration tests, versioning control, code reviews,
-and so on. Aaron's role in this project will be to act as the person who
-manages all of the above and will be available for spot help on any features
-that need more man hours, and any extra time will be spent contributing to
-the game physics and AI engines.  
-   
-
 
 
 
@@ -107,5 +70,4 @@ the game physics and AI engines.
 * Possible AI ships
 * Game data objects
 
-## Integration / testing / design
 
