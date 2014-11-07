@@ -20,6 +20,14 @@ power ups may not be so powerful. Some may be very powerful indeed.
 * Paige
 * [Aaron Gonzales](http://github.com/xysmas)
 
+# workflow notes
+Please make a new branch for each feature or fix you are implementing and when
+it's finished, submit a pull request to merge it. This workflow can be changed
+if needed or wanted. Please do not commit directly to master. Pull requests
+will be rejected if the merge breaks a test or doesn't conform to the coding
+standard set aside by Joel Almighty, including clear comments and javadoc. 
+
+
 # General breakdown of responsibilities
 Note that distribution of labor may change slightly as the project's
 completion waxes and wanes, but for right now, our breakdown is as follows:
