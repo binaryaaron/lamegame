@@ -1,111 +1,76 @@
 # lamegame
+LameGame is a first person shooter with spaceships, made as the final project
+for CS351 at UNM. It's clear that no one has ever attempted to build a game
+like this before. A player will have a view of the spaceship from above and
+back, watching it move around as it goes through space. The game environment
+will have various obstacles, notably asteroids that can destroy a ship if not
+avoided or destroyed by the user. In multiplayer mode, up to four archrivals
+can solve their problems by attacking each other or tricking a user into
+hitting an asteroid. 
 
-Final project for cs351. Name can change.
+Littered throughout the game world, there will be various power-ups, weaponry,
+and health refreshers that players may obtain by flying through them. Some
+power ups may not be so powerful. Some may be very powerful indeed. 
 
-Contributors:
+
+## Contributors:
 * Robert Nicholson rnicholson@unm.edu
 * [Weston Ortiz](https://github.com/wortiz) weston@wortiz.com
 * Hans
 * Paige
 * [Aaron Gonzales](http://github.com/xysmas)
 
+# General breakdown of responsibilities
+Note that distribution of labor may change slightly as the project's
+completion waxes and wanes, but for right now, our breakdown is as follows:
 
-Read up on git workflows for this project - we should make heavy use of feature
-branches and pull requests in development.
+The order in which things are listed could be changed to be in order of
+importance, perhaps.
 
-Here are a few resources for git workflows:
-
-* [The feature branch workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow)
-* [git workflows that work](http://blog.endpoint.com/2014/05/git-workflows-that-work.html)
-* [more git workflow talk](http://www.joslynesser.com/blog/archives/2010/09/06/git-workflow-for-small-teams/)
-
-I say we sort of decide on a workflow on Thursday when we start typing up
-Our project outline. If you want, please feel free to edit this readme and i
-can turn it into a working submission for Joel once complete.
-
-Also, here is an intro to [Markdown](http://daringfireball.net/projects/markdown/syntax),
-the syntax for this readme file
-
-... also, here are a few refs for game development:
-
-* [Game design concepts](https://learn.canvas.net/courses/3)
-* [Game programming patterns](http://gameprogrammingpatterns.com/contents.html)
-
-
-### ... and any other references can go... here!
-* [A nice opengl thing](https://github.com/Fluttershy/rin.java)
-
-## General breakdown of responsibilities 
-# Initial Game Idea:
-
-Asteroids/Space shooter, multiplayer space shooter with asteroids (breakable/physics).
-
-Ships fight against each other.
-
-Power-ups or alternative weapons to pick up (fly through).
-
-Health pick ups.
-
-## General breakdown of responsibilities
-
-* Robert (Dan)
-  * OpenGL 3.2/ LWJGL 3.2 
-  * Graphics in general
-  * Audio / OpenAL
+## Robert (Dan)
+  * Implementing graphics (not as simple as it may sound!)
+  * Implementing Audio / OpenAL
   * Moral support
 
-* Weston Ortiz
-  * General physics / game interaction
-  * Helping with the server, general integration, and communication
-  * Collisions / network related logic for keeping collisions correct on client side, while server does most of the collision checking (hits/pickups)
+## Paige
+ Graphics implementation to represent game state. This is to be run on the
+ local machine of each player in lwgl. I will add and implement models,
+ textures, and lighting for the game. I will also focus on UI/UX. 
 
-* Hans
+## Weston Ortiz
+  * General physics / game interaction
+  * Helping with the server and communication
+  * Collisions / network related logic for keeping collisions correct on client
+	side, while server does most of the collision checking (hits/pickups)
+  * '2nd lead' assisting with integration if needed
+
+## Hans
   * Server and client communication
   * Containers for client game-state update
   * Game physics
+  * "that guy"
 
-* Paige
- Graphics implementation to represent game state. This is to be run on the
- local machine of each player in lwgl. I will add and ipmlement models,
- textures, and lighting for the game. I will also focus on player controls and
- user input on a graphical interface.
+## Aaron Gonzales
+  * "Leader" or something like it.
+  * tracking development process and assigning release dates
+  * Testing 
+  * Daily builds
+  * VC/ Code reviews
+  * Assist with server and physics implementations
+  * OO design and layout for subcomponents
+  * Performance testing
+  * Documentation
+  * pedantic musings
+  * possibly build a neural network AI for an adversary in single player
 
 
-### Aaron
-A major component of this project will be integrating the various features and
-subfeatures with each other in an efficient way and providing assistance on
-complicated features when needed. Efficient software design and best-practice
-OO design priciples can ensure that this happens, including proper abstraction,
-interfaces, unit and integration tests, versioning control, code reviews,
-and so on. Aaron's role in this project will be to act as the person who
-manages all of the above and will be available for spot help on any features
-that need more man hours, and any extra time will be spent contributing to
-the game physics and AI engines.  
-   
+# installtion
 
 
 
 
-# Feature areas
-## Server / backend
 
-##  Graphics
-* Display
-* Lighting
-* Sound
-* Texture wrapping
-* Model importing
-* Potential model making
-* Debug interface
-
-##  Physics/Gameplay
-* World Collisions
-* Game Board
-* Asteroid explosion logic
-* Projectile collisions
-* AI or Game AI for moving asteroids
-* Possible AI ships
-* Game data objects
-
-## Integration / testing / design
-
+# Documentation
+  It's in the [docs](https://github.com/xysmas/lamegame/tree/master/docs)
+  folder.
+  * [Specifications (remember, we're graded on these):](https://github.com/xysmas/lamegame/tree/master/docs)
