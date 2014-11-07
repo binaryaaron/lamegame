@@ -5,7 +5,7 @@ Created by Robert, Weston, Hans, Paige, and Aaron.
 The purpose of this incredibly important and interesting document is to act as
 a centralized specification sheet for LameGame. A (hopefully final?) version of
 the spec sheet will be turned into Joel Castellanos on 2014-11-07, as our grade
-depends on it. 
+depends on it.
 
 This shit will aid Joel in evaluating our horrible performance on the project
 at its completion, so he may easily assign F's to everyone. Joel, you could
@@ -20,22 +20,22 @@ of the spaceship from above and back, watching it move around as it goes
 through space. The game environment will have various obstacles, notably
 asteroids that can destroy a ship if not avoided or destroyed by the user. In
 multiplayer mode, up to four archrivals can solve their problems by attacking
-each other or tricking a user into hitting an asteroid. 
+each other or tricking a user into hitting an asteroid.
 
 Littered throughout the game world, there will be various power-ups, weaponry,
 and health refreshers that players may obtain by flying through them. Some
-power ups may not be so powerful. Some may be very powerful indeed. 
+power ups may not be so powerful. Some may be very powerful indeed.
 
 
 # Scope
 The scope of LameGame is mostly the five developers, our TA, Torin, and our
 instructor, Joel - unless for some reason the general public finds a major
 interest in our amazing game, LameGame. It is meant to be recreational for all
-except for the developers. 
+except for the developers.
 
 
 # Definitions
-Teammates, please edit this  
+Teammates, please edit this
 
 * Server:
 	A machine that serves as a centralized point of entry for users during
@@ -57,33 +57,36 @@ Teammates, please edit this
 * Player :
 	Person who is playing the game to the best or worst of their abilities, in
 	single-player or mulitplayer mode. Let no designation be made between
-	'player' and 'user'. 
+	'player' and 'user'.
 
 * Input:
 	as a subcomponent of the UI, input will be handled through a
 	Wimote/keyboard and mouse. Users will primarly use the keys ${W,A,S,D}$
-	keys to navigate LameGame. Note that there is no significant output. 
+	keys to navigate LameGame. Note that there is no significant output.
 
 * Graphics/ Grafiks:
 	LameGame will be highly visual and beautiful. Some (members of the dev
 	team) may say it looks like Rothko or another famous artist who
 	didn't work in concrete shapes or forms. LameGame's graphics will be made
-	using Java OpenGL (JOGL) via the Java Lightweight Game Library (jlgl). 
+	using Java OpenGL (JOGL) via the Lightweight Java Game Library (lwjgl).
 	Developers will attempt to avoid creating new acronyms. Graphics will
 	include meshes, lighting, textures, immersion, moveable cameras, and
 	"realistic" movement of the objects in space, including the player's ship
 	and all other things. This will be a large chunk of work.
 
 * Physics/Fizikz:
-	LameGame will have a robust physics implemenation largely based on the
-	Bullet engine. I have no idea how that engine works and probably should get
-	cracking.
+   We are looking to implement somewhat believable space physics with
+   inertia playing a part in player movement/gameplay. We are in the process
+   of looking at either implementing basics physics on our own or integrating
+   bullet engine through JBullet. We also want to have asteroids moving through
+   the game area and have the ability to explode, on contact with projectile or
+   enemy ship.
 
 * World:
 	The game's current world or map in which players may play. The world will
 	be comprised of several decorative objects:
 	* the world will have a starry background that is everpresent, like the stars
-		themselves. 
+		themselves.
 	* The world will have far-away planets to provide a sense of place. These
 		planets will hopefully move a little bit, because everything is moving in
 		space.
@@ -99,7 +102,7 @@ Teammates, please edit this
 	success of a larger project. Testing within LameGame will include two
 	subcomponents:
 	* Unit tests - these shall be written for each class or collection of
-	classes that inherit each other. 
+	classes that inherit each other.
 	* Integration test - these shall be performed to ensure that the disparate
 	parts are hacked together in a way that works and doesn't break some other
 	component in the process. It is the author's suspicion that this will be
@@ -119,7 +122,7 @@ Teammates, please edit this
 	master being handeld by one group member who is crazy. We will make
 	extensive use of personal branches and pull requests through github to
 	ensure that code standards, code reviews, and tests are implemented
-	correctly. 
+	correctly.
 
 * Game interaction:
 	Any interaction between a Player and the world. This includes events such
@@ -130,7 +133,7 @@ Teammates, please edit this
 	Refers to both JavaDoc, specifications documents like this one, notes, and
 	smoke signals that relay information to each other or to an end
 	user/player. Includes technical and non-technical docs.
-	
+
 # General breakdown of responsibilities
 Now that you are bored to tears, we can assign labour.
 
@@ -145,7 +148,7 @@ completion waxes and wanes, but for right now, our breakdown is as follows:
 ## Paige
  Graphics implementation to represent game state. This is to be run on the
  local machine of each player in lwgl. I will add and implement models,
- textures, and lighting for the game. I will also focus on UI/UX. 
+ textures, and lighting for the game. I will also focus on UI/UX.
 
 ## Weston Ortiz
   * General physics / game interaction
@@ -163,7 +166,7 @@ completion waxes and wanes, but for right now, our breakdown is as follows:
 ## Aaron Gonzales
   * "Leader" or something like it.
   * tracking development process and assigning release dates
-  * Testing 
+  * Testing
   * Daily builds
   * VC/ Code reviews
   * Assist with server and physics implementations
@@ -172,4 +175,3 @@ completion waxes and wanes, but for right now, our breakdown is as follows:
   * Documentation
   * pedantic musings
   * possibly build a neural network AI for an adversary in single player
-
