@@ -1,18 +1,11 @@
-# LameGame
-Created by Robert, Weston, Hans, Paige, and Aaron.
+# LameGame (Final name undecided) Specification
+Aaron Gonzales
+Robert Nicholson
+Weston Ortiz
+Paige Romero
+Hans Weeks
 
-# This Document
-The purpose of this incredibly important and interesting document is to act as
-a centralized specification sheet for LameGame. A (hopefully final?) version of
-the spec sheet will be turned into Joel Castellanos on 2014-11-07, as our grade
-depends on it.
-
-This shit will aid Joel in evaluating our horrible performance on the project
-at its completion, so he may easily assign F's to everyone. Joel, you could
-just assign us an F now and save everyone the time.
-
-
-# Brief Description of LameGame
+# Brief Description of LameGame 
 
 LameGame is a first person shooter with spaceships. It's clear that no one has
 ever attempted to build a game like this before. A player will have a view
@@ -33,9 +26,7 @@ instructor, Joel - unless for some reason the general public finds a major
 interest in our amazing game, LameGame. It is meant to be recreational for all
 except for the developers.
 
-
 # Definitions
-Teammates, please edit this
 
 * Server:
 	A machine that serves as a centralized point of entry for users during
@@ -44,15 +35,15 @@ Teammates, please edit this
 	aformentioned all-powerful powerups. The server's physical location has not
 	been determined, though a machine in FEC may suffice for our purposes.
 	Users can connect to the server through the Internet, because it's 2014.
-	Packets and other information will be encrypted to keep dirty, rotten
-	cheats away from our precious powerup data.
+	Basic packet verification should be done to ensure only correct data is 
+	being sent to the server.
 
 * UI :
 	The user interface for LameGame. This serves as the primary (and only) way
 	of interacting with the program. Options to reload levels, start games,
 	connect to the server, pull user data from the server, close the game, and
-	so on will be present through the UI. The gui will be created in Java's
-	beautiful Swing lwt framework (or javafx).
+	so on will be present through the UI. The gui most likely will be done in
+        OpenGL unless swing/java fx provide a better interface.
 
 * Player :
 	Person who is playing the game to the best or worst of their abilities, in
@@ -61,8 +52,8 @@ Teammates, please edit this
 
 * Input:
 	as a subcomponent of the UI, input will be handled through a
-	Wimote/keyboard and mouse. Users will primarly use the keys ${W,A,S,D}$
-	keys to navigate LameGame. Note that there is no significant output.
+	joystick(most likely wired xbox controller) or keyboard and mouse. 
+
 
 * Graphics/ Grafiks:
 	LameGame will be highly visual and beautiful. Some (members of the dev
@@ -75,12 +66,12 @@ Teammates, please edit this
 	and all other things. This will be a large chunk of work.
 
 * Physics/Fizikz:
-   We are looking to implement somewhat believable space physics with
-   inertia playing a part in player movement/gameplay. We are in the process
-   of looking at either implementing basics physics on our own or integrating
-   bullet engine through JBullet. We also want to have asteroids moving through
-   the game area and have the ability to explode, on contact with projectile or
-   enemy ship.
+	We are looking to implement somewhat believable space physics with
+	inertia playing a part in player movement/gameplay. We are in the process
+	of looking at either implementing basics physics on our own or integrating
+	bullet engine through JBullet. We also want to have asteroids moving through
+	the game area and have the ability to explode, on contact with projectile or
+	enemy ship.
 
 * World:
 	The game's current world or map in which players may play. The world will
@@ -115,12 +106,12 @@ Teammates, please edit this
 	compiling LameGame will take that long - it's not Windows Vista, after all.
 
 * Version control / code reviews:
-	Git. Github. Git. We students will be using Git/Github as a DVCS,
+	Git through Github. We students will be using Git/Github as a DVCS,
 	implementing a standard feature-and-bugfix branch workflow because we all
 	want to do things that future employers may like. A 'dev' branch and a
 	'master' branch will be the primary lines of development, with merges into
 	master being handeld by one group member who is crazy. We will make
-	extensive use of personal branches and pull requests through github to
+	extensive use of feature branches and pull requests through github to
 	ensure that code standards, code reviews, and tests are implemented
 	correctly.
 
@@ -140,32 +131,9 @@ Now that you are bored to tears, we can assign labour.
 Note that distribution of labor may change slightly as the project's
 completion waxes and wanes, but for right now, our breakdown is as follows:
 
-## Robert (Dan)
-  * Implementing graphics (not as simple as it may sound!)
-  * Implementing Audio / OpenAL
-  * Moral support
-
-## Paige
- Graphics implementation to represent game state. This is to be run on the
- local machine of each player in lwgl. I will add and implement models,
- textures, and lighting for the game. I will also focus on UI/UX.
-
-## Weston Ortiz
-  * General physics / game interaction
-  * Helping with the server and communication
-  * Collisions / network related logic for keeping collisions correct on client
-	side, while server does most of the collision checking (hits/pickups)
-  * '2nd lead' assisting with integration if needed
-
-## Hans
-  * Server and client communication
-  * Containers for client game-state update
-  * Game physics
-  * "that guy"
-
 ## Aaron Gonzales
   * "Leader" or something like it.
-  * tracking development process and assigning release dates
+  * Tracking development process and assigning release dates
   * Testing
   * Daily builds
   * VC/ Code reviews
@@ -173,5 +141,29 @@ completion waxes and wanes, but for right now, our breakdown is as follows:
   * OO design and layout for subcomponents
   * Performance testing
   * Documentation
-  * pedantic musings
-  * possibly build a neural network AI for an adversary in single player
+  * Pedantic musings
+  * Possibly build a neural network AI for an adversary in single player
+
+## Robert (Dan) Nicholson
+  * Implementing graphics (not as simple as it may sound!)
+  * Implementing Audio / OpenAL
+  * Moral support
+
+## Weston Ortiz
+  * General physics and game interaction/logic
+  * Helping with the server and communication
+  * Collisions / network related logic for keeping collisions correct on client
+	side, while server does most of the collision checking (hits/pickups)
+  * '2nd lead' assisting with integration if needed
+
+## Paige Romero
+  * Graphics implementation
+  * Models, textures, lighting
+  * UI/UX for game
+  
+## Hans Weeks
+  * Server and client communication
+  * Containers for client game-state update
+  * Game physics
+  * "that guy"
+
