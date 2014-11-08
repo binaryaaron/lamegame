@@ -7,17 +7,16 @@ Hans Weeks
 
 # Brief Description of LameGame 
 
-LameGame is a first person shooter with spaceships. It's clear that no one has
-ever attempted to build a game like this before. A player will have a view
-of the spaceship from above and back, watching it move around as it goes
-through space. The game environment will have various obstacles, notably
+LameGame is a first person shooter with spaceships. In LameGame, a player will
+have a view of the spaceship from above and back, watching it move around as it
+goes through space. The game environment will have various obstacles, notably
 asteroids that can destroy a ship if not avoided or destroyed by the user. In
-multiplayer mode, up to four archrivals can solve their problems by attacking
+multiplayer mode, up to four archrivals can work out their issues by attacking
 each other or tricking a user into hitting an asteroid.
 
 Littered throughout the game world, there will be various power-ups, weaponry,
 and health refreshers that players may obtain by flying through them. Some
-power ups may not be so powerful. Some may be very powerful indeed.
+powerups may not be so powerful. Some may be very powerful indeed.
 
 
 # Scope
@@ -52,10 +51,10 @@ except for the developers.
 
 * Input:
 	as a subcomponent of the UI, input will be handled through a
-	joystick(most likely wired xbox controller) or keyboard and mouse. 
+	joystick (most likely wired xbox controller) and/or keyboard and mouse. 
 
 
-* Graphics/ Grafiks:
+* Graphics:
 	LameGame will be highly visual and beautiful. Some (members of the dev
 	team) may say it looks like Rothko or another famous artist who
 	didn't work in concrete shapes or forms. LameGame's graphics will be made
@@ -65,7 +64,7 @@ except for the developers.
 	"realistic" movement of the objects in space, including the player's ship
 	and all other things. This will be a large chunk of work.
 
-* Physics/Fizikz:
+* Physics:
 	We are looking to implement somewhat believable space physics with
 	inertia playing a part in player movement/gameplay. We are in the process
 	of looking at either implementing basics physics on our own or integrating
@@ -90,7 +89,7 @@ except for the developers.
 
 * Testing:
 	A thing that young developers seldom do correctly but is crucial to the
-	success of a larger project. Testing within LameGame will include two
+	success of a larger project. Testing within LameGame will include three
 	subcomponents:
 	* Unit tests - these shall be written for each class or collection of
 	classes that inherit each other.
@@ -110,7 +109,7 @@ except for the developers.
 	implementing a standard feature-and-bugfix branch workflow because we all
 	want to do things that future employers may like. A 'dev' branch and a
 	'master' branch will be the primary lines of development, with merges into
-	master being handeld by one group member who is crazy. We will make
+	master being handeld by one crazy group member. We will make
 	extensive use of feature branches and pull requests through github to
 	ensure that code standards, code reviews, and tests are implemented
 	correctly.
@@ -123,10 +122,9 @@ except for the developers.
 * Documentation:
 	Refers to both JavaDoc, specifications documents like this one, notes, and
 	smoke signals that relay information to each other or to an end
-	user/player. Includes technical and non-technical docs.
+	user/player. This includes technical and non-technical docs.
 
 # General breakdown of responsibilities
-Now that you are bored to tears, we can assign labour.
 
 Note that distribution of labor may change slightly as the project's
 completion waxes and wanes, but for right now, our breakdown is as follows:
@@ -142,7 +140,6 @@ completion waxes and wanes, but for right now, our breakdown is as follows:
   * Performance testing
   * Documentation
   * Pedantic musings
-  * Possibly build a neural network AI for an adversary in single player
 
 ## Robert (Dan) Nicholson
   * Implementing graphics (not as simple as it may sound!)
@@ -165,5 +162,4 @@ completion waxes and wanes, but for right now, our breakdown is as follows:
   * Server and client communication
   * Containers for client game-state update
   * Game physics
-  * "that guy"
 

@@ -1,0 +1,309 @@
+\documentclass[titlepage]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+  \linewidth
+  \else
+  \Gin@nat@width
+  \fi
+}
+\makeatother
+
+
+\usepackage{listings}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Python,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+\usepackage{alltt}
+\usepackage[sc]{mathpazo}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=1.5cm,rmargin=1.5cm}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{url}
+\usepackage[unicode=true,pdfusetitle,
+  bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,bookmarksopenlevel=2,
+breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+{hyperref}
+\hypersetup{pdfstartview={XYZ null null 1}}
+\usepackage{float}
+\usepackage{bm}
+ %changes default sectioning commands -> 1,a, etc.
+%\usepackage{breakurl}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%\usepackage[active,tightpage]{preview}
+%\PreviewEnvironment{tikzpicture}
+%%% Header and Footer %%% 
+\lhead{}
+\chead{\leftmark}
+\rhead{}
+\lfoot{Gonzales et al, cs351}
+\cfoot{Final Project Specs}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+
+\begin{document}
+
+\title{LameGame}
+\author{Aaron Gonzales, Robert Nicholson, Weston Ortiz, Paige Romero, Hans
+Weeks}
+\maketitle
+\section{LameGame (Final name undecided)
+Specification}\label{lamegame-final-name-undecided-specification}
+
+
+\section{Brief Description of
+LameGame}\label{brief-description-of-lamegame}
+
+LameGame is a first person shooter with spaceships. In LameGame, a
+player will have a view of the spaceship from above and back, watching
+it move around as it goes through space. The game environment will have
+various obstacles, notably asteroids that can destroy a ship if not
+avoided or destroyed by the user. In multiplayer mode, up to four
+archrivals can work out their issues by attacking each other or tricking
+a user into hitting an asteroid.
+
+Littered throughout the game world, there will be various power-ups,
+weaponry, and health refreshers that players may obtain by flying
+through them. Some powerups may not be so powerful. Some may be very
+powerful indeed.
+
+\section{Scope}\label{scope}
+
+The scope of LameGame is mostly the five developers, our TA, Torin, and
+our instructor, Joel - unless for some reason the general public finds a
+major interest in our amazing game, LameGame. It is meant to be
+recreational for all except for the developers.
+
+\section{Definitions}\label{definitions}
+
+\begin{itemize}
+\item
+  Server: A machine that serves as a centralized point of entry for
+  users during multiplayer access. It can store user data and gameplay
+  information, calculate physics and interactions, and handle placement
+  of the aformentioned all-powerful powerups. The server's physical
+  location has not been determined, though a machine in FEC may suffice
+  for our purposes. Users can connect to the server through the
+  Internet, because it's 2014. Basic packet verification should be done
+  to ensure only correct data is being sent to the server.
+\item
+  UI : The user interface for LameGame. This serves as the primary (and
+  only) way of interacting with the program. Options to reload levels,
+  start games, connect to the server, pull user data from the server,
+  close the game, and so on will be present through the UI. The gui most
+  likely will be done in OpenGL unless swing/java fx provide a better
+  interface.
+\item
+  Player : Person who is playing the game to the best or worst of their
+  abilities, in single-player or mulitplayer mode. Let no designation be
+  made between `player' and `user'.
+\item
+  Input: as a subcomponent of the UI, input will be handled through a
+  joystick (most likely wired xbox controller) and/or keyboard and
+  mouse.
+\item
+  Graphics: LameGame will be highly visual and beautiful. Some (members
+  of the dev team) may say it looks like Rothko or another famous artist
+  who didn't work in concrete shapes or forms. LameGame's graphics will
+  be made using Java OpenGL (JOGL) via the Lightweight Java Game Library
+  (lwjgl). Developers will attempt to avoid creating new acronyms.
+  Graphics will include meshes, lighting, textures, immersion, moveable
+  cameras, and ``realistic'' movement of the objects in space, including
+  the player's ship and all other things. This will be a large chunk of
+  work.
+\item
+  Physics: We are looking to implement somewhat believable space physics
+  with inertia playing a part in player movement/gameplay. We are in the
+  process of looking at either implementing basics physics on our own or
+  integrating bullet engine through JBullet. We also want to have
+  asteroids moving through the game area and have the ability to
+  explode, on contact with projectile or enemy ship.
+\item
+  World: The game's current world or map in which players may play. The
+  world will be comprised of several decorative objects:
+
+  \begin{itemize}
+  \itemsep1pt\parskip0pt\parsep0pt
+  \item
+    the world will have a starry background that is everpresent, like
+    the stars themselves.
+  \item
+    The world will have far-away planets to provide a sense of place.
+    These planets will hopefully move a little bit, because everything
+    is moving in space.
+  \item
+    the world will have 3d objects in it, primarily asteroids unless we
+    have time to add more objects (e.g., space mines, space pirates,
+    space ninjas, space princesses, space beach balls, space aliens,
+    floating software specifications that devour you in one `hit', evil
+    Computer Science instructors that think you have nothing else to do
+    but work on their class).
+  \end{itemize}
+\item
+  Testing: A thing that young developers seldom do correctly but is
+  crucial to the success of a larger project. Testing within LameGame
+  will include three subcomponents:
+
+  \begin{itemize}
+  \itemsep1pt\parskip0pt\parsep0pt
+  \item
+    Unit tests - these shall be written for each class or collection of
+    classes that inherit each other.
+  \item
+    Integration test - these shall be performed to ensure that the
+    disparate parts are hacked together in a way that works and doesn't
+    break some other component in the process. It is the author's
+    suspicion that this will be challenging.
+  \item
+    `Daily' builds - after the first semi-working version is complete,
+    one member will be in charge of creating a `daily build' of
+    LameGame. This daily build will be a final bugfinding and
+    integration testing measure . This daily build may not in fact be
+    daily, but may happen many times per day as the deadline approaches.
+    Also, the authors do not expect that compiling LameGame will take
+    that long - it's not Windows Vista, after all.
+  \end{itemize}
+\item
+  Version control / code reviews: Git through Github. We students will
+  be using Git/Github as a DVCS, implementing a standard
+  feature-and-bugfix branch workflow because we all want to do things
+  that future employers may like. A `dev' branch and a `master' branch
+  will be the primary lines of development, with merges into master
+  being handeld by one crazy group member. We will make extensive use of
+  feature branches and pull requests through github to ensure that code
+  standards, code reviews, and tests are implemented correctly.
+\item
+  Game interaction: Any interaction between a Player and the world. This
+  includes events such as picking up an incredible powerup or firing a
+  space plasma rocket grenade laser at an archnemesis.
+\item
+  Documentation: Refers to both JavaDoc, specifications documents like
+  this one, notes, and smoke signals that relay information to each
+  other or to an end user/player. This includes technical and
+  non-technical docs.
+\end{itemize}
+
+\section{General breakdown of
+responsibilities}\label{general-breakdown-of-responsibilities}
+
+Note that distribution of labor may change slightly as the project's
+completion waxes and wanes, but for right now, our breakdown is as
+follows:
+
+\subsection{Aaron Gonzales}\label{aaron-gonzales}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  ``Leader'' or something like it.
+\item
+  Tracking development process and assigning release dates
+\item
+  Testing
+\item
+  Daily builds
+\item
+  VC/ Code reviews
+\item
+  Assist with server and physics implementations
+\item
+  OO design and layout for subcomponents
+\item
+  Performance testing
+\item
+  Documentation
+\item
+  Pedantic musings
+\end{itemize}
+
+\subsection{Robert (Dan) Nicholson}\label{robert-dan-nicholson}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Implementing graphics (not as simple as it may sound!)
+\item
+  Implementing Audio / OpenAL
+\item
+  Moral support
+\end{itemize}
+
+\subsection{Weston Ortiz}\label{weston-ortiz}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  General physics and game interaction/logic
+\item
+  Helping with the server and communication
+\item
+  Collisions / network related logic for keeping collisions correct on
+  client side, while server does most of the collision checking
+  (hits/pickups)
+\item
+  `2nd lead' assisting with integration if needed
+\end{itemize}
+
+\subsection{Paige Romero}\label{paige-romero}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Graphics implementation
+\item
+  Models, textures, lighting
+\item
+  UI/UX for game
+\end{itemize}
+
+\subsection{Hans Weeks}\label{hans-weeks}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Server and client communication
+\item
+  Containers for client game-state update
+\item
+  Game physics
+\end{itemize}
+
+
+
+\end{document}
