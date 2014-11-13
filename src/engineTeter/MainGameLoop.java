@@ -13,16 +13,17 @@ import entities.Entity;
 import entities.Light;
 import renderEnigne.*;
 import shaders.StaticShader;
+import terrain.Terrain;
 import textures.ModelTexture;
 
 public class MainGameLoop {
-	public static int nAsteroids = 70;
+	public static int nAsteroids = 150;
 
 	public static void main(String[] args) {
 		DisplayManager.createDisplay();
 		Loader loader= new Loader();
 		StaticShader shader = new StaticShader();
-		Renderer renderer =new Renderer(shader);
+		//Renderer renderer =new Renderer(shader);
 		
 
 		RawModel modelShip = OBJLoader.loadObjModel("SciFi_Fighter_MK-OBJ", loader);
@@ -44,6 +45,10 @@ public class MainGameLoop {
 		TexturedModel texturedModelAsteroid =new TexturedModel(modelAsteroid,asteroidTexture);
 		TexturedModel texturedModelStone =new TexturedModel(stoneAsteroid,stoneTexture);
 		TexturedModel texturedModelShip =new TexturedModel(modelShip,shipTexture);
+		
+		texturedModelStone.getTexture().setReflectivity(1);
+		texturedModelStone.getTexture().setShadeDamper(10);
+		
 		
 		
 		Random rand=new Random();
@@ -71,9 +76,17 @@ public class MainGameLoop {
 		Entity ship= new Entity(texturedModelShip,new Vector3f(0f,-40f,-20f),0f,0f,0f,0.3f);
 		Light light =new Light(new Vector3f(10f,5f,2000f), new Vector3f(1.0f,1.0f,1.0f));
 		
-		Camera camera = new Camera();
+		Terrain terrain =new Terrain(-1,-1,loader,new ModelTexture(loader.loadTexture("stone_texture")));
+		Terrain terrain2 =new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("stone_texture")));
 		
+		
+		
+		Camera camera = new Camera();
+		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()){
+			
+		
+			
 			
 		for(int i=0;i<nAsteroids;i++){
 			Entity ass=asteroids[i];
@@ -102,28 +115,27 @@ public class MainGameLoop {
 			}
 			
 		}
-			renderer.prepare();
-	
-			shader.start();
-			shader.loadLight(light);
-			shader.loadViewMatrix(camera);
+		
 			camera.move();
 			
 			for(Entity ass: asteroids){
-			renderer.render(ass,shader);
-			}
-			for(Entity stone: stones){
-				renderer.render(stone,shader);
+				//renderer.processEntity(ass);
 				}
-			renderer.render(ship, shader);
+			for(Entity stone: stones){
+				//renderer.processEntity(stone);
+				}
 			
-			shader.stop();
-			
+
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
+			//renderer.processEntity(ship);
+			renderer.render(light,camera);
+
 			DisplayManager.updateDisplay();
 	
 	
 		}
-		shader.cleanUp();
+		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
