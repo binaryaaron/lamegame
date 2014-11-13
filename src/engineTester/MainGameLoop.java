@@ -1,4 +1,4 @@
-package engineTeter;
+package engineTester;
 
 import java.util.Random;
 
@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import renderEnigne.*;
+import renderEngine.*;
 import shaders.StaticShader;
 import textures.ModelTexture;
 
