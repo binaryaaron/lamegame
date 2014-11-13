@@ -25,8 +25,6 @@ public class PlaneRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 		
-		System.out.print(projectionMatrix);
-		
 	}
 	
 	
