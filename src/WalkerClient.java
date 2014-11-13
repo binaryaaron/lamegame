@@ -73,6 +73,7 @@ public class WalkerClient
     {
       while((allPackageList=(LinkedList<ServerPackage>) inFromServer.readObject())!=null)
       {
+        final long startTime = System.currentTimeMillis();
         if(firstPackage)//get ID from first Package
         {
           myID=allPackageList.getFirst().PACKID;
@@ -113,6 +114,8 @@ public class WalkerClient
         
         outToServer.writeUnshared(myServerPackage);
 //        outToServer.reset();
+        final long endTime=System.currentTimeMillis();
+        System.out.println("Total execution time: "+(endTime-startTime));
       }
     } catch (NumberFormatException e)
     {
@@ -126,4 +129,3 @@ public class WalkerClient
     mySocket.close();
   }
 }
-

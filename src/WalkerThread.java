@@ -3,13 +3,15 @@ import java.awt.image.ReplicateScaleFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.instrument.Instrumentation;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 
 public class WalkerThread extends Thread
 { 
-  public boolean printlocation=false;
+  public boolean printlocation=true;
+  public boolean printclients=false;
   public ServerPackage myServerPackage=null;//contains info for connected client
   private LinkedList<ServerPackage> allPackageList=new LinkedList<>();
   
@@ -26,8 +28,7 @@ public class WalkerThread extends Thread
   }
 
   public void run()
-  {
-    Point location=new Point(0,0);
+  {    
     try
     {
       ObjectOutputStream outToClient=new ObjectOutputStream(myClientSocket.getOutputStream());
@@ -35,7 +36,7 @@ public class WalkerThread extends Thread
       int loop = 0;
       
       while((myServerPackage=(ServerPackage)inFromClient.readObject())!=null)
-      {
+      {        
         reqLocation=myServerPackage.currentP;
         if(printlocation)System.out.println("Client("+reqLocation.x+","+reqLocation.y+")");
         if(printlocation)System.out.println("loop " + loop);
@@ -51,22 +52,37 @@ public class WalkerThread extends Thread
         }
         
         ////send ServerPackages of all clients to this client
+        allPackageList.clear();
+        
+        
         synchronized (myServerPackage)
         {
-          allPackageList.clear();
           for(WalkerThread wt:WalkerServer.threadList)
           {
             allPackageList.add(wt.myServerPackage);
           }
-          allPackageList.addFirst(myServerPackage);          
-//          outToClient.writeObject(allPackageList);
-          System.out.println("hosts connected: "+allPackageList.size());
-          outToClient.writeUnshared(allPackageList);
-//          outToClient.reset();
         }
+        allPackageList.addFirst(myServerPackage);
+        // outToClient.writeObject(allPackageList);
+        if(printclients)System.out.println("hosts connected: "+allPackageList.size());
+        System.out.println("size of allPackageList"+MemoryUtil.shallowSizeOf(allPackageList));
+        outToClient.writeUnshared(allPackageList);
+
         loop++;
       }
-    } catch (IOException e)
+      
+    } 
+    catch (java.net.SocketException e)
+    {
+      try
+      {
+        myClientSocket.close();
+        return;
+      } catch (IOException e1)
+      {
+        e1.printStackTrace();
+      }
+    }catch (IOException e)
     {
       e.printStackTrace();
     }
@@ -76,4 +92,3 @@ public class WalkerThread extends Thread
     }
   }
 }
-

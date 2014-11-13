@@ -27,7 +27,13 @@ public class WalkerServer
       newThread.start();
       IDgen++;
       threadList.add(newThread);
+      for(WalkerThread wt: threadList)
+      {
+        if(!wt.isAlive())
+        {
+          threadList.remove(wt);
+        }
+      }
     }
   }
 }
-
