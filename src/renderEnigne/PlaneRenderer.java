@@ -11,15 +11,15 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import shaders.TerrainShader;
-import terrain.Terrain;
+import plane.Plane;
+import shaders.PlaneShader;
 import textures.ModelTexture;
 import toolbox.MathUtil;
 
-public class TerrainRenderer {
-	private TerrainShader shader;
+public class PlaneRenderer {
+	private PlaneShader shader;
 	
-	public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix){
+	public PlaneRenderer(PlaneShader shader, Matrix4f projectionMatrix){
 		this.shader =shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -30,8 +30,8 @@ public class TerrainRenderer {
 	}
 	
 	
-	public void render(List<Terrain> terrains){
-		for(Terrain terrain:terrains){
+	public void render(List<Plane> terrains){
+		for(Plane terrain:terrains){
 			prepareTerrain(terrain);
 			loadModelMatrix(terrain);
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(),
@@ -44,7 +44,7 @@ public class TerrainRenderer {
 	}
 	
 	
-	private void prepareTerrain(Terrain terrain){
+	private void prepareTerrain(Plane terrain){
 		RawModel rawModel = terrain.getModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		
@@ -65,7 +65,7 @@ public class TerrainRenderer {
 		GL30.glBindVertexArray(0);
 	}
 	
-	private void loadModelMatrix(Terrain terrain){
+	private void loadModelMatrix(Plane terrain){
 		Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(
 				new Vector3f(terrain.getX(),0,terrain.getZ()), 0f, 0f, 0f, 1f);
 		shader.loadTransformationMatrix(transformationMatrix);

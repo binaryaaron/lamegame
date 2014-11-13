@@ -5,21 +5,27 @@ import java.util.Random;
 import models.RawModel;
 import models.TexturedModel;
 
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import plane.Plane;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import renderEnigne.*;
 import shaders.StaticShader;
-import terrain.Terrain;
 import textures.ModelTexture;
+import toolbox.PerformanceUtilities;
 
 public class MainGameLoop {
-	public static int nAsteroids = 150;
+
+	public final static boolean PRINT_FPS=true;
+	public static int nAsteroids = 50;
 
 	public static void main(String[] args) {
+		
+		
 		DisplayManager.createDisplay();
 		Loader loader= new Loader();
 		StaticShader shader = new StaticShader();
@@ -76,13 +82,17 @@ public class MainGameLoop {
 		Entity ship= new Entity(texturedModelShip,new Vector3f(0f,-40f,-20f),0f,0f,0f,0.3f);
 		Light light =new Light(new Vector3f(10f,5f,2000f), new Vector3f(1.0f,1.0f,1.0f));
 		
-		Terrain terrain =new Terrain(-1,-1,loader,new ModelTexture(loader.loadTexture("stone_texture")));
-		Terrain terrain2 =new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("stone_texture")));
+		Plane terrain =new Plane(-1,-1,loader,new ModelTexture(loader.loadTexture("stone_texture")));
+		Plane terrain2 =new Plane(0,-1,loader,new ModelTexture(loader.loadTexture("stone_texture")));
 		
 		
 		
 		Camera camera = new Camera();
 		MasterRenderer renderer = new MasterRenderer();
+		PerformanceUtilities pu= new PerformanceUtilities();		
+		if(PRINT_FPS){
+		pu.startFrameCounter();
+		}
 		while(!Display.isCloseRequested()){
 			
 		
@@ -119,24 +129,35 @@ public class MainGameLoop {
 			camera.move();
 			
 			for(Entity ass: asteroids){
-				//renderer.processEntity(ass);
+				renderer.processEntity(ass);
 				}
 			for(Entity stone: stones){
-				//renderer.processEntity(stone);
+				renderer.processEntity(stone);
 				}
 			
 
-			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
-			//renderer.processEntity(ship);
+			//renderer.processTerrain(terrain);
+			//renderer.processTerrain(terrain2);
+			renderer.processEntity(ship);
 			renderer.render(light,camera);
 
 			DisplayManager.updateDisplay();
-	
+			if(PRINT_FPS){
+			pu.updateFPS();
+			
+			System.out.println(pu.getFPS());
+			}
 	
 		}
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
+	
+	
+
+	
+	
+	
+	
 }

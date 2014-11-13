@@ -9,9 +9,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
+import plane.Plane;
 import shaders.StaticShader;
-import shaders.TerrainShader;
-import terrain.Terrain;
+import shaders.PlaneShader;
 import models.TexturedModel;
 import entities.Camera;
 import entities.Entity;
@@ -27,12 +27,12 @@ public class MasterRenderer {
 	private StaticShader shader =new StaticShader();
 	private EntityRenderer renderer;
 	
-	private TerrainRenderer terrainRenderer;
-	private TerrainShader terrainShader=new TerrainShader();
+	private PlaneRenderer terrainRenderer;
+	private PlaneShader terrainShader=new PlaneShader();
 	
 	
 	private Map<TexturedModel,List<Entity>> entities =new HashMap<>();
-	private List<Terrain> terrains=new  ArrayList<>();
+	private List<Plane> terrains=new  ArrayList<>();
 	
 	
 	public MasterRenderer(){
@@ -41,7 +41,7 @@ public class MasterRenderer {
 
 		createProjectionMatrix();	
 		renderer = new EntityRenderer(shader,projectionMatrix);
-		terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix);
+		terrainRenderer = new PlaneRenderer(terrainShader,projectionMatrix);
 	}
 	
 	
@@ -69,7 +69,7 @@ public class MasterRenderer {
 	}
 	
 	
-	public void processTerrain(Terrain terrain){
+	public void processTerrain(Plane terrain){
 		terrains.add(terrain);
 		
 	}
