@@ -5,7 +5,9 @@ import java.util.Random;
 import models.RawModel;
 import models.TexturedModel;
 
-import org.lwjgl.Sys;
+
+
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -20,8 +22,8 @@ import toolbox.PerformanceUtilities;
 
 public class MainGameLoop {
 
-	public final static boolean PRINT_FPS=true;
-	public static int nAsteroids = 50;
+	public final static boolean PRINT_FPS=false;
+	public static int nAsteroids = 0;
 
 	public static void main(String[] args) {
 		
@@ -29,15 +31,14 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader= new Loader();
 		StaticShader shader = new StaticShader();
-		//Renderer renderer =new Renderer(shader);
 		
 
-		RawModel modelShip = OBJLoader.loadObjModel("SciFi_Fighter_MK-OBJ", loader);
+		RawModel modelShip = OBJLoader.loadObjModel("SkyBox", loader);
 		RawModel modelAsteroid = OBJLoader.loadObjModel("Rock", loader);
 		RawModel stoneAsteroid = OBJLoader.loadObjModel("Rock", loader);
 		
 		ModelTexture asteroidTexture =new ModelTexture(loader.loadTexture("RockRed2"));
-		ModelTexture shipTexture =new ModelTexture(loader.loadTexture("SciFi_FighterMK_diffuse"));
+		ModelTexture shipTexture =new ModelTexture(loader.loadTexture("RockRed2"));
 		ModelTexture stoneTexture =new ModelTexture(loader.loadTexture("stone_texture"));
 		
 		
@@ -79,7 +80,7 @@ public class MainGameLoop {
 			
 		}
 		
-		Entity ship= new Entity(texturedModelShip,new Vector3f(0f,-40f,-20f),0f,0f,0f,0.3f);
+		Entity ship= new Entity(texturedModelShip,new Vector3f(0f,0f,-20f),0f,0f,0f,3f);
 		Light light =new Light(new Vector3f(10f,5f,2000f), new Vector3f(1.0f,1.0f,1.0f));
 		
 		Plane terrain =new Plane(-1,-1,loader,new ModelTexture(loader.loadTexture("stone_texture")));
@@ -125,7 +126,7 @@ public class MainGameLoop {
 			}
 			
 		}
-		
+
 			camera.move();
 			
 			for(Entity ass: asteroids){
@@ -138,6 +139,26 @@ public class MainGameLoop {
 
 			//renderer.processTerrain(terrain);
 			//renderer.processTerrain(terrain2);
+			
+			//debugging for  frame and texture on ship
+if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+	break;
+}
+if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+	ship.rotatate(0.2f, 0.0f, 0f);
+}
+
+if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+	ship.rotatate(-0.2f, 0.0f, 0f);
+}
+if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+	ship.rotatate(0.0f, 0.2f, 0f);
+}
+if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+	ship.rotatate(0.0f, -0.2f, 0f);
+}
+
+
 			renderer.processEntity(ship);
 			renderer.render(light,camera);
 
