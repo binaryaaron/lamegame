@@ -1,36 +1,42 @@
 package textures;
 
-public class ModelTexture {
-	
-	private int textureID;
-	
-	private float shadeDamper = 1;
-	private float reflectivity = 0;
-	
-	public float getShadeDamper() {
-		return shadeDamper;
-	}
+public class ModelTexture
+{
 
-	public void setShadeDamper(float shadeDamper) {
-		this.shadeDamper = shadeDamper;
-	}
+  private int textureID;
 
-	public float getReflectivity() {
-		return reflectivity;
-	}
+  private float shadeDamper = 1;
+  private float reflectivity = 0;
 
-	public void setReflectivity(float reflectivity) {
-		this.reflectivity = reflectivity;
-	}
+  public float getShadeDamper()
+  {
+    return shadeDamper;
+  }
 
-	public ModelTexture(int id){
-		this.textureID =id;
-		
-	}
+  public void setShadeDamper(float shadeDamper)
+  {
+    this.shadeDamper = shadeDamper;
+  }
 
-	public int getTextureID() {
-		return textureID;
-	}
+  public float getReflectivity()
+  {
+    return reflectivity;
+  }
 
+  public void setReflectivity(float reflectivity)
+  {
+    this.reflectivity = reflectivity;
+  }
+
+  public ModelTexture(int id)
+  {
+    this.textureID = id;
+
+  }
+
+  public int getTextureID()
+  {
+    return textureID;
+  }
 
 }
