@@ -39,7 +39,6 @@ public class OBJLoader {
 				line = reader.readLine();
 				String[] currentLine = line.split(" ");
 				if (line.startsWith("v ")) {
-					//System.out.println(line);
 					Vector3f vertex = new Vector3f(
 							Float.parseFloat(currentLine[1]),
 							Float.parseFloat(currentLine[2]),
@@ -125,7 +124,7 @@ public class OBJLoader {
 		textureArray[currentVertexPointer*2]=currentTex.x;
 		
 		//1- is to correct for the y starting point in blender vs lwjgl
-		textureArray[currentVertexPointer*2+1]=1-currentTex.y;
+		textureArray[currentVertexPointer*2+1]=currentTex.y;
 		Vector3f currentNorm =normals.get(Integer.parseInt(vertexData[2])-1);
 		normalsArray[currentVertexPointer*3]=currentNorm.x;
 		normalsArray[currentVertexPointer*3+1]=currentNorm.y;
