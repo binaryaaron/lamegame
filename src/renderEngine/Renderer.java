@@ -1,4 +1,4 @@
-package renderEnigne;
+package renderEngine;
 
 import models.RawModel;
 import models.TexturedModel;

@@ -1,7 +1,7 @@
 package plane;
 
 import models.RawModel;
-import renderEnigne.Loader;
+import renderEngine.Loader;
 import textures.ModelTexture;
 
 public class Plane {
