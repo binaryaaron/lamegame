@@ -174,9 +174,9 @@ public class MainGameLoop
       renderer.render(light, camera);
 
       // if(pu.getFPS()!=textDraw.fps){
-      textDraw.setText(Integer.toString(pu.getFPS()));
+      //textDraw.setText(Integer.toString(pu.getFPS()));
       // textDraw.fps=pu.getFPS();
-      textDraw.render();
+      //textDraw.render();
       // }
 
       DisplayManager.updateDisplay();

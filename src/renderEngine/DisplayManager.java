@@ -23,8 +23,7 @@ public class DisplayManager
     try
     {
       Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-      // Display.create(new PixelFormat(),attribs);
-      Display.create();
+      Display.create(new PixelFormat(),attribs);
       Display.setTitle("ThinMatrixTutorialWindow");
 
     }
