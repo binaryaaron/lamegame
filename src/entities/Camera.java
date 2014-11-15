@@ -1,3 +1,9 @@
+/**
+ * Thanks to youtube user ThinMatrix
+ * Defines the camera and methods for the camera.
+ * The camera is where the user sees the board.
+ * Includes a Keyboard listener.
+ */
 package entities;
 
 import org.lwjgl.input.Keyboard;
@@ -14,6 +20,9 @@ public class Camera
   {
   }
 
+  /**
+   * Move the camera based on user input
+   */
   public void move()
   {
 
@@ -40,6 +49,9 @@ public class Camera
 
   }
 
+  /**
+   * Getters and setters
+   */
   public Vector3f getPosition()
   {
     return position;

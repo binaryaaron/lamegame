@@ -1,3 +1,8 @@
+/**
+ * Thanks to youtube user ThinMatrix
+ * Class that defines entities, which are objects with borders to be
+ * rendered in the game board
+ */
 package entities;
 
 import models.TexturedModel;
@@ -8,9 +13,19 @@ public class Entity
 {
   private TexturedModel model;
   private Vector3f position;
-  private float rotX, rotY, rotZ;
+  private float rotX, rotY, rotZ; //expected in radians
   private float scale;
 
+  /**
+   * Defines an entity with a given model, position, rotation and scale.
+   *
+   * @param model
+   * @param position
+   * @param rotX
+   * @param rotY
+   * @param rotZ
+   * @param scale
+   */
   public Entity(TexturedModel model, Vector3f position, float rotX, float rotY,
       float rotZ, float scale)
   {
@@ -23,6 +38,13 @@ public class Entity
     this.scale = scale;
   }
 
+  /**
+   * Moves the object by the given amount
+   *
+   * @param dx
+   * @param dy
+   * @param dz
+   */
   public void translate(float dx, float dy, float dz)
   {
     this.position.x += dx;
@@ -31,6 +53,13 @@ public class Entity
 
   }
 
+  /**
+   * Rotates the object by the given amount
+   *
+   * @param dx
+   * @param dy
+   * @param dz
+   */
   public void rotatate(float dx, float dy, float dz)
   {
     this.rotX += dx;
@@ -39,6 +68,11 @@ public class Entity
 
   }
 
+  /**
+   * getters and setters
+   *
+   * @param / @return
+   */
   public float getScale()
   {
     return scale;
