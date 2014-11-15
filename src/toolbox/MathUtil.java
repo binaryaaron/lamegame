@@ -14,6 +14,7 @@ public class MathUtil
 
   /**
    * create a transformation matrix based on a vector, rotation, and scale
+   *
    * @param translation
    * @param rx
    * @param ry
@@ -41,6 +42,7 @@ public class MathUtil
 
   /**
    * Create a view matrix based on the camera's position and rotation
+   *
    * @param camera
    * @return
    */

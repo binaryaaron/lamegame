@@ -26,6 +26,7 @@ public class PlaneRenderer
 
   /**
    * Create a planeRenderer with a plane shader and a projection matrix
+   *
    * @param shader
    * @param projectionMatrix
    */
@@ -57,6 +58,7 @@ public class PlaneRenderer
 
   /**
    * Prepares terrains to be rendered
+   *
    * @param terrain
    */
   private void prepareTerrain(Plane terrain)
@@ -88,6 +90,7 @@ public class PlaneRenderer
 
   /**
    * Load a model matrix based on the terrain into the shader
+   *
    * @param terrain
    */
   private void loadModelMatrix(Plane terrain)

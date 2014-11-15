@@ -15,116 +15,127 @@ import renderEngine.*;
 import shaders.StaticShader;
 import textures.ModelTexture;
 
-public class MainGameLoop {
-	public static int nAsteroids = 70;
+public class MainGameLoop
+{
+  public static int nAsteroids = 70;
 
-	public static void main(String[] args) {
-		DisplayManager.createDisplay();
-		Loader loader= new Loader();
-		StaticShader shader = new StaticShader();
-		Renderer renderer =new Renderer(shader);
-		
+  public static void main(String[] args)
+  {
+    DisplayManager.createDisplay();
+    Loader loader = new Loader();
+    StaticShader shader = new StaticShader();
+    Renderer renderer = new Renderer(shader);
 
-		RawModel modelShip = OBJLoader.loadObjModel("SciFi_Fighter_MK-OBJ", loader);
-		RawModel modelAsteroid = OBJLoader.loadObjModel("Rock", loader);
-		RawModel stoneAsteroid = OBJLoader.loadObjModel("Rock", loader);
-		
-		ModelTexture asteroidTexture =new ModelTexture(loader.loadTexture("RockRed2"));
-		ModelTexture shipTexture =new ModelTexture(loader.loadTexture("SciFi_FighterMK_diffuse"));
-		ModelTexture stoneTexture =new ModelTexture(loader.loadTexture("stone_texture"));
-		
-		
-		
-		Entity[] asteroids=new Entity[nAsteroids];
-		Entity[] stones=new Entity[nAsteroids];
-		Vector3f[] asteroidRotation=new Vector3f[nAsteroids];
-		Vector3f[] asteroidMotion=new Vector3f[nAsteroids];
-		
-		
-		TexturedModel texturedModelAsteroid =new TexturedModel(modelAsteroid,asteroidTexture);
-		TexturedModel texturedModelStone =new TexturedModel(stoneAsteroid,stoneTexture);
-		TexturedModel texturedModelShip =new TexturedModel(modelShip,shipTexture);
-		
-		
-		Random rand=new Random();
-		
-		for(int i=0;i<nAsteroids;i++){
-			asteroids[i] = new Entity(texturedModelAsteroid,
-					new Vector3f((rand.nextFloat()-0.5f)*50,
-							(rand.nextFloat()-0.5f)*50,(rand.nextFloat()-0.5f)*50),
-							(rand.nextFloat()-0.5f),(rand.nextFloat()-0.5f),
-							(rand.nextFloat()-0.5f),(rand.nextFloat()+0.5f)*3);
-			
-			stones[i] = new Entity(texturedModelStone,
-					new Vector3f((rand.nextFloat()-0.5f)*50,
-							(rand.nextFloat()-0.5f)*50,(rand.nextFloat()-0.5f)*50),
-							(rand.nextFloat()-0.5f),(rand.nextFloat()-0.5f),
-							(rand.nextFloat()-0.5f),(rand.nextFloat()+0.5f));
-			
-			asteroidRotation[i]=new Vector3f((rand.nextFloat()-0.5f),
-					(rand.nextFloat()-0.5f),(rand.nextFloat()-0.5f));
-			asteroidMotion[i]=new Vector3f((rand.nextFloat()-0.5f)*0.02f,
-					(rand.nextFloat()-0.5f)*0.02f,(rand.nextFloat()-0.5f)*0.02f);
-			
-		}
-		
-		Entity ship= new Entity(texturedModelShip,new Vector3f(0f,-40f,-20f),0f,0f,0f,0.3f);
-		Light light =new Light(new Vector3f(10f,5f,2000f), new Vector3f(1.0f,1.0f,1.0f));
-		
-		Camera camera = new Camera();
-		
-		while(!Display.isCloseRequested()){
-			
-		for(int i=0;i<nAsteroids;i++){
-			Entity ass=asteroids[i];
-			Entity stone=stones[i];
-			Vector3f rot=asteroidRotation[i];
-			Vector3f mot=asteroidMotion[i];
-			
-			ass.rotatate(rot.x, rot.y, rot.z);
-			ass.translate(mot.x, mot.y, mot.z);
-			
-			stone.rotatate(rot.x, rot.y, rot.z);
-			stone.translate(mot.x, mot.y, mot.z);
-			
-			if(ass.getPosition().x>300||ass.getPosition().x<-300){
-				mot.x=-mot.x;
-				
-			}
+    RawModel modelShip = OBJLoader.loadObjModel("SciFi_Fighter_MK-OBJ", loader);
+    RawModel modelAsteroid = OBJLoader.loadObjModel("Rock", loader);
+    RawModel stoneAsteroid = OBJLoader.loadObjModel("Rock", loader);
 
-			if(ass.getPosition().y>300||ass.getPosition().y<-300){
-				mot.y=-mot.y;
-				
-			}
-			if(ass.getPosition().z>300||ass.getPosition().z<-300){
-				mot.y=-mot.y;
-				
-			}
-			
-		}
-			renderer.prepare();
-	
-			shader.start();
-			shader.loadLight(light);
-			shader.loadViewMatrix(camera);
-			camera.move();
-			
-			for(Entity ass: asteroids){
-			renderer.render(ass,shader);
-			}
-			for(Entity stone: stones){
-				renderer.render(stone,shader);
-				}
-			renderer.render(ship, shader);
-			
-			shader.stop();
-			
-			DisplayManager.updateDisplay();
-	
-	
-		}
-		shader.cleanUp();
-		loader.cleanUp();
-		DisplayManager.closeDisplay();
-	}
+    ModelTexture asteroidTexture = new ModelTexture(
+        loader.loadTexture("RockRed2"));
+    ModelTexture shipTexture = new ModelTexture(
+        loader.loadTexture("SciFi_FighterMK_diffuse"));
+    ModelTexture stoneTexture = new ModelTexture(
+        loader.loadTexture("stone_texture"));
+
+    Entity[] asteroids = new Entity[nAsteroids];
+    Entity[] stones = new Entity[nAsteroids];
+    Vector3f[] asteroidRotation = new Vector3f[nAsteroids];
+    Vector3f[] asteroidMotion = new Vector3f[nAsteroids];
+
+    TexturedModel texturedModelAsteroid = new TexturedModel(modelAsteroid,
+        asteroidTexture);
+    TexturedModel texturedModelStone = new TexturedModel(stoneAsteroid,
+        stoneTexture);
+    TexturedModel texturedModelShip = new TexturedModel(modelShip, shipTexture);
+
+    Random rand = new Random();
+
+    for (int i = 0; i < nAsteroids; i++)
+    {
+      asteroids[i] = new Entity(texturedModelAsteroid,
+          new Vector3f((rand.nextFloat() - 0.5f) * 50,
+              (rand.nextFloat() - 0.5f) * 50, (rand.nextFloat() - 0.5f) * 50),
+          (rand.nextFloat() - 0.5f), (rand.nextFloat() - 0.5f),
+          (rand.nextFloat() - 0.5f), (rand.nextFloat() + 0.5f) * 3);
+
+      stones[i] = new Entity(texturedModelStone,
+          new Vector3f((rand.nextFloat() - 0.5f) * 50,
+              (rand.nextFloat() - 0.5f) * 50, (rand.nextFloat() - 0.5f) * 50),
+          (rand.nextFloat() - 0.5f), (rand.nextFloat() - 0.5f),
+          (rand.nextFloat() - 0.5f), (rand.nextFloat() + 0.5f));
+
+      asteroidRotation[i] = new Vector3f((rand.nextFloat() - 0.5f),
+          (rand.nextFloat() - 0.5f), (rand.nextFloat() - 0.5f));
+      asteroidMotion[i] = new Vector3f((rand.nextFloat() - 0.5f) * 0.02f,
+          (rand.nextFloat() - 0.5f) * 0.02f, (rand.nextFloat() - 0.5f) * 0.02f);
+
+    }
+
+    Entity ship = new Entity(texturedModelShip, new Vector3f(0f, -40f, -20f),
+        0f, 0f, 0f, 0.3f);
+    Light light = new Light(new Vector3f(10f, 5f, 2000f),
+        new Vector3f(1.0f, 1.0f, 1.0f));
+
+    Camera camera = new Camera();
+
+    while (!Display.isCloseRequested())
+    {
+
+      for (int i = 0; i < nAsteroids; i++)
+      {
+        Entity ass = asteroids[i];
+        Entity stone = stones[i];
+        Vector3f rot = asteroidRotation[i];
+        Vector3f mot = asteroidMotion[i];
+
+        ass.rotatate(rot.x, rot.y, rot.z);
+        ass.translate(mot.x, mot.y, mot.z);
+
+        stone.rotatate(rot.x, rot.y, rot.z);
+        stone.translate(mot.x, mot.y, mot.z);
+
+        if (ass.getPosition().x > 300 || ass.getPosition().x < -300)
+        {
+          mot.x = -mot.x;
+
+        }
+
+        if (ass.getPosition().y > 300 || ass.getPosition().y < -300)
+        {
+          mot.y = -mot.y;
+
+        }
+        if (ass.getPosition().z > 300 || ass.getPosition().z < -300)
+        {
+          mot.y = -mot.y;
+
+        }
+
+      }
+      renderer.prepare();
+
+      shader.start();
+      shader.loadLight(light);
+      shader.loadViewMatrix(camera);
+      camera.move();
+
+      for (Entity ass : asteroids)
+      {
+        renderer.render(ass, shader);
+      }
+      for (Entity stone : stones)
+      {
+        renderer.render(stone, shader);
+      }
+      renderer.render(ship, shader);
+
+      shader.stop();
+
+      DisplayManager.updateDisplay();
+
+    }
+    shader.cleanUp();
+    loader.cleanUp();
+    DisplayManager.closeDisplay();
+  }
 }

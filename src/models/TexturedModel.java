@@ -13,6 +13,7 @@ public class TexturedModel
 
   /**
    * Create a texturedmodel
+   *
    * @param model
    * @param texture
    */
@@ -24,6 +25,7 @@ public class TexturedModel
 
   /**
    * getters and setters
+   *
    * @return / @param
    */
   public RawModel getRawModel()

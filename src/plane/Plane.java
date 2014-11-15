@@ -20,6 +20,7 @@ public class Plane
 
   /**
    * Create a new plane with a texture, position, and loader
+   *
    * @param gridX
    * @param gridZ
    * @param loader
@@ -36,6 +37,7 @@ public class Plane
 
   /**
    * Creates the terrain in the plane
+   *
    * @param loader
    * @return
    */
@@ -90,9 +92,10 @@ public class Plane
     }
     return loader.loadToVAO(vertices, textureCoords, normals, indices);
   }
-  
+
   /**
    * getters and setters
+   *
    * @return / @param
    */
   public RawModel getModel()

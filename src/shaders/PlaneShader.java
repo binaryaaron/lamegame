@@ -60,6 +60,7 @@ public class PlaneShader extends ShaderProgram
 
   /**
    * Pass shine damper and reflectivity into the shader
+   *
    * @param shineDamper
    * @param reflectivity
    */
@@ -71,6 +72,7 @@ public class PlaneShader extends ShaderProgram
 
   /**
    * Pass our transformation matrix into the shader
+   *
    * @param matrix
    */
   public void loadTransformationMatrix(Matrix4f matrix)
@@ -80,6 +82,7 @@ public class PlaneShader extends ShaderProgram
 
   /**
    * Pass our light color and light position into the shader
+   *
    * @param light
    */
   public void loadLight(Light light)
@@ -87,9 +90,10 @@ public class PlaneShader extends ShaderProgram
     super.loadVector(location_lightPosition, light.getPosition());
     super.loadVector(location_lightColor, light.getColor());
   }
-  
+
   /**
    * pass the shader a matrix based on our camera's position and rotation
+   *
    * @param camera
    */
   public void loadViewMatrix(Camera camera)
@@ -100,6 +104,7 @@ public class PlaneShader extends ShaderProgram
 
   /**
    * Pass the shader a projection matrix, a matrix based on our perspection
+   *
    * @param matrix
    */
   public void loadProjectionMatrix(Matrix4f matrix)

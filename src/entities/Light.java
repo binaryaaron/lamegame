@@ -12,9 +12,10 @@ public class Light
 {
   private Vector3f position;
   private Vector3f color;
-  
+
   /**
    * Create a light with this position and color
+   *
    * @param position
    * @param color
    */
@@ -24,11 +25,12 @@ public class Light
     this.position = position;
     this.color = color;
   }
-  
+
   /**
    * getters and setters
+   *
    * @param / @return
-   */ 
+   */
   public Vector3f getPosition()
   {
     return position;

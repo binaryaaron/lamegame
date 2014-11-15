@@ -11,11 +11,12 @@ public class ModelTexture
 
   //subdued effect
   private float shadeDamper = 1;
-  
+
   private float reflectivity = 0;
 
   /**
    * Getters and setters
+   *
    * @return / @return
    */
   public float getShadeDamper()

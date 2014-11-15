@@ -18,6 +18,7 @@ public class Entity
 
   /**
    * Defines an entity with a given model, position, rotation and scale.
+   *
    * @param model
    * @param position
    * @param rotX
@@ -37,9 +38,9 @@ public class Entity
     this.scale = scale;
   }
 
-
   /**
    * Moves the object by the given amount
+   *
    * @param dx
    * @param dy
    * @param dz
@@ -54,6 +55,7 @@ public class Entity
 
   /**
    * Rotates the object by the given amount
+   *
    * @param dx
    * @param dy
    * @param dz
@@ -66,9 +68,9 @@ public class Entity
 
   }
 
-
   /**
    * getters and setters
+   *
    * @param / @return
    */
   public float getScale()

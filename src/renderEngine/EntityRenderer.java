@@ -25,9 +25,10 @@ public class EntityRenderer
 {
 
   private StaticShader shader;
-  
+
   /**
    * Our renderer will use our shader and projection matrix to draw entities
+   *
    * @param shader
    * @param projectionMatrix
    */
@@ -42,7 +43,8 @@ public class EntityRenderer
   }
 
   /**
-   * For every entity, draw the entity with its corresponding model 
+   * For every entity, draw the entity with its corresponding model
+   *
    * @param entities
    */
   public void render(Map<TexturedModel, List<Entity>> entities)
@@ -65,6 +67,7 @@ public class EntityRenderer
 
   /**
    * Puts a model into the VAO and binds a texture to it
+   *
    * @param model
    */
   private void prepareTexturedModel(TexturedModel model)

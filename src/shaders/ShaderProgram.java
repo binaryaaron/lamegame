@@ -28,6 +28,7 @@ public abstract class ShaderProgram
   /**
    * Accepts one vertexShader and one fragmentShader file
    * Attaches the shaders and links them to the program
+   *
    * @param vertexFile
    * @param fragmentFile
    */
@@ -48,6 +49,7 @@ public abstract class ShaderProgram
 
   /**
    * Returns the location of the specified uniform matrix/vector
+   *
    * @param uniformName
    * @return
    */
@@ -90,6 +92,7 @@ public abstract class ShaderProgram
 
   /**
    * Bind the selected uniform location and matrix/vector data to the program
+   *
    * @param attribute
    * @param variableName
    */
@@ -103,6 +106,7 @@ public abstract class ShaderProgram
 
   /**
    * loads a float value into the VBO
+   *
    * @param location
    * @param value
    */
@@ -115,6 +119,7 @@ public abstract class ShaderProgram
 
   /**
    * loads a vector into the VBO
+   *
    * @param location
    * @param vector
    */
@@ -127,6 +132,7 @@ public abstract class ShaderProgram
 
   /**
    * loads a boolean into the VBO
+   *
    * @param location
    * @param value
    */
@@ -139,6 +145,7 @@ public abstract class ShaderProgram
 
   /**
    * Loads a matrix into the VBO
+   *
    * @param location
    * @param matrix
    */
@@ -152,6 +159,7 @@ public abstract class ShaderProgram
 
   /**
    * Creates a shader from a file and returns its ID
+   *
    * @param file
    * @param type
    * @return

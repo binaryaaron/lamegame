@@ -11,6 +11,7 @@ public class RawModel
 
   /**
    * RawModel creation
+   *
    * @param vaoIDin
    * @param vertexCountIn
    */
@@ -23,6 +24,7 @@ public class RawModel
 
   /**
    * Getters and setters
+   *
    * @return / @return
    */
   public int getVaoID()

@@ -18,7 +18,8 @@ public class TextDraw
   private int y;
   private Color color;
   private boolean antiAlias = false;
-  private static final Font awtFont = new Font("Times New Roman", Font.BOLD, 36);
+  private static final Font awtFont = new Font("Times New Roman", Font.BOLD,
+      36);
   private static TrueTypeFont font = new TrueTypeFont(awtFont, false);
 
   /**
@@ -33,7 +34,6 @@ public class TextDraw
     color = Color.black;
 
   }
-
 
   public void init()
   {
@@ -72,8 +72,10 @@ public class TextDraw
     // GL11.glDisable(GL11.GL_BLEND);
     GL11.glDrawBuffer(GL11.GL_FRONT_AND_BACK);
   }
+
   /**
    * Getters and setters
+   *
    * @return / @param
    */
   public String getText()

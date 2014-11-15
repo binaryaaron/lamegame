@@ -54,6 +54,7 @@ public class MasterRenderer
 
   /**
    * Renders a scene using the main light, camera position, and entities
+   *
    * @param sun
    * @param camera
    */
@@ -81,6 +82,7 @@ public class MasterRenderer
 
   /**
    * Add a terrain to terrain list
+   *
    * @param terrain
    */
   public void processTerrain(Plane terrain)
@@ -91,6 +93,7 @@ public class MasterRenderer
 
   /**
    * add an entity to the batch
+   *
    * @param entity
    */
   public void processEntity(Entity entity)
@@ -131,7 +134,8 @@ public class MasterRenderer
   {
     float aspectRatio = (float) Display.getWidth()
         / (float) Display.getHeight();
-    float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
+    float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f)))
+        * aspectRatio);
     float x_scale = y_scale / aspectRatio;
     float frustum_length = FAR_PLANE - NEAR_PLANE;
 
