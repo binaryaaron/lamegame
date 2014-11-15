@@ -1,3 +1,8 @@
+/**
+ * Thanks to youtube user ThinMatrix
+ * Master renderer controls the entity and plane renderer,
+ * and is responsible for rendering the final scene to be displayed
+ */
 package renderEngine;
 
 import java.util.ArrayList;
@@ -5,14 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.TexturedModel;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
 import plane.Plane;
-import shaders.StaticShader;
 import shaders.PlaneShader;
-import models.TexturedModel;
+import shaders.StaticShader;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -33,6 +39,9 @@ public class MasterRenderer
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
   private List<Plane> terrains = new ArrayList<>();
 
+  /**
+   * When the master renderer is created, create a projection matrix and renderers
+   */
   public MasterRenderer()
   {
     GL11.glEnable(GL11.GL_CULL_FACE);
@@ -43,6 +52,11 @@ public class MasterRenderer
     terrainRenderer = new PlaneRenderer(terrainShader, projectionMatrix);
   }
 
+  /**
+   * Renders a scene using the main light, camera position, and entities
+   * @param sun
+   * @param camera
+   */
   public void render(Light sun, Camera camera)
   {
 
@@ -65,12 +79,20 @@ public class MasterRenderer
     terrains.clear();
   }
 
+  /**
+   * Add a terrain to terrain list
+   * @param terrain
+   */
   public void processTerrain(Plane terrain)
   {
     terrains.add(terrain);
 
   }
 
+  /**
+   * add an entity to the batch
+   * @param entity
+   */
   public void processEntity(Entity entity)
   {
     TexturedModel entityModel = entity.getModel();
@@ -88,6 +110,9 @@ public class MasterRenderer
 
   }
 
+  /**
+   * Sets up a scene for rendering
+   */
   public void prepare()
   {
     GL11.glEnable(GL11.GL_BLEND);
@@ -98,6 +123,10 @@ public class MasterRenderer
 
   }
 
+  /**
+   * Creates the projection matrix. The projection matrix represents the user's
+   * field of view.
+   */
   private void createProjectionMatrix()
   {
     float aspectRatio = (float) Display.getWidth()
@@ -116,6 +145,9 @@ public class MasterRenderer
 
   }
 
+  /**
+   * cleans up excess memory in the shaders
+   */
   public void cleanUp()
   {
     shader.cleanUp();

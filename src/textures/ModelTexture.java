@@ -1,3 +1,7 @@
+/**
+ * Class that holds data about a texture
+ * Thanks to youtube user ThinMatrix
+ */
 package textures;
 
 public class ModelTexture
@@ -5,9 +9,15 @@ public class ModelTexture
 
   private int textureID;
 
+  //subdued effect
   private float shadeDamper = 1;
+  
   private float reflectivity = 0;
 
+  /**
+   * Getters and setters
+   * @return / @return
+   */
   public float getShadeDamper()
   {
     return shadeDamper;

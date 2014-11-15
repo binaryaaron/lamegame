@@ -1,19 +1,30 @@
+/**
+ * Thanks to youtube user ThinMatrix
+ * OBJLoader loads object models from a file using the loader class
+ */
 package renderEngine;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-
-import org.lwjgl.util.vector.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.RawModel;
+
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class OBJLoader
 {
 
+  /**
+   * Load an object model from a file
+   * @param fileName
+   * @param loader
+   * @return
+   */
   public static RawModel loadObjModel(String fileName, Loader loader)
   {
     FileReader fr = null;
@@ -132,6 +143,15 @@ public class OBJLoader
 
   }
 
+  /**
+   * Process a vertex and translate its data into arrays
+   * @param vertexData
+   * @param indices
+   * @param textures
+   * @param normals
+   * @param textureArray
+   * @param normalsArray
+   */
   private static void processVertex(String[] vertexData, List<Integer> indices,
       List<Vector2f> textures, List<Vector3f> normals, float[] textureArray,
       float[] normalsArray)

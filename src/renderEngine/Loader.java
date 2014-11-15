@@ -1,3 +1,7 @@
+/**
+ * Thanks to youtube user ThinMatrix
+ * loads data in and out of the VAO and VBO 
+ */
 package renderEngine;
 
 import java.io.FileInputStream;
@@ -5,7 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.RawModel;
 
@@ -14,7 +19,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -24,7 +28,14 @@ public class Loader
   private List<Integer> vbos = new ArrayList<>();
   private List<Integer> textures = new ArrayList<>();
 
-  // creates a raw model to draw
+  /**
+   * creates a raw model to draw
+   * @param positions
+   * @param textureCoords
+   * @param normals
+   * @param indices
+   * @return
+   */
   public RawModel loadToVAO(float[] positions, float[] textureCoords,
       float[] normals, int[] indices)
   {
@@ -41,6 +52,11 @@ public class Loader
 
   }
 
+  /**
+   * store a texture from a file into a texture-ID ArrayList
+   * @param fileName
+   * @return
+   */
   public int loadTexture(String fileName)
   {
     Texture texture = null;
@@ -65,7 +81,10 @@ public class Loader
 
   }
 
-  // retruns the ID of a new vao objcet
+  /**
+   *  returns the ID of a new VAO object
+   * @return
+   */
   private int createVAO()
   {
     int vaoID = GL30.glGenVertexArrays();
@@ -74,7 +93,9 @@ public class Loader
 
   }
 
-  // clear excess memory
+  /**
+   *  Clear excess memory
+   */
   public void cleanUp()
   {
     for (int vao : vaos)
@@ -95,7 +116,12 @@ public class Loader
 
   }
 
-  // adds vbo to attribute number in bound vao
+  /**
+   *  adds VBO to attribute number in bound VAO
+   * @param attributeNumber
+   * @param coordinateSize
+   * @param data
+   */
   private void storeDataInAttrributeList(int attributeNumber,
       int coordinateSize, float[] data)
   {
@@ -109,13 +135,20 @@ public class Loader
     GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
   }
-
+  
+  /**
+   * Puts an empty stream into the VAO, effectively unbinding it
+   */
   private void unbindVAO()
   {
     GL30.glBindVertexArray(0);
 
   }
 
+  /**
+   * bind the triangle indices to the VBO
+   * @param indices
+   */
   private void bindIndicesBuffer(int[] indices)
   {
     int vboID = GL15.glGenBuffers();
@@ -124,7 +157,12 @@ public class Loader
     IntBuffer buffer = storeDataInIntBuffer(indices);
     GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
   }
-
+  
+  /**
+   *  puts array of ints into a int buffer
+   * @param data
+   * @return
+   */
   private IntBuffer storeDataInIntBuffer(int[] data)
   {
     IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
@@ -134,7 +172,11 @@ public class Loader
 
   }
 
-  // puts array of floats into a float buffer
+  /**
+   *  puts array of floats into a float buffer
+   * @param data
+   * @return
+   */
   private FloatBuffer storeDataInFloatBuffer(float[] data)
   {
     FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);

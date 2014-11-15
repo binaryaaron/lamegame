@@ -1,3 +1,9 @@
+/*** 
+ * Thanks to youtube user ThinMatrix
+ * Generates board and fills it with objects, such as asteroids and ships.
+ * Updates the position of the objects and camera.
+ * Updates the GUI
+ */
 package engineTester;
 
 import java.util.Random;
@@ -10,13 +16,17 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import plane.Plane;
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
-import renderEngine.*;
+import renderEngine.DisplayManager;
+import renderEngine.Loader;
+import renderEngine.MasterRenderer;
+import renderEngine.OBJLoader;
+import renderEngine.TextDraw;
 import shaders.StaticShader;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
 
 public class MainGameLoop
 {
@@ -30,7 +40,7 @@ public class MainGameLoop
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     StaticShader shader = new StaticShader();
-
+    // Renderer renderer =new Renderer(shader);
     RawModel modelShip = OBJLoader.loadObjModel("SkyBox", loader);
     RawModel modelAsteroid = OBJLoader.loadObjModel("Rock", loader);
     RawModel stoneAsteroid = OBJLoader.loadObjModel("Rock", loader);
@@ -60,6 +70,7 @@ public class MainGameLoop
     // if(PRINT_FPS)textDraw.init();
     Random rand = new Random();
 
+    /* create asteroids with random positions and velocity direction*/
     for (int i = 0; i < nAsteroids; i++)
     {
       asteroids[i] = new Entity(texturedModelAsteroid, new Vector3f(
@@ -80,7 +91,7 @@ public class MainGameLoop
           (rand.nextFloat() - 0.5f) * 0.02f, (rand.nextFloat() - 0.5f) * 0.02f);
 
     }
-
+    /* load the ship in front of the camera */
     Entity ship = new Entity(texturedModelShip, new Vector3f(0f, 0f, -20f), 0f,
         0f, 0f, 3f);
     Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
@@ -98,9 +109,11 @@ public class MainGameLoop
     {
       pu.startFrameCounter();
     }
+    /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
 
+      /* rotate and move each asteroid */
       for (int i = 0; i < nAsteroids; i++)
       {
         Entity ass = asteroids[i];
@@ -113,7 +126,7 @@ public class MainGameLoop
 
         stone.rotatate(rot.x, rot.y, rot.z);
         stone.translate(mot.x, mot.y, mot.z);
-
+        /* reverse an asteroid's direction if they reach the bounds of the field */
         if (ass.getPosition().x > 300 || ass.getPosition().x < -300)
         {
           mot.x = -mot.x;
@@ -134,7 +147,7 @@ public class MainGameLoop
       }
 
       camera.move();
-
+      /* render each asteroid/stone */
       for (Entity ass : asteroids)
       {
         renderer.processEntity(ass);

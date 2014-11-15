@@ -1,3 +1,7 @@
+/**
+ * Thanks to youtube user ThinMatrix
+ * Responsible for rendering planes
+ */
 package renderEngine;
 
 import java.util.List;
@@ -20,6 +24,11 @@ public class PlaneRenderer
 {
   private PlaneShader shader;
 
+  /**
+   * Create a planeRenderer with a plane shader and a projection matrix
+   * @param shader
+   * @param projectionMatrix
+   */
   public PlaneRenderer(PlaneShader shader, Matrix4f projectionMatrix)
   {
     this.shader = shader;
@@ -29,6 +38,9 @@ public class PlaneRenderer
 
   }
 
+  /*
+   * Render each plane
+   */
   public void render(List<Plane> terrains)
   {
     for (Plane terrain : terrains)
@@ -43,6 +55,10 @@ public class PlaneRenderer
 
   }
 
+  /**
+   * Prepares terrains to be rendered
+   * @param terrain
+   */
   private void prepareTerrain(Plane terrain)
   {
     RawModel rawModel = terrain.getModel();
@@ -59,6 +75,9 @@ public class PlaneRenderer
     GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
   }
 
+  /**
+   * Unbinds terrains
+   */
   private void unbindTexturedModel()
   {
     GL20.glDisableVertexAttribArray(0);
@@ -67,6 +86,10 @@ public class PlaneRenderer
     GL30.glBindVertexArray(0);
   }
 
+  /**
+   * Load a model matrix based on the terrain into the shader
+   * @param terrain
+   */
   private void loadModelMatrix(Plane terrain)
   {
     Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(

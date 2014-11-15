@@ -1,13 +1,17 @@
+/**
+ * Thanks to youtube user ThinMatrix
+ * Generic renderer class
+ */
 package renderEngine;
 
 import models.RawModel;
 import models.TexturedModel;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 import shaders.StaticShader;
@@ -31,6 +35,10 @@ public class Renderer
 
   }
 
+  /**
+   * Create a renderer based on a shader
+   * @param shader
+   */
   public Renderer(StaticShader shader)
   {
     createProjectionMatrix();
@@ -40,6 +48,11 @@ public class Renderer
 
   }
 
+  /**
+   * Render each model/texture
+   * @param entity
+   * @param shader
+   */
   public void render(Entity entity, StaticShader shader)
   {
     TexturedModel model = entity.getModel();
@@ -69,6 +82,9 @@ public class Renderer
     GL30.glBindVertexArray(0);
   }
 
+  /**
+   * Create a projection matrix based on the user's view
+   */
   private void createProjectionMatrix()
   {
     float aspectRatio = (float) Display.getWidth()
