@@ -1,3 +1,7 @@
+/**
+ * Tools for creating matrices
+ * Thanks to youtube user ThinMatrix
+ */
 package toolbox;
 
 import org.lwjgl.util.vector.Matrix4f;
@@ -8,6 +12,15 @@ import entities.Camera;
 public class MathUtil
 {
 
+  /**
+   * create a transformation matrix based on a vector, rotation, and scale
+   * @param translation
+   * @param rx
+   * @param ry
+   * @param rz
+   * @param scale
+   * @return
+   */
   public static Matrix4f createTransformationMatrix(Vector3f translation,
       float rx, float ry, float rz, float scale)
   {
@@ -26,6 +39,11 @@ public class MathUtil
     return matrix;
   }
 
+  /**
+   * Create a view matrix based on the camera's position and rotation
+   * @param camera
+   * @return
+   */
   public static Matrix4f createViewMatrix(Camera camera)
   {
 

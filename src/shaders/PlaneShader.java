@@ -1,6 +1,7 @@
 /**
- * In charge of reading in data to the shader
  * Thanks to youtube user ThinMatrix
+ * In charge of reading in plane data to the shader
+ * Similar to StaticShader
  */
 package shaders;
 
@@ -10,11 +11,11 @@ import toolbox.MathUtil;
 import entities.Camera;
 import entities.Light;
 
-public class StaticShader extends ShaderProgram
+public class PlaneShader extends ShaderProgram
 {
 
-  private static final String VERTEX_FILE = "src/shaders/vertexShader.txt";
-  private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.txt";
+  private static final String VERTEX_FILE = "src/shaders/planeVertexShader.txt";
+  private static final String FRAGMENT_FILE = "src/shaders/planeFragmentShader.txt";
 
   private int location_TransformationMatrix;
   private int location_ProjectionMatrix;
@@ -24,7 +25,7 @@ public class StaticShader extends ShaderProgram
   private int location_shineDamper;
   private int location_reflectivity;
 
-  public StaticShader()
+  public PlaneShader()
   {
     super(VERTEX_FILE, FRAGMENT_FILE);
   }
@@ -85,7 +86,6 @@ public class StaticShader extends ShaderProgram
   {
     super.loadVector(location_lightPosition, light.getPosition());
     super.loadVector(location_lightColor, light.getColor());
-
   }
   
   /**
