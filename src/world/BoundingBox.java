@@ -49,6 +49,21 @@ public class BoundingBox implements Box
   }
 
   /**
+   * Check if the box contains this box
+   * @param box box to check
+   * @return true if contains false otherwise
+   */
+  @Override public boolean contains(Box box)
+  {
+    Vector3f boxMin = box.getMin();
+    Vector3f boxMax = box.getMax();
+
+    return min.x <= boxMin.x && max.x >= boxMax.x &&
+        min.y <= boxMin.y && max.y >= boxMax.y &&
+        min.z <= boxMin.z && max.z >= boxMax.z;
+  }
+
+  /**
    * Dimensions of the object
    *
    * @return x, y, z

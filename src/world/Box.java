@@ -18,6 +18,13 @@ public interface Box
   public boolean contains(Vector3f point);
 
   /**
+   * Check if the box contains this box
+   * @param box box to check
+   * @return true if contains false otherwise
+   */
+  public boolean contains(Box box);
+
+  /**
    * Dimensions of the object
    * @return x,y,z
    */
