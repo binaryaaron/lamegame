@@ -54,4 +54,9 @@ public class BoxUtilitiesTest extends TestCase
     assertTrue(BoxUtilities.collision(b1, b6));
     assertTrue(BoxUtilities.collision(b6, b1));
   }
+
+  public void testCreateBoundingBoxFromVertices() throws Exception
+  {
+
+  }
 }

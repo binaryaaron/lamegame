@@ -9,6 +9,14 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public interface Box
 {
+
+  /**
+   * Check if the box contains this point
+   * @param point point to check
+   * @return true if contains false otherwise
+   */
+  public boolean contains(Vector3f point);
+
   /**
    * Dimensions of the object
    * @return x,y,z
@@ -74,4 +82,10 @@ public interface Box
    * @param max x,y,z
    */
   public void setMax(Vector3f max);
+
+  /**
+   * Translate the box in space by trans
+   * @param trans x,y,z
+   */
+  public void translate(Vector3f trans);
 }

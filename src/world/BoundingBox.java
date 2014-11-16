@@ -36,6 +36,19 @@ public class BoundingBox implements Box
   }
 
   /**
+   * Check if the box contains this point
+   *
+   * @param point point to check
+   * @return true if contains false otherwise
+   */
+  @Override public boolean contains(Vector3f point)
+  {
+    return point.x >= min.x && point.x <= max.x &&
+        point.y >= min.y && point.y <= max.y &&
+        point.z >= min.z && point.z <= max.z;
+  }
+
+  /**
    * Dimensions of the object
    *
    * @return x, y, z
@@ -145,6 +158,18 @@ public class BoundingBox implements Box
   {
     this.max = max;
     updateCenter();
+  }
+
+  /**
+   * Translate the box in space by trans
+   *
+   * @param trans x,y,z
+   */
+  @Override public void translate(Vector3f trans)
+  {
+    min.translate(trans.x, trans.y, trans.z);
+    max.translate(trans.x, trans.y, trans.z);
+    center.translate(trans.x, trans.y, trans.z);
   }
 
 }

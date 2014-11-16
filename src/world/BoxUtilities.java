@@ -1,6 +1,5 @@
 package world;
 
-import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -27,48 +26,28 @@ public class BoxUtilities
   }
 
   /**
-   * Some simple tests that should be expanded on
+   * Utility method to create a bounding box from vertices, slow
+   * @param vertices vertices of an object
+   * @return the bounding box for that object
    */
-  public static void checkCollision()
+  public static BoundingBox createBoundingBoxFromVertices(Vector3f[] vertices)
   {
-    Vector3f min = new Vector3f(0f, 0f, 0f);
-    Vector3f max = new Vector3f(5f,5f,5f);
+    Vector3f first = vertices[0];
+    Vector3f min = new Vector3f(first.x, first.y, first.z);
+    Vector3f max = new Vector3f(first.x, first.y, first.z);
 
-    Box b1 = new BoundingBox(min, max);
-    Box b2 = new BoundingBox(new Vector3f(-5f, -5f, -5f), min);
+    // Brute force search
+    for (Vector3f vec : vertices)
+    {
+      min.x = vec.x < min.x ? vec.x : min.x;
+      min.y = vec.y < min.y ? vec.y : min.y;
+      min.z = vec.z < min.z ? vec.z : min.z;
+      max.x = vec.x > max.x ? vec.x : max.x;
+      max.x = vec.y > max.y ? vec.y : max.y;
+      max.x = vec.z > max.z ? vec.z : max.z;
+    }
 
-    // Should be true
-    System.out.println(collision(b1, b1));
-    System.out.println(collision(b2, b2));
-
-    // Should be false
-    System.out.println(collision(b1, b2));
-    System.out.println(collision(b2, b1));
-
-    Box b3 = new BoundingBox(new Vector3f(4f,5f,5f), new Vector3f(8f,8f,8f));
-    // Should be false;
-    System.out.println(collision(b1,b3));
-    System.out.println(collision(b3, b1));
-
-    Box b4 = new BoundingBox(new Vector3f(5f,4f,5f), new Vector3f(8f,8f,8f));
-    // Should be false;
-    System.out.println(collision(b1,b4));
-    System.out.println(collision(b4, b1));
-
-    Box b5 = new BoundingBox(new Vector3f(5f,5f,4f), new Vector3f(8f,8f,8f));
-    // Should be false;
-    System.out.println(collision(b1,b5));
-    System.out.println(collision(b5, b1));
-
-    Box b6 = new BoundingBox(new Vector3f(4f,4f,4f), new Vector3f(8f,8f,8f));
-    // Should be true
-    System.out.println(collision(b1, b6));
-    System.out.println(collision(b6, b1));
-  }
-
-  public static void main(String[] args)
-  {
-    checkCollision();
+    return new BoundingBox(min, max);
   }
 
 }
