@@ -1,4 +1,4 @@
-package server
+package server;
 
 import java.awt.Point;
 import java.io.Serializable;

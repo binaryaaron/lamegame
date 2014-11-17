@@ -1,6 +1,9 @@
 package server;
 
+import org.lwjgl.MemoryUtil;
+
 import java.awt.Point;
+
 import java.awt.image.ReplicateScaleFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -67,7 +70,7 @@ public class WalkerThread extends Thread
         allPackageList.addFirst(myServerPackage);
         // outToClient.writeObject(allPackageList);
         if(printclients)System.out.println("hosts connected: "+allPackageList.size());
-        System.out.println("size of allPackageList"+MemoryUtil.shallowSizeOf(allPackageList));
+        System.out.println("size of allPackageList"+ server.MemoryUtil.shallowSizeOf(allPackageList));
         outToClient.writeUnshared(allPackageList);
 
         loop++;
