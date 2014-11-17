@@ -21,6 +21,8 @@ public class PlayerObjectTest
 
   @After public void tearDown() throws Exception
   {
+    p1 = null;
+    p2 = null;
   }
 
   @Test public void testGetHealth() throws Exception
@@ -68,7 +70,6 @@ public class PlayerObjectTest
   {
     assertTrue(p1.getPlayerId() == 1);
     assertTrue(p2.getPlayerId() == 2);
-
   }
 
   @Test public void testCompareTo() throws Exception
