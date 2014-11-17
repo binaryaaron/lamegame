@@ -16,8 +16,8 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
   private Vector3f velocity = new Vector3f();
   private Vector3f accel = new Vector3f();
   private Boolean model = false;
-  private static byte PLAYER_COUNT = 0;
-  private final byte playerId;
+  private static short PLAYER_COUNT = 0;
+  private final short playerId;
   private Boolean alive = true;
   private Boolean playing = true;
   private static Boolean DEBUG = true;
@@ -42,8 +42,8 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
     }
     this.velocity.set(0,0,0);
     this.accel.set(0,0,0);
-    this.playerId = PLAYER_COUNT;
     PLAYER_COUNT++;
+    this.playerId = PLAYER_COUNT;
   }
 
   /**
@@ -177,7 +177,7 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
     this.alive = alive;
   }
 
-  @Override public byte getPlayerId()
+  @Override public short getPlayerId()
   {
     return playerId;
   }

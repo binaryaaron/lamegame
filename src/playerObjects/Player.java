@@ -82,7 +82,7 @@ public interface Player
    */
   void setAlive(Boolean alive);
 
-  byte getPlayerId();
+  short getPlayerId();
 
   /**
    * Gets the status of the player - are they playing the game? logging off?
