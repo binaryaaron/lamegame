@@ -16,7 +16,7 @@ public class Picture extends JFrame
   public static final String VERSION = "Picture Version 2013.2.14";
 
   private int imageWidth, imageHeight;
-  private BufferedImage userImage;
+  public BufferedImage userImage;
   private int insideLeft, insideTop;
 
   //Constructor to create an empty picture of a specified inside size
