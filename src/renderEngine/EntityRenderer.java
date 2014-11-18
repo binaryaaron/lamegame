@@ -1,7 +1,3 @@
-/**
- * Thanks to youtube user ThinMatrix
- * Responsible for drawing models onto the display
- */
 package renderEngine;
 
 import java.util.List;
@@ -25,12 +21,7 @@ public class EntityRenderer
 {
 
   private StaticShader shader;
-  
-  /**
-   * Our renderer will use our shader and projection matrix to draw entities
-   * @param shader
-   * @param projectionMatrix
-   */
+
   public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix)
   {
     this.shader = shader;
@@ -41,10 +32,6 @@ public class EntityRenderer
 
   }
 
-  /**
-   * For every entity, draw the entity with its corresponding model 
-   * @param entities
-   */
   public void render(Map<TexturedModel, List<Entity>> entities)
   {
     for (TexturedModel model : entities.keySet())
@@ -63,10 +50,6 @@ public class EntityRenderer
 
   }
 
-  /**
-   * Puts a model into the VAO and binds a texture to it
-   * @param model
-   */
   private void prepareTexturedModel(TexturedModel model)
   {
     RawModel rawModel = model.getRawModel();
@@ -83,9 +66,6 @@ public class EntityRenderer
     GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
   }
 
-  /**
-   * Unbinds a model and its texture
-   */
   private void unbindTexturedModel()
   {
     GL20.glDisableVertexAttribArray(0);
@@ -102,4 +82,5 @@ public class EntityRenderer
     shader.loadTransformationMatrix(transformationMatrix);
 
   }
+
 }

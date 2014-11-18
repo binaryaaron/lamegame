@@ -40,7 +40,8 @@ public class MasterRenderer
   private List<Plane> terrains = new ArrayList<>();
 
   /**
-   * When the master renderer is created, create a projection matrix and renderers
+   * When the master renderer is created, create a projection matrix and
+   * renderers
    */
   public MasterRenderer()
   {
@@ -54,6 +55,7 @@ public class MasterRenderer
 
   /**
    * Renders a scene using the main light, camera position, and entities
+   * 
    * @param sun
    * @param camera
    */
@@ -81,6 +83,7 @@ public class MasterRenderer
 
   /**
    * Add a terrain to terrain list
+   * 
    * @param terrain
    */
   public void processTerrain(Plane terrain)
@@ -91,6 +94,7 @@ public class MasterRenderer
 
   /**
    * add an entity to the batch
+   * 
    * @param entity
    */
   public void processEntity(Entity entity)

@@ -31,8 +31,8 @@ import entities.Light;
 public class MainGameLoop
 {
 
-  public final static boolean PRINT_FPS = true;
-  public static int nAsteroids = 0;
+  public final static boolean PRINT_FPS = false;
+  public static int nAsteroids = 50;
 
   public static void main(String[] args)
   {
@@ -41,13 +41,15 @@ public class MainGameLoop
     Loader loader = new Loader();
     StaticShader shader = new StaticShader();
     // Renderer renderer =new Renderer(shader);
-    RawModel modelShip = OBJLoader.loadObjModel("SkyBox", loader);
-    RawModel modelAsteroid = OBJLoader.loadObjModel("Rock", loader);
-    RawModel stoneAsteroid = OBJLoader.loadObjModel("Rock", loader);
+    RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
+    RawModel modelAsteroid = OBJLoader.loadObjModel("Rock", loader, false);
+    RawModel stoneAsteroid = OBJLoader.loadObjModel("Rock", loader, false);
+
+    ModelTexture shipTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
 
     ModelTexture asteroidTexture = new ModelTexture(
         loader.loadTexture("RockRed2"));
-    ModelTexture shipTexture = new ModelTexture(loader.loadTexture("RockRed2"));
+
     ModelTexture stoneTexture = new ModelTexture(
         loader.loadTexture("stone_texture"));
 
@@ -60,7 +62,7 @@ public class MainGameLoop
         asteroidTexture);
     TexturedModel texturedModelStone = new TexturedModel(stoneAsteroid,
         stoneTexture);
-    TexturedModel texturedModelShip = new TexturedModel(modelShip, shipTexture);
+    TexturedModel texturedSkyBox = new TexturedModel(skyBox, shipTexture);
 
     texturedModelStone.getTexture().setReflectivity(1);
     texturedModelStone.getTexture().setShadeDamper(10);
@@ -70,7 +72,7 @@ public class MainGameLoop
     // if(PRINT_FPS)textDraw.init();
     Random rand = new Random();
 
-    /* create asteroids with random positions and velocity direction*/
+    /* create asteroids with random positions and velocity direction */
     for (int i = 0; i < nAsteroids; i++)
     {
       asteroids[i] = new Entity(texturedModelAsteroid, new Vector3f(
@@ -92,15 +94,15 @@ public class MainGameLoop
 
     }
     /* load the ship in front of the camera */
-    Entity ship = new Entity(texturedModelShip, new Vector3f(0f, 0f, -20f), 0f,
-        0f, 0f, 3f);
+    Entity skyBoxEntity = new Entity(texturedSkyBox,
+        new Vector3f(0f, 0f, -40f), 0f, 0f, 0f, 500f);
     Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
         1.0f, 1.0f));
 
-    Plane terrain = new Plane(-1, -1, loader, new ModelTexture(
-        loader.loadTexture("stone_texture")));
-    Plane terrain2 = new Plane(0, -1, loader, new ModelTexture(
-        loader.loadTexture("stone_texture")));
+    // Plane terrain = new Plane(-1, -1, loader, new ModelTexture(
+    // loader.loadTexture("stone_texture")));
+    // Plane terrain2 = new Plane(0, -1, loader, new ModelTexture(
+    // loader.loadTexture("stone_texture")));
 
     Camera camera = new Camera();
     MasterRenderer renderer = new MasterRenderer();
@@ -151,6 +153,7 @@ public class MainGameLoop
       for (Entity ass : asteroids)
       {
         renderer.processEntity(ass);
+
       }
       for (Entity stone : stones)
       {
@@ -167,29 +170,28 @@ public class MainGameLoop
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_UP))
       {
-        ship.rotatate(0.2f, 0.0f, 0f);
+        skyBoxEntity.rotatate(0.2f, 0.0f, 0f);
       }
 
       if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
       {
-        ship.rotatate(-0.2f, 0.0f, 0f);
+        skyBoxEntity.rotatate(-0.2f, 0.0f, 0f);
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
       {
-        ship.rotatate(0.0f, 0.2f, 0f);
+        skyBoxEntity.rotatate(0.0f, 0.2f, 0f);
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
       {
-        ship.rotatate(0.0f, -0.2f, 0f);
+        skyBoxEntity.rotatate(0.0f, -0.2f, 0f);
       }
 
-      renderer.processEntity(ship);
+      renderer.processEntity(skyBoxEntity);
       renderer.render(light, camera);
-
       // if(pu.getFPS()!=textDraw.fps){
-      //textDraw.setText(Integer.toString(pu.getFPS()));
+      // textDraw.setText(Integer.toString(pu.getFPS()));
       // textDraw.fps=pu.getFPS();
-      //textDraw.render();
+      // textDraw.render();
       // }
 
       DisplayManager.updateDisplay();
