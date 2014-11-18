@@ -1,9 +1,12 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.AllPermission;
@@ -18,13 +21,14 @@ public class WalkerClient
   public static String hostName="Manticore";
   public static int socketVal=4444;
   
-  public  ServerPackage myServerPackage=null;
-  private static LinkedList<ServerPackage> allPackageList=new LinkedList<>();
-  
-  private static Point location=new Point(1, 1);
   private final  int xBound=500;
   private final  int yBound=500;
-  private int myID;
+  
+  private Point reqLocation = null;//requested location from client
+  private Point currLocation= null;
+  private String playerLocations;
+  String outputS;
+  private LinkedList<Point> playerLocList=new LinkedList<>();
 
   public static void main(String[] args) throws IOException
   {
@@ -41,8 +45,9 @@ public class WalkerClient
     //TODO consider adding an ID number to each instance of Client
     Random rand=new Random();
     Socket mySocket=null;
-    ObjectOutputStream outToServer=null;
-    ObjectInputStream inFromServer=null;
+    PrintWriter out=null;
+    BufferedReader in=null;
+    
     if(args.length>0)
     {
       hostName=args[0];
@@ -51,8 +56,8 @@ public class WalkerClient
     try
     {
       mySocket=new Socket(hostName, socketVal);
-      outToServer=new ObjectOutputStream(mySocket.getOutputStream());
-      inFromServer=new ObjectInputStream(mySocket.getInputStream());
+      out=new PrintWriter(mySocket.getOutputStream(), true);
+      in=new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
     } catch (UnknownHostException e)
     {
       System.err.println("Don't know about host: "+hostName);
@@ -64,68 +69,60 @@ public class WalkerClient
     }
     
     //initialize ServerPackage
-    boolean firstPackage=true;
     Point startPoint=new Point(255,255);
-    myServerPackage=new ServerPackage(-1);//-1 represents unknown ID number
-    myServerPackage.currentP=startPoint;
-    outToServer.writeObject(myServerPackage);
+    outputS=StringUtility.pointToString(startPoint);
+    out.println(outputS);
+    
     try
     {
-      while((allPackageList=(LinkedList<ServerPackage>) inFromServer.readObject())!=null)
+      while((playerLocations=in.readLine())!=null)
       {
         final long startTime = System.currentTimeMillis();
-        if(firstPackage)//get ID from first Package
-        {
-          myID=allPackageList.getFirst().PACKID;
-          firstPackage=false;
+        currLocation=StringUtility.stringToPoint(playerLocations);
+        playerLocations=StringUtility.popString(playerLocations);
+        
+        if(printlocation)System.out.println("Server:("+currLocation.x+","+currLocation.y+")");
+        
+        playerLocList.clear();
+        while(playerLocations.length()>0)
+        {          
+          Point p = StringUtility.stringToPoint(playerLocations);
+          playerLocations=StringUtility.popString(playerLocations);
+          playerLocList.add(p);
         }
-        myServerPackage=allPackageList.getFirst();
-        location.x=myServerPackage.currentP.x;
-        location.y=myServerPackage.currentP.y;
-        if(printlocation)System.out.println("Server:("+location.x+","+location.y+")");
         
         //////////draw map        
         //other players
-        for (ServerPackage sp : allPackageList)
+        for(Point p:playerLocList)
         {
-          System.out.println("elements to draw: " + allPackageList.size());
-//          if(sp.PACKID==myID)break;//don't redraw current player
-          Point point = sp.currentP;
           myGraphics.setColor(Color.GREEN);
-          myGraphics.fillRect(point.x - 1, point.y - 1, 3, 3);
+          myGraphics.fillRect(p.x - 1, p.y - 1, 3, 3);
           myGraphics.setColor(Color.RED);
-          myGraphics.fillRect(point.x, point.y, 1, 1);
+          myGraphics.fillRect(p.x, p.y, 1, 1);
         }
-      //this player
+        //this player
         myGraphics.setColor(Color.DARK_GRAY);
-        myGraphics.fillRect(location.x-1, location.y-1, 3, 3);
+        myGraphics.fillRect(currLocation.x-1, currLocation.y-1, 3, 3);
         myGraphics.setColor(Color.CYAN);
-        myGraphics.fillRect(location.x, location.y, 1, 1);
+        myGraphics.fillRect(currLocation.x, currLocation.y, 1, 1);
         myPicture.repaint();
         ////
         
         int xStep=rand.nextInt(3)-1;//create new random x/y steps of -1,0, or 1
         int yStep=rand.nextInt(3)-1;
-        Point newLoc=new Point(location.x+xStep,location.y+yStep);//add steps to new point
-        myServerPackage.prevP.x=myServerPackage.currentP.x;//pass currentP to prevP
-        myServerPackage.prevP.y=myServerPackage.currentP.y;
-        myServerPackage.currentP.x=newLoc.x;//update currentP
-        myServerPackage.currentP.y=newLoc.y;
+        reqLocation=new Point(currLocation.x+xStep,currLocation.y+yStep);//add steps to new point
+        outputS=StringUtility.pointToString(reqLocation);
         
-        outToServer.writeUnshared(myServerPackage);
-//        outToServer.reset();
+        out.println(outputS);
         final long endTime=System.currentTimeMillis();
         System.out.println("Total execution time: "+(endTime-startTime));
       }
     } catch (NumberFormatException e)
     {
       e.printStackTrace();
-    } catch (ClassNotFoundException e)
-    {
-      e.printStackTrace();
     }
-    outToServer.close();
-    inFromServer.close();
+    out.close();
+    in.close();
     mySocket.close();
   }
 }
