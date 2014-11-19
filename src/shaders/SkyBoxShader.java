@@ -6,10 +6,10 @@ import toolbox.MathUtil;
 import entities.Camera;
 import entities.Light;
 
-public class PlaneShader extends ShaderProgram{
+public class SkyBoxShader extends ShaderProgram{
 
-	private static final String VERTEX_FILE="src/shaders/planeVertexShader.txt";
-	private static final String FRAGMENT_FILE="src/shaders/planeFragmentShader.txt";
+	private static final String VERTEX_FILE="src/shaders/skyVertexShader.txt";
+	private static final String FRAGMENT_FILE="src/shaders/skyFragmentShader.txt";
 	
 	private int location_TransformationMatrix;
 	private int location_ProjectionMatrix;
@@ -19,7 +19,7 @@ public class PlaneShader extends ShaderProgram{
 	private int location_shineDamper;
 	private int location_reflectivity;	
 	
-	public PlaneShader(){
+	public SkyBoxShader(){
 		super(VERTEX_FILE, FRAGMENT_FILE);
 		
 	}

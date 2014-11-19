@@ -15,23 +15,27 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import plane.Plane;
-import shaders.PlaneShader;
+import entities.Camera;
+import shaders.SkyBoxShader;
+import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.MathUtil;
 
-public class PlaneRenderer
+public class SkyBoxRenderer
 {
-  private PlaneShader shader;
+  private SkyBoxShader shader;
+  private Camera camera;
 
   /**
    * Create a planeRenderer with a plane shader and a projection matrix
    * @param shader
    * @param projectionMatrix
    */
-  public PlaneRenderer(PlaneShader shader, Matrix4f projectionMatrix)
+  public SkyBoxRenderer(SkyBoxShader shader, Matrix4f projectionMatrix,Camera camera)
   {
     this.shader = shader;
+    this.camera=camera;
+    
     shader.start();
     shader.loadProjectionMatrix(projectionMatrix);
     shader.stop();
@@ -41,17 +45,16 @@ public class PlaneRenderer
   /*
    * Render each plane
    */
-  public void render(List<Plane> terrains)
+  public void render(SkyBox sky)
   {
-    for (Plane terrain : terrains)
-    {
-      prepareTerrain(terrain);
-      loadModelMatrix(terrain);
-      GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel()
+    
+      prepareTerrain(sky);
+      loadModelMatrix(sky);
+      GL11.glDrawElements(GL11.GL_TRIANGLES, sky.getModel().getRawModel()
           .getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
       unbindTexturedModel();
       // System.out.println(terrain.getModel().getVertexCount()+";"+terrain.getTexture().getTextureID());
-    }
+    
 
   }
 
@@ -59,15 +62,15 @@ public class PlaneRenderer
    * Prepares terrains to be rendered
    * @param terrain
    */
-  private void prepareTerrain(Plane terrain)
+  private void prepareTerrain(SkyBox sky)
   {
-    RawModel rawModel = terrain.getModel();
+    RawModel rawModel = sky.getModel().getRawModel();
     GL30.glBindVertexArray(rawModel.getVaoID());
 
     GL20.glEnableVertexAttribArray(0);
     GL20.glEnableVertexAttribArray(1);
     GL20.glEnableVertexAttribArray(2);
-    ModelTexture texture = terrain.getTexture();
+    ModelTexture texture = sky.getModel().getTexture();
     shader.loadShineVariables(texture.getShadeDamper(),
         texture.getReflectivity());
 
@@ -90,10 +93,10 @@ public class PlaneRenderer
    * Load a model matrix based on the terrain into the shader
    * @param terrain
    */
-  private void loadModelMatrix(Plane terrain)
+  private void loadModelMatrix(SkyBox sky)
   {
     Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(
-        new Vector3f(terrain.getX(), 0, terrain.getZ()), 0f, 0f, 0f, 1f);
+        camera.getPosition(), 0f, 0f, 0f, sky.getSkyEntity().getScale());
     shader.loadTransformationMatrix(transformationMatrix);
 
   }
