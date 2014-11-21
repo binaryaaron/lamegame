@@ -1,9 +1,8 @@
-package playerObjects;
+package gameObjects;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.lwjgl.util.vector.Vector3f;
 
 import static org.junit.Assert.*;
 
@@ -21,8 +20,10 @@ public class PlayerObjectTest
 
   @After public void tearDown() throws Exception
   {
-    p1 = null;
-    p2 = null;
+    p1.removePlayer();
+    PlayerObject.PLAYER_COUNT--;
+    p2.removePlayer();
+    PlayerObject.PLAYER_COUNT--;
   }
 
   @Test public void testGetHealth() throws Exception
@@ -68,6 +69,7 @@ public class PlayerObjectTest
 
   @Test public void testGetPlayerId() throws Exception
   {
+    System.out.println(p1);
     assertTrue(p1.getPlayerId() == 1);
     assertTrue(p2.getPlayerId() == 2);
   }
@@ -79,6 +81,7 @@ public class PlayerObjectTest
 
   @Test public void testToString() throws Exception
   {
+    p1.toString();
 
   }
 }

@@ -1,4 +1,4 @@
-package playerObjects;
+package gameObjects;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -16,8 +16,8 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
   private Vector3f velocity = new Vector3f();
   private Vector3f accel = new Vector3f();
   private Boolean model = false;
-  private static short PLAYER_COUNT = 0;
-  private final short playerId;
+  public static short PLAYER_COUNT = 0;
+  public final short playerId;
   private Boolean alive = true;
   private Boolean playing = true;
   private static Boolean DEBUG = true;
@@ -29,6 +29,13 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
    */
   public PlayerObject()
   {
+    // check for number of players
+    if (PLAYER_COUNT == 4)
+    {
+      System.out.println("Cannot create more than four players!");
+      playerId = -1;
+      return;
+    }
     if(DEBUG) System.out.println("Initializing PlayerObject");
     this.health = 100;
     //Each player starts in a different part of the world
@@ -42,7 +49,7 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
     }
     this.velocity.set(0,0,0);
     this.accel.set(0,0,0);
-    PLAYER_COUNT++;
+    PlayerObject.PLAYER_COUNT++;
     this.playerId = PLAYER_COUNT;
   }
 
@@ -211,6 +218,17 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
   }
 
   /**
+   * Disconnects the player and removes them from the player count
+   * Will not work correctly as implemented - player three disconnects with four players and will not
+   * get the proper id if rejoins - they get the wrong assignment
+   */
+  public void removePlayer()
+  {
+    PLAYER_COUNT--;
+    //
+  }
+
+  /**
    * Intended only for debugging.
    *
    * <P>Here, the contents of every field are placed into the result, with
@@ -218,6 +236,26 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
    */
   @Override
   public String toString() {
+    StringBuilder result = new StringBuilder();
+    String delimiter = ":";
+
+    result.append(playerId + delimiter );
+    result.append(position + delimiter);
+    result.append(velocity + delimiter);
+    result.append(accel + delimiter);
+    result.append(health + delimiter );
+    result.append(alive + delimiter);
+    result.append(playing + delimiter);
+    return result.toString();
+  }
+
+  /**
+   * Intended only for debugging.
+   *
+   * <P>Here, the contents of every field are placed into the result, with
+   * one field per line.
+   */
+  public String debugPrint(Boolean debug) {
     StringBuilder result = new StringBuilder();
     String NEW_LINE = System.getProperty("line.separator");
 
