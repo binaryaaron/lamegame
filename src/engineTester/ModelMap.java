@@ -29,7 +29,7 @@ public class ModelMap {
 	StaticShader shader = new StaticShader();
 	
 	public ModelMap(){
-	    RawModel ship = OBJLoader.loadObjModel("SpaceShip2", loader, true);
+	    RawModel ship = OBJLoader.loadObjModel("SpaceShip3", loader, true);
 	    RawModel ship2 = OBJLoader.loadObjModel("SpaceShip31", loader, true);
 	    RawModel modelAsteroid = OBJLoader.loadObjModel("SquareRock3", loader,  true);
 	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  false);

@@ -30,7 +30,7 @@ import entities.Light;
 public class MainGameLoop {
 
 	public final static boolean PRINT_FPS = false;
-	private final static boolean PHYSICS_DEBUG = false;
+	private final static boolean PHYSICS_DEBUG = true;
 
 	public static void main(String[] args) {
 
