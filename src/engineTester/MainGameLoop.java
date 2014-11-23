@@ -150,7 +150,7 @@ public class MainGameLoop
           for (Entity ent : renderList)
           {
             ent.move();
-            System.out.println(ent);
+            //System.out.println(ent);
             for (Entity other : renderList)
             {
               if (BoxUtilities.collision(ent.getBox(), other.getBox()))
