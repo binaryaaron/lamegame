@@ -43,9 +43,11 @@ public class BoxUtilities
       min.y = vec.y < min.y ? vec.y : min.y;
       min.z = vec.z < min.z ? vec.z : min.z;
       max.x = vec.x > max.x ? vec.x : max.x;
-      max.x = vec.y > max.y ? vec.y : max.y;
-      max.x = vec.z > max.z ? vec.z : max.z;
+      max.y = vec.y > max.y ? vec.y : max.y;
+      max.z = vec.z > max.z ? vec.z : max.z;
     }
+
+    System.out.println("min " + min + " max " + max);
 
     return new BoundingBox(min, max);
   }

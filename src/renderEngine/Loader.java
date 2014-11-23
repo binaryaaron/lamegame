@@ -18,6 +18,8 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+import world.BoundingBox;
+import world.BoxUtilities;
 
 public class Loader {
 	private List<Integer> vaos=new ArrayList<>();
@@ -27,7 +29,7 @@ public class Loader {
 	
 	
 	//creates a raw model to draw
-	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices){
+	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices, BoundingBox box){
 		int vaoID=createVAO();
 		bindIndicesBuffer(indices);
 		vaos.add(vaoID);
@@ -37,7 +39,7 @@ public class Loader {
 		storeDataInAttrributeList(2,3,normals);
 		
 		unbindVAO();
-		return new RawModel (vaoID,indices.length);
+		return new RawModel (vaoID,indices.length, box);
 		
 	}
 	

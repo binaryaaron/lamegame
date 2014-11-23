@@ -1,14 +1,21 @@
 package models;
 
+import world.BoundingBox;
+
 public class RawModel {
 	private int vaoID;
 	private int vertexCount;
-	
-	public RawModel(int vaoIDin, int vertexCountIn){
+	private BoundingBox box;
+	public RawModel(int vaoIDin, int vertexCountIn, BoundingBox box){
 		vaoID=vaoIDin;
 		vertexCount=vertexCountIn;
+		this.box = box;
 		
-		
+	}
+
+	public BoundingBox getBoundingBox()
+	{
+		return box;
 	}
 
 	public int getVaoID() {

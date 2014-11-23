@@ -3,12 +3,14 @@ package entities;
 import models.TexturedModel;
 
 import org.lwjgl.util.vector.Vector3f;
+import world.BoundingBox;
 
 public class Entity {
 	private TexturedModel model;
 	private Vector3f position;
 	private float rotX,rotY,rotZ;
 	private float scale;
+	private BoundingBox box;
 	
 
 
@@ -21,6 +23,9 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale=scale;
+		box = model.getRawModel().getBoundingBox().deepCopy();
+		box.scale(0.9f*scale);
+		box.translate(position);
 	}
 
 	
@@ -28,7 +33,7 @@ public class Entity {
 		this.position.x+=dx;
 		this.position.y+=dy;
 		this.position.z+=dz;
-		
+		box.translate(dx, dy, dz);
 	}
 	
 	public void rotatate(float dx,float dy,float dz){
@@ -37,9 +42,11 @@ public class Entity {
 		this.rotZ+=dz;
 		
 	}
-	
-	
-	
+
+	public BoundingBox getBox()
+	{
+		return box;
+	}
 	
 	public float getScale() {
 		return scale;

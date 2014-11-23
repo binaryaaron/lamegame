@@ -12,6 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
 import models.Vertex;
+import world.BoxUtilities;
 
 public class OBJLoader
 {
@@ -164,8 +165,14 @@ public class OBJLoader
       indicesArray[i] = indices.get(i);
     }
 
+    Vector3f[] vertarray = new Vector3f[vertices.size()];
+    for (int i = 0; i < vertices.size(); i++)
+    {
+      vertarray[i] = vertices.get(i);
+    }
+
     return loader.loadToVAO(verticesArray, textureArray, normalsArray,
-        indicesArray);
+        indicesArray, BoxUtilities.createBoundingBoxFromVertices(vertarray));
   }
 
   /**

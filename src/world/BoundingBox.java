@@ -187,4 +187,22 @@ public class BoundingBox implements Box
     center.translate(trans.x, trans.y, trans.z);
   }
 
+  public void scale(float size)
+  {
+    min.scale(size);
+    max.scale(size);
+    updateCenter();
+  }
+
+  public void translate(float dx, float dy, float dz)
+  {
+    min.translate(dx, dy, dz);
+    max.translate(dx, dy, dz);
+    center.translate(dx, dy, dz);
+  }
+
+  public BoundingBox deepCopy()
+  {
+    return new BoundingBox(new Vector3f(min), new Vector3f(max));
+  }
 }

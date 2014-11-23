@@ -1,6 +1,7 @@
 package models;
 
 import textures.ModelTexture;
+import world.BoundingBox;
 
 public class TexturedModel {
 	
