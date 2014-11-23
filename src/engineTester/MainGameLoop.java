@@ -32,7 +32,7 @@ public class MainGameLoop
 {
 
   public final static boolean PRINT_FPS = true;
-  public static int nAsteroids = 0;
+  public static int nAsteroids = 5;
 
   public static void main(String[] args)
   {
