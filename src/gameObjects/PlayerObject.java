@@ -45,6 +45,7 @@ public class PlayerObject extends GameObject implements Comparable<PlayerObject>
     PLAYER_COUNT++;
     this.playerId = PLAYER_COUNT;
     this.hitPoints = 1000;
+    this.mass = 50;
   }
 
   /**

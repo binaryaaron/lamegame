@@ -35,7 +35,7 @@ public class Asteroid extends GameObject
     this.model = true;
     this.hitPoints = 500;
     this.id = ASTEROID_COUNT;
-
+    this.mass = Globals.randInt(5000, 100);
   }
 
   /**
