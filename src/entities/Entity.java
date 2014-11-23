@@ -48,7 +48,7 @@ public class Entity {
 		translate(vel);
 	}
 	
-	public void rotatate(float dx,float dy,float dz){
+	public void rotate(float dx,float dy,float dz){
 		this.rotX+=dx;
 		this.rotY+=dy;
 		this.rotZ+=dz;

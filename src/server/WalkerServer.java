@@ -26,11 +26,13 @@ public class WalkerServer
     while(listening)
     {
       WalkerThread newThread=new WalkerThread(myServerSocket.accept(),IDgen);
+      System.out.println("socket connection accepted");
       newThread.start();
       IDgen++;
       threadList.add(newThread);
-      for(WalkerThread wt: threadList)
+      for(int i=0; i<threadList.size();i++)
       {
+        WalkerThread wt=threadList.get(i);
         if(!wt.isAlive())
         {
           threadList.remove(wt);
