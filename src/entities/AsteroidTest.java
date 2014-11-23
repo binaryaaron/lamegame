@@ -1,4 +1,4 @@
-package gameObjects;
+package entities;
 
 import org.junit.After;
 import org.junit.Before;

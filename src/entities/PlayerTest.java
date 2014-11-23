@@ -1,4 +1,4 @@
-package gameObjects;
+package entities;
 
 import org.junit.After;
 import org.junit.Before;
@@ -6,16 +6,16 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class PlayerObjectTest
+public class PlayerTest
 {
-  PlayerObject p1;
-  PlayerObject p2;
+  Player p1;
+  Player p2;
 
 
   @Before public void setUp() throws Exception
   {
-     p1 = new PlayerObject();
-     p2 = new PlayerObject();
+     p1 = new Player();
+     p2 = new Player();
   }
 
   @After public void tearDown() throws Exception

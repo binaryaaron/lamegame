@@ -1,15 +1,16 @@
-package gameObjects;
+package entities;
 
+import gameObjects.GameObject;
 import world.BoundingBox;
 
 /**
- * PlayerObject is the concrete implementation of Player. It holds data for
+ * Player is the concrete implementation of Player. It holds data for
  * every relevant player field, including position, velocity, acceleration,
  * health, id, and boolean flags to denote if the person is playing(connected)
  * or alive.
  * Created by aarongonzales on 11/14/14.
  */
-public class PlayerObject extends GameObject implements Comparable<PlayerObject>
+public class Player extends GameObject implements Comparable<Player>
 {
   public static short PLAYER_COUNT = 0;
   private final short playerId;
@@ -19,10 +20,10 @@ public class PlayerObject extends GameObject implements Comparable<PlayerObject>
   private static final int SIZE = 5;
 
   /**
-   * Default constructor for a PlayerObject. Initializes position to
+   * Default constructor for a Player. Initializes position to
    * 0,0,0
    */
-  public PlayerObject()
+  public Player()
   {
     // check for number of players
     if (PLAYER_COUNT == 4)
@@ -31,7 +32,7 @@ public class PlayerObject extends GameObject implements Comparable<PlayerObject>
       playerId = -1;
       return;
     }
-    if(DEBUG) System.out.println("Initializing PlayerObject");
+    if(DEBUG) System.out.println("Initializing Player");
     //Each player starts in a different part of the world
     if (PLAYER_COUNT == 0)
     {
@@ -139,7 +140,7 @@ public class PlayerObject extends GameObject implements Comparable<PlayerObject>
    * @return player with lower id
    */
   @Override
-  public int compareTo(PlayerObject otherPlayerObject)
+  public int compareTo(Player otherPlayerObject)
   {
     return (this.getPlayerId() > otherPlayerObject.getPlayerId() ) ? -1: (this.getPlayerId() > otherPlayerObject
         .getPlayerId()) ? 1:0 ;

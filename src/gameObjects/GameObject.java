@@ -7,7 +7,7 @@ import world.Box;
 /**
  * Created by aarongonzales on 11/21/14.
  */
-public abstract class GameObject implements GObject
+public abstract class GameObject
 {
   protected Vector3f position = new Vector3f();
   protected Vector3f velocity = new Vector3f();
@@ -28,7 +28,7 @@ public abstract class GameObject implements GObject
    *
    * @param increase the amount to increase the velocity by. may be negative.
    */
-  @Override public void increaseVelocity(float increase)
+  public void increaseVelocity(float increase)
   {
     velocity.set(velocity.getX()+increase, velocity.getY() + increase, velocity.getZ() + increase);
   }
@@ -38,7 +38,7 @@ public abstract class GameObject implements GObject
    *
    * @param increase an integer amount for increasing
    */
-  @Override public void increaseVx(float increase)
+  public void increaseVx(float increase)
   {
     velocity.setX(velocity.getX() + increase);
   }
@@ -58,13 +58,13 @@ public abstract class GameObject implements GObject
    *
    * @param increase an integer amount for increasing
    */
-  @Override public void increaseVz(float increase)
+  public void increaseVz(float increase)
   {
     velocity.setZ(velocity.getZ() + increase);
   }
 
 
-  @Override public Vector3f getVelocity()
+  public Vector3f getVelocity()
   {
     return velocity;
   }
@@ -73,7 +73,7 @@ public abstract class GameObject implements GObject
    * term for the skin this player has at the moment
    * @return the current skin
    */
-  @Override public Boolean getModel()
+  public Boolean getModel()
   {
     return model;
   }
@@ -83,7 +83,7 @@ public abstract class GameObject implements GObject
    * term for the skin this player has at the moment
    * @return the current skin
    */
-  @Override public void setModel(Boolean model)
+  public void setModel(Boolean model)
   {
     this.model = model;
   }
@@ -91,7 +91,7 @@ public abstract class GameObject implements GObject
   /**
    * Generic method to return the type of object.
    */
-  @Override public String getType()
+  public String getType()
   {
     return "GameObject";
   }
@@ -99,7 +99,7 @@ public abstract class GameObject implements GObject
   /**
    * Gets this object's bounding box.
    */
-  @Override public Box getBBox()
+  public Box getBBox()
   {
     return this.bbox;
   }
