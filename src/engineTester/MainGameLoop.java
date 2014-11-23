@@ -69,7 +69,7 @@ public class MainGameLoop
 
     if (PHYSICS_DEBUG)
     {
-      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5";
+      testInput = "A001,1,0,-20,0,0,0,1;" + "A001,-1,0,-20,0,0,0,0.5";
 
     }
 
@@ -140,17 +140,32 @@ public class MainGameLoop
         Entity Asteroid1 = renderList.get(1);
         Entity Asteroid2 = renderList.get(0);
 
+
         long time = System.currentTimeMillis();
         if (time - lastTime > 25)
         {
-          Asteroid1.move();
-          Asteroid2.move();
-          lastTime = time;
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
+          Entity ass1;
+          Entity ass2;
+          for (int i = 0; i < renderList.size(); i++)
           {
-            PhysicsUtilities.elasticCollision(50, Asteroid1.vel, 200,
-                Asteroid2.vel);
+            renderList.get(i).move();
           }
+          for (int i = 0; i < renderList.size(); i++)
+          {
+            ass1 = renderList.get(i);
+            for (int j = 0; j < renderList.size(); j++)
+            {
+              if (i == j) continue;
+              ass2 = renderList.get(j);
+              if (BoxUtilities.collision(ass1.getBox(), ass2.getBox()))
+              {
+                PhysicsUtilities.elasticCollision(200, ass1.vel, 200,
+                    ass2.vel);
+              }
+            }
+          }
+          lastTime = time;
+
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
