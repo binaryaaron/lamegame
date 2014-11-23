@@ -69,7 +69,10 @@ public class MainGameLoop
 
     if (PHYSICS_DEBUG)
     {
-      testInput = "A001,1,0,-20,0,0,0,1;" + "A001,-1,0,-20,0,0,0,0.5";
+      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
+          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
+          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
+          + "A002,-4,-3,-20,0,0,0,0.5;";
 
     }
 
@@ -144,28 +147,20 @@ public class MainGameLoop
         long time = System.currentTimeMillis();
         if (time - lastTime > 25)
         {
-          Entity ass1;
-          Entity ass2;
-          for (int i = 0; i < renderList.size(); i++)
+          for (Entity ent : renderList)
           {
-            renderList.get(i).move();
-          }
-          for (int i = 0; i < renderList.size(); i++)
-          {
-            ass1 = renderList.get(i);
-            for (int j = 0; j < renderList.size(); j++)
+            ent.move();
+            System.out.println(ent);
+            for (Entity other : renderList)
             {
-              if (i == j) continue;
-              ass2 = renderList.get(j);
-              if (BoxUtilities.collision(ass1.getBox(), ass2.getBox()))
+              if (BoxUtilities.collision(ent.getBox(), other.getBox()))
               {
-                PhysicsUtilities.elasticCollision(200, ass1.vel, 200,
-                    ass2.vel);
+                PhysicsUtilities.elasticCollision(200, ent.vel, 200,
+                    other.vel);
               }
             }
           }
           lastTime = time;
-
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
