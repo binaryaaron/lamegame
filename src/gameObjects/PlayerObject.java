@@ -177,7 +177,7 @@ public class PlayerObject extends GameObject implements Comparable<PlayerObject>
   public String toString() {
     StringBuilder result = new StringBuilder();
     String delimiter = ":";
-    result.append(playerId + delimiter );
+    result.append("P" + playerId + delimiter );
     result.append(position + delimiter);
     result.append(velocity + delimiter);
     result.append(hitPoints + delimiter );
