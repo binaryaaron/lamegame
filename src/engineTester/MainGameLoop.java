@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import gameObjects.Asteroid;
+import entities.Asteroid;
 import models.RawModel;
 import models.TexturedModel;
 

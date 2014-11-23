@@ -55,8 +55,8 @@ public class PlayerTest
   @Test public void testGetPlayerId() throws Exception
   {
     System.out.println(p1);
-    assertTrue(p1.getPlayerId() == 1);
-    assertTrue(p2.getPlayerId() == 2);
+    assertTrue(p1.getIntId() == 1);
+    assertTrue(p2.getIntId() == 2);
   }
 
   @Test public void testCompareTo() throws Exception

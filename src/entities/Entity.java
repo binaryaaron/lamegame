@@ -16,6 +16,7 @@ public class Entity {
 	protected Vector3f rotation = new Vector3f();
 	private static Boolean DEBUG = true;
 	protected int hitPoints;
+	protected float mass;
 
 
 	public Entity(){}

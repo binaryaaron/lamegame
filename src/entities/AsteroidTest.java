@@ -37,7 +37,7 @@ public class AsteroidTest
 
   @Test public void testAsteroidSize() throws Exception
   {
-    System.out.println("Asteroid Size: " + ass.getBBox().getMax());
+    System.out.println("Asteroid Size: " + ass.getBox().getMax());
   }
 
   @Test public void testToString() throws Exception
