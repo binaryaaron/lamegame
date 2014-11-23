@@ -16,9 +16,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
-import plane.Plane;
-import shaders.PlaneShader;
+import shaders.SkyBoxShader;
 import shaders.StaticShader;
+import skyBox.SkyBox;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -33,27 +33,29 @@ public class MasterRenderer
   private StaticShader shader = new StaticShader();
   private EntityRenderer renderer;
 
-  private PlaneRenderer terrainRenderer;
-  private PlaneShader terrainShader = new PlaneShader();
+  private SkyBoxRenderer skyBoxRenderer;
+  private SkyBoxShader skyBoxShader = new SkyBoxShader();
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-  private List<Plane> terrains = new ArrayList<>();
-
+  private SkyBox skyBox;
+  private Camera camera;
   /**
-   * When the master renderer is created, create a projection matrix and renderers
+   * When the master renderer is created, create a projection matrix and
+   * renderers
    */
-  public MasterRenderer()
+  public MasterRenderer(Camera camera)
   {
     GL11.glEnable(GL11.GL_CULL_FACE);
     GL11.glCullFace(GL11.GL_BACK);
-
+    this.camera=camera;
     createProjectionMatrix();
     renderer = new EntityRenderer(shader, projectionMatrix);
-    terrainRenderer = new PlaneRenderer(terrainShader, projectionMatrix);
+    skyBoxRenderer = new SkyBoxRenderer(skyBoxShader, projectionMatrix,camera);
   }
 
   /**
    * Renders a scene using the main light, camera position, and entities
+   * 
    * @param sun
    * @param camera
    */
@@ -62,35 +64,39 @@ public class MasterRenderer
 
     prepare();
 
+    
+    skyBoxShader.start();
+    skyBoxShader.loadLight(sun);
+    skyBoxShader.loadViewMatrix(camera);
+    skyBoxRenderer.render(skyBox);
+    skyBoxShader.stop();
     shader.start();
-
+    
     shader.loadLight(sun);
     shader.loadViewMatrix(camera);
     renderer.render(entities);
     shader.stop();
 
-    terrainShader.start();
-    terrainShader.loadLight(sun);
-    terrainShader.loadViewMatrix(camera);
-    terrainRenderer.render(terrains);
-    terrainShader.stop();
+
 
     entities.clear();
-    terrains.clear();
+    skyBox=null;
   }
 
   /**
    * Add a terrain to terrain list
+   * 
    * @param terrain
    */
-  public void processTerrain(Plane terrain)
+  public void processSkyBox(SkyBox skyBox)
   {
-    terrains.add(terrain);
+   this.skyBox=skyBox;
 
   }
 
   /**
    * add an entity to the batch
+   * 
    * @param entity
    */
   public void processEntity(Entity entity)
@@ -151,7 +157,7 @@ public class MasterRenderer
   public void cleanUp()
   {
     shader.cleanUp();
-    terrainShader.cleanUp();
+    skyBoxShader.cleanUp();
   }
 
 }

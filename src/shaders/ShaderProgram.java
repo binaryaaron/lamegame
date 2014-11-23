@@ -1,8 +1,3 @@
-/**
- * Controls most opertions between the shader and everything else.
- * Gets data from the shader, loads the shader, and stops/starts the shader.
- * Thanks to youtube user ThinMatrix
- */
 package shaders;
 
 import java.io.BufferedReader;
@@ -25,12 +20,6 @@ public abstract class ShaderProgram
 
   private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
-  /**
-   * Accepts one vertexShader and one fragmentShader file
-   * Attaches the shaders and links them to the program
-   * @param vertexFile
-   * @param fragmentFile
-   */
   public ShaderProgram(String vertexFile, String fragmentFile)
   {
     vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
@@ -46,38 +35,24 @@ public abstract class ShaderProgram
 
   protected abstract void getAllUniformLocations();
 
-  /**
-   * Returns the location of the specified uniform matrix/vector
-   * @param uniformName
-   * @return
-   */
   protected int getUniformLocation(String uniformName)
   {
     return GL20.glGetUniformLocation(programID, uniformName);
 
   }
 
-  /**
-   * Tells our shader to attach to the program
-   */
   public void start()
   {
     GL20.glUseProgram(programID);
 
   }
 
-  /**
-   * Attaches nothing to the program, unattaching our shader
-   */
   public void stop()
   {
     GL20.glUseProgram(0);
 
   }
 
-  /**
-   * Detaches and deletes each shader
-   */
   public void cleanUp()
   {
     stop();
@@ -88,11 +63,6 @@ public abstract class ShaderProgram
     GL20.glDeleteProgram(programID);
   }
 
-  /**
-   * Bind the selected uniform location and matrix/vector data to the program
-   * @param attribute
-   * @param variableName
-   */
   protected void bindAttribute(int attribute, String variableName)
   {
     GL20.glBindAttribLocation(programID, attribute, variableName);
@@ -101,11 +71,6 @@ public abstract class ShaderProgram
 
   protected abstract void bindAttributes();
 
-  /**
-   * loads a float value into the VBO
-   * @param location
-   * @param value
-   */
   protected void loadFloat(int location, float value)
   {
 
@@ -113,11 +78,6 @@ public abstract class ShaderProgram
 
   }
 
-  /**
-   * loads a vector into the VBO
-   * @param location
-   * @param vector
-   */
   protected void loadVector(int location, Vector3f vector)
   {
 
@@ -125,11 +85,6 @@ public abstract class ShaderProgram
 
   }
 
-  /**
-   * loads a boolean into the VBO
-   * @param location
-   * @param value
-   */
   protected void loadBoolean(int location, boolean value)
   {
     float toLoad = 0;
@@ -137,11 +92,6 @@ public abstract class ShaderProgram
     GL20.glUniform1f(location, toLoad);
   }
 
-  /**
-   * Loads a matrix into the VBO
-   * @param location
-   * @param matrix
-   */
   protected void loadMatrix(int location, Matrix4f matrix)
   {
     matrix.store(matrixBuffer);
@@ -150,12 +100,6 @@ public abstract class ShaderProgram
 
   }
 
-  /**
-   * Creates a shader from a file and returns its ID
-   * @param file
-   * @param type
-   * @return
-   */
   private static int loadShader(String file, int type)
   {
     StringBuilder shaderSource = new StringBuilder();
@@ -182,9 +126,8 @@ public abstract class ShaderProgram
     GL20.glCompileShader(shaderID);
     if (GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE)
     {
-      System.out.println(GL20.glGetShaderInfoLog(shaderID, 1000));
+      System.out.println("could not compile shader");
       System.exit(-1);
-      
 
     }
     return shaderID;

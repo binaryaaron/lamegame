@@ -1,7 +1,3 @@
-/**
- * Thanks to youtube user ThinMatrix
- * OBJLoader loads object models from a file using the loader class
- */
 package renderEngine;
 
 import java.io.BufferedReader;
@@ -11,22 +7,31 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.RawModel;
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
+import models.RawModel;
+import models.Vertex;
 
 public class OBJLoader
 {
 
   /**
-   * Load an object model from a file
+   * build a new Raw Model by parsing a .obj file.
+   * The target .obj file must contain vertex coordinates, uv, normal vectors, and face indices
+   * simpleShape is true for lowpoly objects. A more expensive, more accurate method is employed 
+   * for simple shapes
+   * 
    * @param fileName
    * @param loader
+   * @param simpleShape
    * @return
    */
-  public static RawModel loadObjModel(String fileName, Loader loader)
+  public static RawModel loadObjModel(String fileName, Loader loader,
+      boolean simpleShape)
   {
+
+    //Read file all obj files must be in res folder
     FileReader fr = null;
     try
     {
@@ -34,7 +39,7 @@ public class OBJLoader
     }
     catch (FileNotFoundException e)
     {
-      System.out.println(fileName + " not found.");
+      System.out.println("res/" + fileName + ".obj" + " not found.");
       e.printStackTrace();
     }
 
@@ -44,14 +49,19 @@ public class OBJLoader
     List<Vector2f> textures = new ArrayList<>();
     List<Vector3f> normals = new ArrayList<>();
     List<Integer> indices = new ArrayList<>();
+    List<Vertex> proccessedVertecies = new ArrayList<>();
     float[] verticesArray = null;
     float[] normalsArray = null;
     float[] textureArray = null;
-    int[] indicesArray = null;
 
+    List<Float> normalsArrayList = new ArrayList<>();
+    List<Float> textureArrayList = new ArrayList<>();
+
+    int[] indicesArray = null;
+    
+    //parse 
     try
     {
-
       while (true)
       {
         line = reader.readLine();
@@ -78,11 +88,19 @@ public class OBJLoader
         }
         else if (line.startsWith("f "))
         {
-          textureArray = new float[vertices.size() * 2];
-          normalsArray = new float[vertices.size() * 3];
+
+          for (int i = 0; i < vertices.size() * 3; i++)
+          {
+            normalsArrayList.add(null);
+          }
+
+          for (int i = 0; i < vertices.size() * 2; i++)
+          {
+            textureArrayList.add(null);
+          }
+
           break;
         }
-
       }
 
       while (line != null)
@@ -91,32 +109,46 @@ public class OBJLoader
         {
           line = reader.readLine();
           continue;
-
         }
-
         String[] currentLine = line.split(" ");
         String[] vertex1 = currentLine[1].split("/");
         String[] vertex2 = currentLine[2].split("/");
         String[] vertex3 = currentLine[3].split("/");
-
-        processVertex(vertex1, indices, textures, normals, textureArray,
-            normalsArray);
-        processVertex(vertex2, indices, textures, normals, textureArray,
-            normalsArray);
-        processVertex(vertex3, indices, textures, normals, textureArray,
-            normalsArray);
+        processVertex(vertex1, indices, textures, normals, vertices,
+            textureArrayList, normalsArrayList, proccessedVertecies,
+            simpleShape);
+        processVertex(vertex2, indices, textures, normals, vertices,
+            textureArrayList, normalsArrayList, proccessedVertecies,
+            simpleShape);
+        processVertex(vertex3, indices, textures, normals, vertices,
+            textureArrayList, normalsArrayList, proccessedVertecies,
+            simpleShape);
         line = reader.readLine();
       }
+
       reader.close();
     }
+
     catch (Exception e)
     {
       e.printStackTrace();
-
     }
 
     verticesArray = new float[vertices.size() * 3];
     indicesArray = new int[indices.size()];
+    textureArray = new float[textureArrayList.size()];
+    normalsArray = new float[normalsArrayList.size()];
+
+    for (int i = 0; i < textureArrayList.size(); i++)
+    {
+      textureArray[i] = textureArrayList.get(i);
+
+    }
+    for (int i = 0; i < normalsArrayList.size(); i++)
+    {
+      normalsArray[i] = normalsArrayList.get(i);
+
+    }
 
     int vertexPointer = 0;
     for (Vector3f vertex : vertices)
@@ -130,44 +162,61 @@ public class OBJLoader
     for (int i = 0; i < indices.size(); i++)
     {
       indicesArray[i] = indices.get(i);
-
-    }
-    for (float vertex : indicesArray)
-    {
-      // System.out.println(vertex);
-
     }
 
     return loader.loadToVAO(verticesArray, textureArray, normalsArray,
         indicesArray);
-
   }
 
   /**
-   * Process a vertex and translate its data into arrays
    * @param vertexData
    * @param indices
    * @param textures
    * @param normals
-   * @param textureArray
-   * @param normalsArray
+   * @param vertecies
+   * @param textureArrayList
+   * @param normalsArrayList
+   * @param proccessedVertecies
+   * @param simple
    */
   private static void processVertex(String[] vertexData, List<Integer> indices,
-      List<Vector2f> textures, List<Vector3f> normals, float[] textureArray,
-      float[] normalsArray)
+      List<Vector2f> textures, List<Vector3f> normals,
+      List<Vector3f> vertecies, List<Float> textureArrayList,
+      List<Float> normalsArrayList, List<Vertex> proccessedVertecies,
+      boolean simple)
   {
+    Vertex trackV = new Vertex(Integer.parseInt(vertexData[0]),
+        Integer.parseInt(vertexData[1]), Integer.parseInt(vertexData[2]));
 
     int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
-    indices.add(currentVertexPointer);
-    Vector2f currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
-    textureArray[currentVertexPointer * 2] = currentTex.x;
+    if (simple && proccessedVertecies.contains(trackV))
+    {
+      Vector3f refVector = vertecies.get(trackV.vertexInd - 1);
+      vertecies.add(new Vector3f(refVector.x, refVector.y, refVector.z));
+      currentVertexPointer = vertecies.size() - 1;
 
-    // 1- is to correct for the y starting point in blender vs lwjgl
-    textureArray[currentVertexPointer * 2 + 1] = currentTex.y;
-    Vector3f currentNorm = normals.get(Integer.parseInt(vertexData[2]) - 1);
-    normalsArray[currentVertexPointer * 3] = currentNorm.x;
-    normalsArray[currentVertexPointer * 3 + 1] = currentNorm.y;
-    normalsArray[currentVertexPointer * 3 + 2] = currentNorm.z;
+      Vector2f currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
+      textureArrayList.add(currentTex.x);
+      textureArrayList.add(1 - currentTex.y);
+      Vector3f currentNorm = normals.get(Integer.parseInt(vertexData[2]) - 1);
+      normalsArrayList.add(currentNorm.x);
+      normalsArrayList.add(currentNorm.y);
+      normalsArrayList.add(currentNorm.z);
+
+    }
+    else
+    {
+
+      Vector2f currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
+      textureArrayList.set(currentVertexPointer * 2, currentTex.x);
+      textureArrayList.set(currentVertexPointer * 2 + 1, 1 - currentTex.y);
+      Vector3f currentNorm = normals.get(Integer.parseInt(vertexData[2]) - 1);
+      normalsArrayList.set(currentVertexPointer * 3, currentNorm.x);
+      normalsArrayList.set(currentVertexPointer * 3 + 1, currentNorm.y);
+      normalsArrayList.set(currentVertexPointer * 3 + 2, currentNorm.z);
+    }
+    indices.add(currentVertexPointer);
+    proccessedVertecies.add(trackV);
   }
 
 }

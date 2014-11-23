@@ -1,14 +1,16 @@
-/**
- * TextDraw attempts to draw normal text to the screen
- */
-
 package renderEngine;
 
 import java.awt.Font;
+import java.io.InputStream;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.util.ResourceLoader;
 
 public class TextDraw
 {
@@ -21,9 +23,6 @@ public class TextDraw
   private static final Font awtFont = new Font("Times New Roman", Font.BOLD, 36);
   private static TrueTypeFont font = new TrueTypeFont(awtFont, false);
 
-  /**
-   * Initialize a blank block of text
-   */
   public TextDraw()
   {
     text = "";
@@ -34,48 +33,6 @@ public class TextDraw
 
   }
 
-
-  public void init()
-  {
-    // font = new TrueTypeFont(awtFont,antiAlias);
-  }
-
-  /**
-   * Render the text to the screen
-   */
-  public void render()
-  {
-    // font = new TrueTypeFont(awtFont,antiAlias);
-
-    GL11.glDrawBuffer(GL11.GL_BACK);
-    GL11.glEnable(GL11.GL_TEXTURE_2D);
-
-    GL11.glMatrixMode(GL11.GL_PROJECTION);
-    GL11.glPushMatrix();
-    GL11.glLoadIdentity();
-    GL11.glOrtho(0, 800, 600, 0, 1, -1);
-    GL11.glMatrixMode(GL11.GL_MODELVIEW);
-    GL11.glDisable(GL11.GL_CULL_FACE);
-    GL11.glDisable(GL11.GL_DEPTH_TEST);
-    GL11.glDisable(GL11.GL_LIGHTING);
-    GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-    GL11.glLoadIdentity();
-    // Color.white.bind();
-    font.drawString(x, y, text);
-
-    GL11.glEnable(GL11.GL_DEPTH_TEST);
-    GL11.glEnable(GL11.GL_CULL_FACE);
-    GL11.glMatrixMode(GL11.GL_PROJECTION);
-    GL11.glPopMatrix();
-    GL11.glMatrixMode(GL11.GL_MODELVIEW);
-    GL11.glDisable(GL11.GL_TEXTURE_2D);
-    // GL11.glDisable(GL11.GL_BLEND);
-    GL11.glDrawBuffer(GL11.GL_FRONT_AND_BACK);
-  }
-  /**
-   * Getters and setters
-   * @return / @param
-   */
   public String getText()
   {
     return text;
@@ -119,6 +76,44 @@ public class TextDraw
   public TrueTypeFont getFont()
   {
     return font;
+  }
+
+  public void init()
+  {
+
+    // font = new TrueTypeFont(awtFont,antiAlias);
+
+  }
+
+  public void render()
+  {
+
+    // font = new TrueTypeFont(awtFont,antiAlias);
+
+    GL11.glDrawBuffer(GL11.GL_BACK);
+    GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+    GL11.glMatrixMode(GL11.GL_PROJECTION);
+    GL11.glPushMatrix();
+    GL11.glLoadIdentity();
+    GL11.glOrtho(0, 800, 600, 0, 1, -1);
+    GL11.glMatrixMode(GL11.GL_MODELVIEW);
+    GL11.glDisable(GL11.GL_CULL_FACE);
+    GL11.glDisable(GL11.GL_DEPTH_TEST);
+    GL11.glDisable(GL11.GL_LIGHTING);
+    GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+    GL11.glLoadIdentity();
+    // Color.white.bind();
+    font.drawString(x, y, text);
+
+    GL11.glEnable(GL11.GL_DEPTH_TEST);
+    GL11.glEnable(GL11.GL_CULL_FACE);
+    GL11.glMatrixMode(GL11.GL_PROJECTION);
+    GL11.glPopMatrix();
+    GL11.glMatrixMode(GL11.GL_MODELVIEW);
+    GL11.glDisable(GL11.GL_TEXTURE_2D);
+    // GL11.glDisable(GL11.GL_BLEND);
+    GL11.glDrawBuffer(GL11.GL_FRONT_AND_BACK);
   }
 
 }
