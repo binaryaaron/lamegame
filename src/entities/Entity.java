@@ -11,6 +11,7 @@ public class Entity {
 	private float rotX,rotY,rotZ;
 	private float scale;
 	private BoundingBox box;
+	public Vector3f vel = new Vector3f(0f,0f,0f);
 	
 
 
@@ -34,6 +35,17 @@ public class Entity {
 		this.position.y+=dy;
 		this.position.z+=dz;
 		box.translate(dx, dy, dz);
+	}
+
+	public void translate(Vector3f vel)
+	{
+		position.translate(vel.x, vel.y, vel.z);
+		box.translate(vel);
+	}
+
+	public void move()
+	{
+		translate(vel);
 	}
 	
 	public void rotatate(float dx,float dy,float dz){

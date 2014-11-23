@@ -6,9 +6,12 @@
  */
 package engineTester;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import gameObjects.Asteroid;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -16,6 +19,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -27,6 +31,8 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import world.BoxUtilities;
+
+import javax.swing.*;
 
 public class MainGameLoop
 {
@@ -63,7 +69,7 @@ public class MainGameLoop
 
     if (PHYSICS_DEBUG)
     {
-      testInput = "A001,1,0,-5,0,0,0,1;" + "A002,-1,0,-5,0,0,0,0.5";
+      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5";
 
     }
 
@@ -113,6 +119,10 @@ public class MainGameLoop
     {
       pu.startFrameCounter();
     }
+
+    long startTime = System.currentTimeMillis();
+    long lastTime = System.currentTimeMillis();
+
     /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
@@ -126,80 +136,63 @@ public class MainGameLoop
       //holding shift will slow down the shifting speed.
       if (PHYSICS_DEBUG)
       {
-        Float scale = 0.1f;
+        Float scale = 0.001f;
         Entity Asteroid1 = renderList.get(1);
         Entity Asteroid2 = renderList.get(0);
+
+        long time = System.currentTimeMillis();
+        if (time - lastTime > 25)
+        {
+          Asteroid1.move();
+          Asteroid2.move();
+          lastTime = time;
+          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
+          {
+            PhysicsUtilities.elasticCollision(50, Asteroid1.vel, 200,
+                Asteroid2.vel);
+          }
+        }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
             .isKeyDown(Keyboard.KEY_RSHIFT))
         {
-          scale = 0.01f;
+          scale = 0.0001f;
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
         {
-          Asteroid2.translate(scale, 0.0f, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid2.translate(-scale, 0.0f, 0f);
-          }
+          Asteroid2.vel.x +=scale;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
         {
-          Asteroid2.translate(-scale, 0.0f, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid2.translate(scale, 0.0f, 0f);
-          }
+          Asteroid2.vel.x -=scale;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP))
         {
-          Asteroid2.translate(0.0f, scale, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid2.translate(0.0f, -scale, 0f);
-          }
+          Asteroid2.vel.y += scale;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
         {
-          Asteroid2.translate(0.0f, -scale, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid2.translate(0.0f, scale, 0f);
-          }
+          Asteroid2.vel.y -= scale;
+
         }
         // /
         if (Keyboard.isKeyDown(Keyboard.KEY_D))
         {
-          Asteroid1.translate(scale, 0.0f, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid1.translate(-scale, 0.0f, 0f);
-          }
+          Asteroid1.vel.x += scale;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A))
         {
-          Asteroid1.translate(-scale, 0.0f, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid1.translate(scale, 0.0f, 0f);
-          }
+          Asteroid1.vel.x -= scale;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_W))
         {
-          Asteroid1.translate(0.0f, scale, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid1.translate(0.0f, -scale, 0f);
-          }
+          Asteroid1.vel.y += scale;
+
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_S))
         {
-          Asteroid1.translate(0.0f, -scale, 0f);
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
-          {
-            Asteroid1.translate(0.0f, scale, 0f);
-          }
+          Asteroid1.vel.y -= scale;
         }
 
       }
