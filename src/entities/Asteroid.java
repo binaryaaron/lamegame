@@ -14,6 +14,7 @@ public class Asteroid extends Entity
 {
   private static short ASTEROID_COUNT = 0;
   private static Boolean DEBUG = true;
+  private int id;
 
 
   public Asteroid(TexturedModel model)
@@ -28,6 +29,8 @@ public class Asteroid extends Entity
     this.box = new BoundingBox(position, tmpSize, tmpSize, tmpSize);
     this.model = model;
     this.hitPoints = 500;
+    this.id = ASTEROID_COUNT;
+    this.mass = Globals.randInt(5000, 100);
   }
 
   /**
@@ -42,6 +45,20 @@ public class Asteroid extends Entity
 
   }
 
-
+  /**
+   * Converts the asteroid's current stats to a string for sending back and forth
+   * across the network
+   * @return String with the id, position, velocity, hp, and other fields
+   */
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder();
+    String delimiter = ":";
+    result.append("A" + id + delimiter );
+    result.append(position + delimiter);
+    result.append(velocity + delimiter);
+    result.append(hitPoints + delimiter );
+    return result.toString();
+  }
 }
 

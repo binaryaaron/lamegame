@@ -16,6 +16,7 @@ public abstract class GameObject
   protected Boolean model = false;
   private static Boolean DEBUG = true;
   protected int hitPoints;
+  protected float mass;
 
 
   public void setVelocity(Vector3f velocity)
@@ -150,6 +151,25 @@ public abstract class GameObject
   protected void uponDeath(GameObject go)
   {
    //unimplemented in GameObject()
+  }
+
+  /**
+   * Gets the game object's mass
+   * @return - float mass
+   */
+  public float getMass()
+  {
+    return mass;
+  }
+
+  /**
+   * Sets this object's mass -
+   * could be used by powerups
+   * @param m - float for mass
+   */
+  public void setMass(float m)
+  {
+    mass = m;
   }
 
 

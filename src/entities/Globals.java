@@ -3,7 +3,7 @@ package entities;
 import java.util.Random;
 
 /**
- * Created by carlyhendrickson on 11/22/14.
+ * Created by aarongonzales on 11/22/14.
  */
 public class Globals
 {
@@ -33,20 +33,15 @@ public class Globals
 
   /**
    * Returns a pseudo-random number between the world's coordinate values
-   * e.g., (-100, 100) in each axis
+   * e.g., 100 in each axis
    *
    * @return Integer between world size and not, inclusive.
    * @see java.util.Random#nextInt(int)
    */
   public static float randInt() {
-
-    // NOTE: Usually this should be a field rather than a method
-    // variable so that it is not re-seeded every call.
-    Random rand = new Random();
-
     // nextInt is normally exclusive of the top value,
     // so add 1 to make it inclusive
-    int randomNum = rand.nextInt((WORLD_SIZE - WORLD_SIZE*-1) + 1) + WORLD_SIZE*-1;
+    int randomNum = RAND.nextInt((WORLD_SIZE - WORLD_SIZE*-1) + 1) + WORLD_SIZE*-1;
     return randomNum;
   }
 }

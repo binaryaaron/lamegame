@@ -46,6 +46,7 @@ public class Player extends GameObject implements Comparable<Player>
     PLAYER_COUNT++;
     this.playerId = PLAYER_COUNT;
     this.hitPoints = 1000;
+    this.mass = 50;
   }
 
   /**
@@ -178,7 +179,7 @@ public class Player extends GameObject implements Comparable<Player>
   public String toString() {
     StringBuilder result = new StringBuilder();
     String delimiter = ":";
-    result.append(playerId + delimiter );
+    result.append("P" + playerId + delimiter );
     result.append(position + delimiter);
     result.append(velocity + delimiter);
     result.append(hitPoints + delimiter );
