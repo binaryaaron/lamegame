@@ -8,8 +8,8 @@ import static org.junit.Assert.*;
 
 public class PlayerObjectTest
 {
-  Player p1;
-  Player p2;
+  PlayerObject p1;
+  PlayerObject p2;
 
 
   @Before public void setUp() throws Exception
@@ -21,22 +21,7 @@ public class PlayerObjectTest
   @After public void tearDown() throws Exception
   {
     p1.removePlayer();
-    PlayerObject.PLAYER_COUNT--;
     p2.removePlayer();
-    PlayerObject.PLAYER_COUNT--;
-  }
-
-  @Test public void testGetHealth() throws Exception
-  {
-    assertTrue(p1.getHealth() >= 0);
-  }
-
-  @Test public void testSetHealth() throws Exception
-  {
-    p1.setHealth((short)0);
-    assertTrue(p1.getHealth() == 0);
-
-
   }
 
   @Test public void testGetPosition() throws Exception
@@ -52,7 +37,7 @@ public class PlayerObjectTest
 
   @Test public void testGetVelocity() throws Exception
   {
-
+    assertEquals(p1.getVelocity().getX(), 0, 0);
   }
 
   @Test public void testSetVelocity() throws Exception

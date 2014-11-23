@@ -1,6 +1,6 @@
 package gameObjects;
 
-import org.lwjgl.util.vector.Vector3f;
+import world.BoundingBox;
 
 /**
  * PlayerObject is the concrete implementation of Player. It holds data for
@@ -9,19 +9,14 @@ import org.lwjgl.util.vector.Vector3f;
  * or alive.
  * Created by aarongonzales on 11/14/14.
  */
-public class PlayerObject implements Comparable<PlayerObject>, Player
+public class PlayerObject extends GameObject implements Comparable<PlayerObject>
 {
-  private short health;
-  private Vector3f position = new Vector3f();
-  private Vector3f velocity = new Vector3f();
-  private Vector3f accel = new Vector3f();
-  private Boolean model = false;
   public static short PLAYER_COUNT = 0;
-  public final short playerId;
+  private final short playerId;
   private Boolean alive = true;
   private Boolean playing = true;
   private static Boolean DEBUG = true;
-
+  private static final int SIZE = 5;
 
   /**
    * Default constructor for a PlayerObject. Initializes position to
@@ -37,7 +32,6 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
       return;
     }
     if(DEBUG) System.out.println("Initializing PlayerObject");
-    this.health = 100;
     //Each player starts in a different part of the world
     if (PLAYER_COUNT == 0)
     {
@@ -47,10 +41,10 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
     {
       this.initPlayer();
     }
-    this.velocity.set(0,0,0);
-    this.accel.set(0,0,0);
-    PlayerObject.PLAYER_COUNT++;
+    velocity.set(0,0,0);
+    PLAYER_COUNT++;
     this.playerId = PLAYER_COUNT;
+    this.hitPoints = 1000;
   }
 
   /**
@@ -62,6 +56,10 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
   {
     this.position.set(0,0,0);
     this.model = true;
+
+    this.bbox = new BoundingBox(position, SIZE, SIZE, SIZE);
+    //this.bbox = new BoundingBox(new Vector3f(-10, -10, -10), new Vector3f(10,10,10));
+
   }
 
   /**
@@ -77,101 +75,31 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
   {
     this.position.set(PLAYER_COUNT*50, 0, 0);
     this.model = true;
+    this.bbox = new BoundingBox(position, SIZE, SIZE, SIZE);
   }
 
   /**
    * Gets the player's health.
    * @return short health
    */
-  @Override public short getHealth()
+  public int getHitPoints()
   {
-    return health;
+    return hitPoints;
   }
 
   /**
    * Sets the player's health
    * @param health the updated health score
    */
-  @Override public void setHealth(short health)
+  public void setHealth(int health)
   {
-    this.health = health;
-  }
-
-  @Override public Vector3f getPosition()
-  {
-    return position;
-  }
-
-  @Override public void setPosition(Vector3f position)
-  {
-    this.position = position;
-  }
-
-  @Override public Vector3f getVelocity()
-  {
-    return velocity;
-  }
-
-  public void setVelocity(Vector3f velocity)
-  {
-    this.velocity = velocity;
-  }
-
-  /**
-   * Updates the velocity by a constant in all directions
-   *
-   * @param increase the amount to increase the velocity by. may be negative.
-   *                 must be within range of a byte (-127 -- 127)
-   */
-  @Override public void increaseVelocity(byte increase)
-  {
-    velocity.set(velocity.getX()+increase, velocity.getY() + increase, velocity.getZ() + increase);
-  }
-
-  @Override public Vector3f getAccel()
-  {
-    return accel;
-  }
-
-  public void setAccel(Vector3f accel)
-  {
-    this.accel = accel;
-  }
-
-  public static Boolean getDEBUG()
-  {
-    return DEBUG;
-  }
-
-  public static void setDEBUG(Boolean DEBUG)
-  {
-    PlayerObject.DEBUG = DEBUG;
-  }
-
-  /**
-   * Placeholder method for getting the player's "model" - my generic
-   * term for the skin this player has at the moment
-   * @return the current skin
-   */
-  @Override public Boolean getModel()
-  {
-    return model;
-  }
-
-  /**
-   * Placeholder method for updating the player's "model" - my generic
-   * term for the skin this player has at the moment
-   * @return the current skin
-   */
-  @Override public void setModel(Boolean model)
-  {
-    this.model = model;
+    hitPoints= health;
   }
 
   /**
    * Gets the 'alive' flag for this player.
    */
-  @Override public boolean getAlive()
+  public boolean getAlive()
   {
     return alive;
   }
@@ -179,12 +107,12 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
   /**
    * Sets the 'alive' flag for this player.
    */
-  @Override public void setAlive(Boolean alive)
+  public void setAlive(Boolean alive)
   {
     this.alive = alive;
   }
 
-  @Override public short getPlayerId()
+  public short getPlayerId()
   {
     return playerId;
   }
@@ -194,13 +122,13 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
    * delete them!
    * @return if the player is playing or not
    */
-  @Override public Boolean getPlaying()
+  public Boolean getPlaying()
   {
     return playing;
 
   }
 
-  @Override public void setPlaying(Boolean playing)
+  public void setPlaying(Boolean playing)
   {
     this.playing = playing;
   }
@@ -229,21 +157,30 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
   }
 
   /**
-   * Intended only for debugging.
-   *
-   * <P>Here, the contents of every field are placed into the result, with
-   * one field per line.
+   * Kills this player object. Should send a signal to the screen and say
+   * that the player is dead, allowing the player to respawn or something
+   * could assign a new player with the same ID as this one ...?
+   * @param go the game object to die
+   */
+  @Override
+  protected void uponDeath(GameObject go)
+  {
+    System.out.println("I'm dead!");
+  }
+
+  /**
+   * Converts the player's current stats to a string for sending back and forth
+   * across the network
+   * @return String with the playerId, position, velocity, health, and other fields
    */
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
     String delimiter = ":";
-
     result.append(playerId + delimiter );
     result.append(position + delimiter);
     result.append(velocity + delimiter);
-    result.append(accel + delimiter);
-    result.append(health + delimiter );
+    result.append(hitPoints + delimiter );
     result.append(alive + delimiter);
     result.append(playing + delimiter);
     return result.toString();
@@ -261,10 +198,9 @@ public class PlayerObject implements Comparable<PlayerObject>, Player
 
     result.append(this.getClass().getName() + " Object {" + NEW_LINE);
     result.append(" PlayerID: " + playerId + NEW_LINE);
-    result.append(" Health: " + health + NEW_LINE);
+    result.append(" Health: " + hitPoints + NEW_LINE);
     result.append(" Position: " + position + NEW_LINE);
     result.append(" Velocity: " + velocity + NEW_LINE );
-    result.append(" Acceleration: " + accel + NEW_LINE);
     result.append(" Alive: " + alive + NEW_LINE);
     result.append(" Playing: " + playing + NEW_LINE);
     result.append("}");
