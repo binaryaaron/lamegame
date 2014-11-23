@@ -19,6 +19,7 @@ public class Asteroid extends GameObject
 {
   private static short ASTEROID_COUNT = 0;
   private static Boolean DEBUG = true;
+  private int id;
 
 
   public Asteroid()
@@ -33,6 +34,7 @@ public class Asteroid extends GameObject
     this.bbox = new BoundingBox(position, tmpSize, tmpSize, tmpSize);
     this.model = true;
     this.hitPoints = 500;
+    this.id = ASTEROID_COUNT;
 
   }
 
@@ -48,6 +50,20 @@ public class Asteroid extends GameObject
 
   }
 
-
+  /**
+   * Converts the asteroid's current stats to a string for sending back and forth
+   * across the network
+   * @return String with the id, position, velocity, hp, and other fields
+   */
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder();
+    String delimiter = ":";
+    result.append("A" + id + delimiter );
+    result.append(position + delimiter);
+    result.append(velocity + delimiter);
+    result.append(hitPoints + delimiter );
+    return result.toString();
+  }
 }
 
