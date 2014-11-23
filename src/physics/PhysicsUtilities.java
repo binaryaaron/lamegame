@@ -32,10 +32,10 @@ public class PhysicsUtilities
 
     u1.scale(c1);
     u2.scale(c2);
-    q2.scale(k1);
     q1.scale(k2);
+    q2.scale(k1);
 
     Vector3f.add(u1, u2, vec1);
-    Vector3f.add(q1, q1, vec2);
+    Vector3f.add(q1, q2, vec2);
   }
 }
