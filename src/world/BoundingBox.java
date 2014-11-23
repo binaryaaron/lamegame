@@ -25,6 +25,20 @@ public class BoundingBox implements Box
   }
 
   /**
+   * Create a bounding box from a "center" position vector and size indicators
+   * @param center a vector for the center position
+   * @param sizex 1/2 the size of the x direction
+   * @param sizey 1/2 the size of the y direction
+   * @param sizez 1/2 the size of the z direction
+   */
+  public BoundingBox(Vector3f center, float sizex, float sizey, float sizez)
+  {
+    this.center = center;
+    this.min = new Vector3f(center.getX() - sizex, center.getY() - sizey, center.getZ() - sizez);
+    this.max = new Vector3f(center.getX() + sizex, center.getY() + sizey, center.getZ() + sizez);
+  }
+
+  /**
    * Utility method to update the center for quick lookup on min/max change
    */
   private void updateCenter()

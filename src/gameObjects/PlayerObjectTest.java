@@ -1,16 +1,15 @@
-package playerObjects;
+package gameObjects;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.lwjgl.util.vector.Vector3f;
 
 import static org.junit.Assert.*;
 
 public class PlayerObjectTest
 {
-  Player p1;
-  Player p2;
+  PlayerObject p1;
+  PlayerObject p2;
 
 
   @Before public void setUp() throws Exception
@@ -21,21 +20,8 @@ public class PlayerObjectTest
 
   @After public void tearDown() throws Exception
   {
-    p1 = null;
-    p2 = null;
-  }
-
-  @Test public void testGetHealth() throws Exception
-  {
-    assertTrue(p1.getHealth() >= 0);
-  }
-
-  @Test public void testSetHealth() throws Exception
-  {
-    p1.setHealth((short)0);
-    assertTrue(p1.getHealth() == 0);
-
-
+    p1.removePlayer();
+    p2.removePlayer();
   }
 
   @Test public void testGetPosition() throws Exception
@@ -51,7 +37,7 @@ public class PlayerObjectTest
 
   @Test public void testGetVelocity() throws Exception
   {
-
+    assertEquals(p1.getVelocity().getX(), 0, 0);
   }
 
   @Test public void testSetVelocity() throws Exception
@@ -68,6 +54,7 @@ public class PlayerObjectTest
 
   @Test public void testGetPlayerId() throws Exception
   {
+    System.out.println(p1);
     assertTrue(p1.getPlayerId() == 1);
     assertTrue(p2.getPlayerId() == 2);
   }
@@ -79,6 +66,7 @@ public class PlayerObjectTest
 
   @Test public void testToString() throws Exception
   {
+    p1.toString();
 
   }
 }
