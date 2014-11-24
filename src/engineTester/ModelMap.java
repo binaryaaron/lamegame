@@ -28,7 +28,8 @@ public class ModelMap {
 	Loader loader = new Loader();
 	StaticShader shader = new StaticShader();
 	
-	public ModelMap(){
+	public ModelMap()
+	{
 	    RawModel ship = OBJLoader.loadObjModel("SpaceShip3", loader, true);
 	    RawModel ship2 = OBJLoader.loadObjModel("SpaceShip31", loader, true);
 	    RawModel modelAsteroid = OBJLoader.loadObjModel("SquareRock3", loader,  true);
@@ -45,6 +46,8 @@ public class ModelMap {
 	    TexturedModel texturedModelStone = new TexturedModel(modelAsteroid,stoneTexture);
 	    TexturedModel texturedShip = new TexturedModel(ship, shipTexture);
 	    TexturedModel texturedShip2 = new TexturedModel(ship2, ship2Texture);
+	    
+	    
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
     texturedModelList.put("A003", texturedModelStone);

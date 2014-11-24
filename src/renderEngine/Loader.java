@@ -6,7 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.RawModel;
 
@@ -15,11 +16,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+
 import world.BoundingBox;
-import world.BoxUtilities;
 
 public class Loader {
 	private List<Integer> vaos=new ArrayList<>();
@@ -29,7 +29,8 @@ public class Loader {
 	
 	
 	//creates a raw model to draw
-	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices, BoundingBox box){
+	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices, BoundingBox box)
+	{
 		int vaoID=createVAO();
 		bindIndicesBuffer(indices);
 		vaos.add(vaoID);
@@ -45,7 +46,8 @@ public class Loader {
 	
 	
 	
-	public int loadTexture(String fileName){
+	public int loadTexture(String fileName)
+	{
 		Texture texture = null;
 		try {
 			texture =TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
@@ -134,12 +136,11 @@ public class Loader {
 	
 	
 	//puts array of floats into a float buffer
-	private FloatBuffer storeDataInFloatBuffer(float[] data){
+	private FloatBuffer storeDataInFloatBuffer(float[] data)
+	{
 		FloatBuffer buffer =BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
-		
-		
 	}
 }
