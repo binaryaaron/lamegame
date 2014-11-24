@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.RawModel;
 import models.TexturedModel;
+import renderEngine.FontLoader;
 import renderEngine.Loader;
 import renderEngine.OBJLoader;
 import shaders.StaticShader;
@@ -34,26 +35,27 @@ public class ModelMap {
 	    RawModel ship2 = OBJLoader.loadObjModel("SpaceShip31", loader, true);
 	    RawModel modelAsteroid = OBJLoader.loadObjModel("SquareRock3", loader,  true);
 	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  false);
-
+	    RawModel hello = FontLoader.loadFontModel("font", loader, false, "hello", 0, 0, 20);
+	    
 	    ModelTexture shipTexture = new ModelTexture(loader.loadTexture("SciFi_FighterMK_diffuse"));
 	    ModelTexture ship2Texture = new ModelTexture(loader.loadTexture("space_frigate_6_color"));
 	    ModelTexture asteroidTexture = new ModelTexture(loader.loadTexture("stone_texture"));
 	    ModelTexture stoneTexture = new ModelTexture(loader.loadTexture("RockRed2"));
-
+	    ModelTexture helloTx = new ModelTexture(loader.loadTexture("RockRed2"));
 	
 	    TexturedModel texturedModelAsteroid = new TexturedModel(modelAsteroid,asteroidTexture);
 	    TexturedModel texturedModelAsteroid2 = new TexturedModel(stoneAsteroid,asteroidTexture);
 	    TexturedModel texturedModelStone = new TexturedModel(modelAsteroid,stoneTexture);
 	    TexturedModel texturedShip = new TexturedModel(ship, shipTexture);
 	    TexturedModel texturedShip2 = new TexturedModel(ship2, ship2Texture);
-	    
+	    TexturedModel texturedHello = new TexturedModel(hello,helloTx);
 	    
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
     texturedModelList.put("A003", texturedModelStone);
     texturedModelList.put("S001", texturedShip);
     texturedModelList.put("S002", texturedShip2);
-    
+    texturedModelList.put("T001", texturedHello);
     
     
 	}

@@ -69,7 +69,7 @@ public class MainGameLoop
 
 		else {
 			testInput = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
-					+ "A001,4,2,-3,0,0,0,1;"+"Cam,0,0,3,0,90,0,1";
+					+ "A001,4,2,-3,0,0,0,1;"+ "T001,1,1,0,0,0,1,0;"+"Cam,0,0,3,0,90,0,1";
 		}
 
 		List<Entity> renderList = new ArrayList<>();

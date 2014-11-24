@@ -19,7 +19,6 @@ import world.BoxUtilities;
 public class FontLoader 
 {
 
-
   /**
    * build a new Raw Model by parsing a font.png file.
    * The target .obj file must contain vertex coordinates, uv, normal vectors, and face indices
@@ -107,16 +106,22 @@ public class FontLoader
         normals.add(new Vector3f(0,0,0));
         normals.add(new Vector3f(0,0,0));
         normals.add(new Vector3f(0,0,0));
-        
-        for (int j = 0; j < vertices.size() * 3; j++)
-        {
-          normalsArrayList.add(null);
-        }
+      }
+      for (int j = 0; j < vertices.size() * 3; j++)
+      {
+        normalsArrayList.add(null);
+      }
 
-        for (int j = 0; j < vertices.size() * 2; j++)
-        {
-          textureArrayList.add(null);
-        }
+      for (int j = 0; j < vertices.size() * 2; j++)
+      {
+        textureArrayList.add(null);
+      }
+      for(int i = 0; i < text.length(); i++)
+      {
+        String []vertex1 = new String[]{""+i*3+1,""+i*3+1,""+i*3+1};
+        String []vertex2 = new String[]{""+i*3+2,""+i*3+2,""+i*3+2};
+        String []vertex3 = new String[]{""+i*3+3,""+i*3+3,""+i*3+3};
+        System.out.println("hi");
         processVertex(vertex1, indices, textures, normals, vertices,
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);
@@ -125,7 +130,7 @@ public class FontLoader
             simpleShape);
         processVertex(vertex3, indices, textures, normals, vertices,
             textureArrayList, normalsArrayList, proccessedVertecies,
-            simpleShape);
+            simpleShape);        
       }
     }
     catch (Exception e)
@@ -213,7 +218,6 @@ public class FontLoader
     for (int i = 0; i < textureArrayList.size(); i++)
     {
       textureArray[i] = textureArrayList.get(i);
-
     }
     for (int i = 0; i < normalsArrayList.size(); i++)
     {
