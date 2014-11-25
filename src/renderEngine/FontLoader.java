@@ -60,19 +60,15 @@ public class FontLoader
         vertices.add(down_right);
         vertices.add(up_right);
         vertices.add(up_left);
-
-        System.out.println("v "+down_left.x+" "+down_left.y+" "+down_left.z);
-        System.out.println("v "+down_right.x+" "+down_right.y+" "+down_right.z);
-        System.out.println("v "+up_right.x+" "+up_right.y+" "+up_right.z);
-        System.out.println("v "+up_left.x+" "+up_left.y+" "+up_left.z);
       }
       for(int i = 0; i < text.length(); i++)
       {
         //create the texture coordinates based on the input text
         char character = text.charAt(i);
-        float uv_x = (character%16)/16.0f;
-        float uv_y = (character/16)/16.0f;
-        
+        int letterVal = (int)character;;
+        float uv_x = 1-(letterVal%16)/16.0f;
+        float uv_y = (float)0.9375-(letterVal/16)/16.0f;
+        System.out.println(character+" " + uv_y);
         Vector2f uv_up_left = new Vector2f(uv_x, uv_y);
         Vector2f uv_up_right = new Vector2f(uv_x+1.0f/16.0f, uv_y);
         Vector2f uv_down_right = new Vector2f(uv_x+1.0f/16.0f,(uv_y+1.0f/16.0f));
@@ -83,11 +79,6 @@ public class FontLoader
         textures.add(uv_down_right);
         textures.add(uv_up_right);
         textures.add(uv_up_left);
-
-        System.out.println("vt "+uv_down_left.x+" "+uv_down_left.y);
-        System.out.println("vt "+uv_down_right.x+" "+uv_down_right.y);
-        System.out.println("vt "+uv_up_right.x+" "+uv_up_right.y);
-        System.out.println("vt "+uv_up_left.x+" "+uv_up_left.y);
       }
       for(int i = 0; i < text.length(); i++)
       {
@@ -96,10 +87,6 @@ public class FontLoader
         normals.add(new Vector3f(0,0,1));
         normals.add(new Vector3f(0,0,1));
         normals.add(new Vector3f(0,0,1));
-        System.out.println("vn 0.000000 0.000000 1.000000");
-        System.out.println("vn 0.000000 0.000000 1.000000");
-        System.out.println("vn 0.000000 0.000000 1.000000");
-        System.out.println("vn 0.000000 0.000000 1.000000");
       }
       //create a 3d normals array list
       for (int j = 0; j < vertices.size() * 3; j++)
@@ -128,7 +115,6 @@ public class FontLoader
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);
 
-        System.out.println("f "+(i*4+1)+"/"+(i*4+1)+"/"+(i*4+1)+" "+(i*4+4)+"/"+(i*4+2)+"/"+(i*4+1)+" "+(i*4+2)+"/"+(i*4+3)+"/"+(i*4+1));
         //second triangle of the quad
         String []vertex4 = new String[]{""+(i*4+4),""+(i*4+1),""+(i*4+1)};
         String []vertex5 = new String[]{""+(i*4+3),""+(i*4+2),""+(i*4+1)};
@@ -142,7 +128,6 @@ public class FontLoader
         processVertex(vertex6, indices, textures, normals, vertices,
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);      
-        System.out.println("f "+(i*4+4)+"/"+(i*4+2)+"/"+(i*4+1)+" "+(i*4+3)+"/"+(i*4+3)+"/"+(i*4+1)+" "+(i*4+2)+"/"+(i*4+4)+"/"+(i*4+1));
       }
     }
     catch (Exception e)
