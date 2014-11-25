@@ -1,5 +1,6 @@
 package physics;
 
+import entities.Entity;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -17,9 +18,13 @@ public class PhysicsUtilities
    * @param mass2
    * @param vec2
    */
-  public static void elasticCollision(float mass1, Vector3f vec1, float mass2,
-      Vector3f vec2)
+  public static void elasticCollision(Entity first, Entity second)
   {
+    Vector3f vec1 = first.vel;
+    Vector3f vec2 = second.vel;
+
+    float mass1 = first.mass;
+    float mass2 = second.mass;
     Vector3f u1 = new Vector3f(vec1);
     Vector3f u2 = new Vector3f(vec2);
     Vector3f q1 = new Vector3f(vec1);

@@ -7,10 +7,12 @@ import toolbox.MathUtil;
 import world.BoundingBox;
 
 public class Entity {
+	private static final float initialMass = 100f;
 	private TexturedModel model;
 	private Vector3f position;
 	private float rotX,rotY,rotZ;
 	private float scale;
+	public float mass;
 
 	public float getSize()
 	{
@@ -46,6 +48,7 @@ public class Entity {
 		size = MathUtil.vectorDist(box.getMax(), box.getMin());
 		halfSize = size * 0.5f;
 		box.translate(position);
+		mass = initialMass * scale;
 	}
 
 	

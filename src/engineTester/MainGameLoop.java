@@ -71,10 +71,10 @@ public class MainGameLoop
 
     if (PHYSICS_DEBUG)
     {
-      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
-          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
-          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
-          + "A002,-4,-3,-20,0,0,0,0.5;";
+      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.6;" +
+          "A002,-3,0,-20,0,0,0,0.2;" + "A002,-4,0,-20,0,0,0,0.7;"  +
+          "A002,-5,0,-20,0,0,0,0.3;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
+          + "A002,-4,-3,-20,0,0,0,0.8;";
 
     }
 
@@ -153,7 +153,22 @@ public class MainGameLoop
           {
             Entity ent = renderList.get(0);
             renderList.remove(ent);
-            renderList.addAll(explodeEntity(ent));
+            List<Entity> newEnts = explodeEntity(ent);
+            for (Entity nent : newEnts)
+            {
+              boolean canadd = true;
+              for (Entity myEnt : renderList)
+              {
+                if (BoxUtilities.collision(nent.getBox(), myEnt.getBox())) {
+                  canadd = false;
+                  break;
+                }
+              }
+              if (canadd)
+              {
+                renderList.add(nent);
+              }
+            }
             timeTilExplode = 50;
           }
           for (Entity ent : renderList)
@@ -164,8 +179,7 @@ public class MainGameLoop
             {
               if (BoxUtilities.collision(ent.getBox(), other.getBox()))
               {
-                PhysicsUtilities.elasticCollision(200, ent.vel, 200,
-                    other.vel);
+                PhysicsUtilities.elasticCollision(ent, other);
               }
             }
           }
@@ -254,21 +268,28 @@ public class MainGameLoop
     Entity ent1 = new Entity(ent);
     ent1.translate(ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
     ent1.vel = new Vector3f(Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), 0);
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     ent1 = new Entity(ent);
     ent1.translate(-ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
     ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), 0);
+
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     ent1 = new Entity(ent);
     ent1.translate(ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
     ent1.vel = new Vector3f(Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), 0);
+
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     ent1 = new Entity(ent);
     ent1.translate(-ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, -ent.getHalfSize()* Globals.RAND.nextFloat() + 2 * ent.getHalfSize() * Globals.RAND.nextFloat() );
     ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), 0);
+
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     return entList;
