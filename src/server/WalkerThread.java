@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.instrument.Instrumentation;
 import java.net.ServerSocket;
@@ -32,22 +34,24 @@ public class WalkerThread extends Thread
   }
 
   public void run()
-  {    
+  {
     try
     {
-      out=new PrintWriter(myClientSocket.getOutputStream());
+//      out=new PrintWriter(myClientSocket.getOutputStream());
+      out=new PrintWriter(myClientSocket.getOutputStream(),true);
+//      out=new PrintWriter(myClientSocket.getOutputStream());
       in=new BufferedReader(new InputStreamReader(myClientSocket.getInputStream()));
       int loop = 0;
       
-      while((inputFromClient=in.readLine())!=null)
+      while ((inputFromClient = in.readLine()) != null)
       {
-//        if(loop%60==0)
-          System.out.println("intput from client= "+inputFromClient+"\n"+loop);//delete this
+        // if(loop%60==0)
+        System.out.println("intput from client= " + inputFromClient + "\n"+ loop);// delete this
         loop++;
-        //for initial server test, call the getter method to update from this loop
-        outputToClient=inputFromClient;//test version, this is not testing or updating the input, just bouncing it
+        // for initial server test, call the getter method to update from this
+        outputToClient = inputFromClient;// test version, this is not testing or updating the input, just bouncing it
         out.println(outputToClient);
-      }      
+      }
     } 
     catch (java.net.SocketException e)
     {
