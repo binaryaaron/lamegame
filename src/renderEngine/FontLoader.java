@@ -1,3 +1,6 @@
+/**
+ * Controls the rendering of text, done without a .obj
+ */
 package renderEngine;
 
 import java.util.ArrayList;
@@ -17,7 +20,6 @@ public class FontLoader
   /**
    * build a new Raw Model by parsing text given
    * size determines how large the text created should be.
-   * simpleShape is true for lowpoly objects. A more expensive, more accurate method is employed 
    * for simple shapes
    * 
    * @param fileName
@@ -66,9 +68,10 @@ public class FontLoader
         //create the texture coordinates based on the input text
         char character = text.charAt(i);
         int letterVal = (int)character;;
-        float uv_x = 1-(letterVal%16)/16.0f;
+        //calculate the position of the letter on the png
+        float uv_x = (letterVal%16)/16.0f;
         float uv_y = (float)0.9375-(letterVal/16)/16.0f;
-        System.out.println(character+" " + uv_y);
+        System.out.println(character+" " + uv_x);
         Vector2f uv_up_left = new Vector2f(uv_x, uv_y);
         Vector2f uv_up_right = new Vector2f(uv_x+1.0f/16.0f, uv_y);
         Vector2f uv_down_right = new Vector2f(uv_x+1.0f/16.0f,(uv_y+1.0f/16.0f));
@@ -102,9 +105,15 @@ public class FontLoader
       for(int i = 0; i < text.length(); i++)
       {
         //these are the coordinates for the first triangle of the quad
-        String []vertex1 = new String[]{""+(i*4+4),""+(i*4+1),""+(i*4+1)};
-        String []vertex2 = new String[]{""+(i*4+2),""+(i*4+3),""+(i*4+1)};
-        String []vertex3 = new String[]{""+(i*4+1),""+(i*4+4),""+(i*4+1)};
+        String []vertex5 = new String[]{""+(i*4+4),""+(i*4+1),""+(i*4+1)};
+        String []vertex4 = new String[]{""+(i*4+2),""+(i*4+3),""+(i*4+1)};
+        String []vertex6 = new String[]{""+(i*4+1),""+(i*4+4),""+(i*4+1)};
+        
+        //second triangle of the quad
+        String []vertex2 = new String[]{""+(i*4+4),""+(i*4+1),""+(i*4+1)};
+        String []vertex1 = new String[]{""+(i*4+3),""+(i*4+2),""+(i*4+1)};
+        String []vertex3 = new String[]{""+(i*4+2),""+(i*4+3),""+(i*4+1)};
+        
         processVertex(vertex1, indices, textures, normals, vertices,
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);
@@ -115,10 +124,7 @@ public class FontLoader
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);
 
-        //second triangle of the quad
-        String []vertex4 = new String[]{""+(i*4+4),""+(i*4+1),""+(i*4+1)};
-        String []vertex5 = new String[]{""+(i*4+3),""+(i*4+2),""+(i*4+1)};
-        String []vertex6 = new String[]{""+(i*4+2),""+(i*4+3),""+(i*4+1)};
+
         processVertex(vertex4, indices, textures, normals, vertices,
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);
