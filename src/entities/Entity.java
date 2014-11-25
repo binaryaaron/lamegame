@@ -3,6 +3,7 @@ package entities;
 import models.TexturedModel;
 
 import org.lwjgl.util.vector.Vector3f;
+import toolbox.MathUtil;
 import world.BoundingBox;
 
 public class Entity {
@@ -10,10 +11,26 @@ public class Entity {
 	private Vector3f position;
 	private float rotX,rotY,rotZ;
 	private float scale;
+
+	public float getSize()
+	{
+		return size;
+	}
+
+	public float getHalfSize()
+	{
+		return halfSize;
+	}
+
+	private float size;
+	private float halfSize;
 	private BoundingBox box;
 	public Vector3f vel = new Vector3f(0f,0f,0f);
 	
-
+  public Entity(Entity ent)
+	{
+		this(ent.model, new Vector3f(ent.position), ent.rotX, ent.rotY, ent.rotZ, ent.scale*0.9f);
+	}
 
 	public Entity(TexturedModel model, Vector3f position, float rotX,
 			float rotY, float rotZ,float scale) {
@@ -26,6 +43,8 @@ public class Entity {
 		this.scale=scale;
 		box = model.getRawModel().getBoundingBox().deepCopy();
 		box.scale(0.9f*scale);
+		size = MathUtil.vectorDist(box.getMax(), box.getMin());
+		halfSize = size * 0.5f;
 		box.translate(position);
 	}
 

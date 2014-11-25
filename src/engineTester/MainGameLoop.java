@@ -9,9 +9,11 @@ package engineTester;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import gameObjects.Asteroid;
+import gameObjects.Globals;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -125,7 +127,7 @@ public class MainGameLoop
 
     long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
-
+    int timeTilExplode = 50;
     /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
@@ -146,6 +148,14 @@ public class MainGameLoop
         long time = System.currentTimeMillis();
         if (time - lastTime > 25)
         {
+          timeTilExplode--;
+          if (timeTilExplode == 0)
+          {
+            Entity ent = renderList.get(0);
+            renderList.remove(ent);
+            renderList.addAll(explodeEntity(ent));
+            timeTilExplode = 50;
+          }
           for (Entity ent : renderList)
           {
             ent.move();
@@ -178,11 +188,11 @@ public class MainGameLoop
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP))
         {
-          Asteroid2.vel.y += scale;
+          Asteroid1.vel.z -= scale;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
         {
-          Asteroid2.vel.y -= scale;
+          Asteroid1.vel.z += scale;
 
         }
         // /
@@ -235,6 +245,33 @@ public class MainGameLoop
     renderer.cleanUp();
     loader.cleanUp();
     DisplayManager.closeDisplay();
+  }
+
+  public static List<Entity> explodeEntity(Entity ent)
+  {
+    List<Entity> entList = new LinkedList<>();
+    float velScale = 0.01f;
+    Entity ent1 = new Entity(ent);
+    ent1.translate(ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    ent1 = new Entity(ent);
+    ent1.translate(-ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    ent1 = new Entity(ent);
+    ent1.translate(ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    ent1 = new Entity(ent);
+    ent1.translate(-ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, -ent.getHalfSize()* Globals.RAND.nextFloat() + 2 * ent.getHalfSize() * Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    return entList;
   }
 
 }

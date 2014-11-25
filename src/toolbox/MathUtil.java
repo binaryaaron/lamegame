@@ -32,6 +32,14 @@ public class MathUtil {
 		return viewMatrix;
 		
 	}
+
+	public static float vectorDist(Vector3f vec1, Vector3f vec2)
+	{
+		float x = vec1.x - vec2.x;
+		float y = vec1.y - vec2.y;
+		float z = vec1.z - vec2.z;
+		return (float) Math.sqrt(x*x + y*y + z*z);
+	}
 	
 
 }
