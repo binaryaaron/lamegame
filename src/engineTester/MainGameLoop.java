@@ -41,8 +41,8 @@ public class MainGameLoop
 {
 
 	  public final static boolean PRINT_FPS = false;
-	  private final static boolean PHYSICS_DEBUG = true;
-	  private final static boolean ASTEROIDS =false;
+	  private final static boolean PHYSICS_DEBUG = false;
+	  private final static boolean ASTEROIDS =true;
 	  private final static boolean SERVER_TEST=false;
 	  private static int nAsteroids=50;
 	  static Entity player;
@@ -52,7 +52,10 @@ public class MainGameLoop
 	    DisplayManager.createDisplay();
 	    Loader loader = new Loader();
 	    ModelMap modelMap = new ModelMap();
-
+	    
+	    Camera camera = new Camera();
+	    camera.followObj=player;
+	    
 	    // create skybox, this is not an entity so it is seperate
 	    RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
 	    ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
@@ -60,12 +63,12 @@ public class MainGameLoop
 	    SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 
 	    modelMap.getTexturedModelList().put("Play",
-	        modelMap.getTexturedModelList().get("S001"));
+	        modelMap.getTexturedModelList().get("S002"));
 	    // create lights and camera for the player. camera position should be set in
 	    // parsing routine
 	    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
 	        1.0f, 1.0f));
-	    Camera camera = new Camera();
+	   
 	    MasterRenderer renderer = new MasterRenderer(camera);
 
 	    PerformanceUtilities pu = new PerformanceUtilities();
@@ -112,42 +115,10 @@ public class MainGameLoop
       testInput = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
           + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
     }
+    
+    List<Entity> renderList= parseGameStateString(testInput,modelMap);
 
-    List<Entity> renderList = new ArrayList<>();
-
-    String[] sceneInfo = testInput.split(";");
-    for (String object : sceneInfo)
-    {
-      String[] currentLine = object.split(",");
-      String id;
-      float x, y, z, xr, yr, zr, s;
-      // translate all imput data into appropriate entities;
-      x = Float.parseFloat(currentLine[1]);
-      y = Float.parseFloat(currentLine[2]);
-      z = Float.parseFloat(currentLine[3]);
-      xr = Float.parseFloat(currentLine[4]);
-      yr = Float.parseFloat(currentLine[5]);
-      zr = Float.parseFloat(currentLine[6]);
-      s = Float.parseFloat(currentLine[7]);
-      System.out.println(object.charAt(0));
-      if (object.startsWith("Cam"))
-      {
-        camera.setPosition(new Vector3f(x, y, z));
-        camera.setPitch(xr);
-        camera.setYaw(yr);
-        camera.setRoll(zr);
-      }
-
-      else
-      {
-
-        id = currentLine[0];
-
-        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(
-            id), new Vector3f(x, y, z), xr, yr, zr, s);
-        renderList.add(tmp_Entity);
-      }
-    }
+    
 
     if (PRINT_FPS)
     {
@@ -158,11 +129,12 @@ public class MainGameLoop
     long lastTime = System.currentTimeMillis();
 
     /* Perform object movement as long as the window exists */
+    WalkerClient wc=null;
+    if(SERVER_TEST)    wc =new WalkerClient(args);
     while (!Display.isCloseRequested())
     {
     	 /* Perform object movement as long as the window exists */
-    	WalkerClient wc=null;
-    if(SERVER_TEST)    wc =new WalkerClient(args);
+    	
       
           if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
           {
@@ -171,9 +143,8 @@ public class MainGameLoop
 
           // Camera to follow player.
 
-          float camxShift;
-          float camyShift;
-          float camzShift;
+          Vector3f camShiftZ;
+          Vector3f camShiftY;
 
           // controls for physics testing with two asteroids
           // wasd control leftest asteroid, arrows control rightmost.
@@ -181,6 +152,7 @@ public class MainGameLoop
       //controls for physics testing with two asteroids
       //wasd control leftest asteroid, arrows control rightmost.
       //holding shift will slow down the shifting speed.
+          float rotateShift=0.0f;
       if (PHYSICS_DEBUG)
       {
         Float scale = 0.001f;
@@ -244,37 +216,120 @@ public class MainGameLoop
 
       }
 
-      if(player!=null){
+      else
+      {
+    	  
+    	  
+        Float scale = 0.1f;
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
+            || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+        {
+          scale = 0.01f;
+        }
+
+        // System.out.println(player.getRotX()+";"+player.getRotY()+";"+player.getRotZ());
+        // System.out.println(Math.cos(player.getRotX())+";"+Math.cos(player.getRotY())+";"+Math.cos(player.getRotZ()));
+        // System.out.println(Math.cos(player.getRotX()*(3.14/180))+";"+Math.cos(player.getRotY()*(3.14/180))+";"+Math.cos(player.getRotZ()*(3.14/180)));
+
+        float sinx = (float) Math.sin(player.getRotX() * 3.14 / 180) * scale;
+        float cosx = (float) Math.cos(player.getRotX() * (3.14 / 180)) * scale;
+        float siny = (float) Math.sin(player.getRotY() * 3.14 / 180) * scale;
+        float cosy = (float) Math.cos(player.getRotY() * (3.14 / 180)) * scale;
+        float sinz = (float) Math.sin(player.getRotZ() * 3.14 / 180) * scale;
+        float cosz = (float) Math.cos(player.getRotZ() * (3.14 / 180)) * scale;
+       
+        if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+        {
+          player.translate(-siny * cosz*3, sinx * cosz*3, -cosy * cosx*3);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+        {
+          player.translate(siny * cosz, -sinx * cosz, cosy * cosx);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+        {
+          player.translate(cosy * cosz, sinz * cosx, -siny * cosx);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+        {
+          player.translate(-cosy * cosz, sinz * cosx, siny * cosx);
+        }
+
+        // /
+        if (Keyboard.isKeyDown(Keyboard.KEY_W))
+        {
+          player.front.y+=scale*3.141592/180;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_S))
+        {
+        	player.rotateX(-scale);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_A))
+        {
+         
+        	 player.rotateY(scale);
+        	// player.rotate(0.0f, -scale, 0.0f);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_D))
+        {
+        	 player.rotateY(-scale);
+        //  player.rotate(0.0f, scale, 0.0f);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+        {
+        	 player.rotateZ(scale);
+        //  player.rotate(0.0f, 0f, scale);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_E))
+        {
+        	 player.rotateZ(-scale);
+         // player.rotate(0.0f, 0f, -scale);
+        }
+      }
+      
+      
+      
+      
+      
+      
+      
+      
+      if(SERVER_TEST){
       Vector3f pos=player.getPosition();
-      if(SERVER_TEST) testInput=wc.updateClientGameState("Play,"+pos.x+","+pos.y+","+pos.z+","+player.getRotX()+","+player.getRotY()+","+player.getRotZ()+","+0.3);
+      testInput=wc.updateClientGameState("Play,"+pos.x+","+pos.y+","+pos.z+","+player.getRotX()+","+player.getRotY()+","+player.getRotZ()+","+0.3);
+      renderList.clear();
       renderList=parseGameStateString(testInput,modelMap);
-      
-      
+      }
+     
       float yOff = 1;
       float zOff = 3;
 
-      camxShift = ((float) Math.sin(player.getRotY() * 3.14 / 180) * zOff);// *(float)
-                                                                           // Math.sin(player.getRotZ()*3.14/180);
-      camyShift = ((float) (Math.cos(player.getRotX() * 3.14 / 180)) * yOff)
-          - (float) (Math.sin(player.getRotX() * 3.14 / 180)) * zOff;// *(float)
-                                                                     // Math.cos(player.getRotX()*3.14/180);
-      camzShift = -((float) Math.sin(player.getRotX() * 3.14 / 180) * yOff)
-          + ((float) Math.cos(player.getRotX() * 3.14 / 180) * zOff);// *(float)
-                                                                     // Math.cos(player.getRotX()*3.14/180);;
+      camShiftZ = player.zAxis;// *(float)
+      camShiftY= player.yAxis;
+    //  System.out.println(player.zAxis);
+      // Math.sin(player.getRotZ()*3.14/180);
+//      camyShift = ((float) (Math.cos(player.getRotX() * 3.14 / 180)) * yOff)
+//          - (float) (Math.sin(player.getRotX() * 3.14 / 180)) * zOff;// *(float)
+//                                                                     // Math.cos(player.getRotX()*3.14/180);
+//      camzShift = -((float) Math.sin(player.getRotX() * 3.14 / 180) * yOff)
+//          + ((float) Math.cos(player.getRotX() * 3.14 / 180) * zOff);// *(float)
+//                                                                     // Math.cos(player.getRotX()*3.14/180);;
 
-      camera.setPosition(player.getPosition().x + camxShift,
-          player.getPosition().y + camyShift, player.getPosition().z
-              + camzShift);
-      camera.setRotation(-player.getRotX(), -player.getRotY(),
-          -player.getRotZ());
-      }
+      camera.setPosition(player.getPosition().x + camShiftZ.x*zOff+camShiftY.x*yOff,
+          player.getPosition().y + camShiftZ.y*zOff+camShiftY.y*yOff, player.getPosition().z
+              + camShiftZ.z*zOff+camShiftY.z*yOff);
+     // camera.setRotation(-player.getRotX(),- player.getRotY(),
+      //    -player.getRotZ());
+      
 			/* render each entity passed to the client */
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
 
       }
-
+     //System.out.println(player.xAxis);
+      camera.followObj=player;
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
 
@@ -320,6 +375,7 @@ public class MainGameLoop
 
   	        player = new Entity(modelMap.getTexturedModelList().get(id),
   	            new Vector3f(x, y, z), xr, yr, zr, s);
+  	        renderList.add(player);
 
   	      }
   	      else

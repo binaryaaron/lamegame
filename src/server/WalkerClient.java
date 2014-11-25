@@ -28,7 +28,7 @@ public class WalkerClient extends Thread
   BufferedReader in=null;
   
   private String spoofString="Play,0,0,4,0,90,0,0.3";//TODO delete this after testing
-  private String inputFromServer="Play,0,0,4,0,0,0,0.3";
+  private volatile String inputFromServer="Play,0,0,4,0,0,0,0.3";
   private String outputToServer;
   
   private LinkedList<Point> playerLocList=new LinkedList<>();
@@ -61,27 +61,52 @@ public class WalkerClient extends Thread
     }
     
     //initialize ServerPackage
-    Point startPoint=new Point(255,255);
-    outputToServer=StringUtility.pointToString(startPoint);
-    out.write(outputToServer);
+  
     this.start();
   }
   
   public void run()
   {
 	  System.out.println("clientUpdate1:"+inputFromServer);
+//    try
+//    {
 	  //TODO delete this after
     	inputFromServer=spoofString;
+		try {
+			while ((inputFromServer = in.readLine()) != null)
+			{
+				// System.out.println(inputFromServer);
 
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+      
+
+    
+    try
+    {
+      out.close();
+      in.close();
+      mySocket.close();
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+    }
     System.out.println("clientUpdate2:"+inputFromServer);
   }
   
+  
+  
   public synchronized String updateClientGameState(String updateString)
   {
+  //System.out.println("out"+updateString);
     outputToServer=updateString;
     out.println(outputToServer);
+   
+    //System.out.println("in"+inputFromServer);
     return inputFromServer;
-//	  System.out.println("clientUpdate3:"+inputFromServer);
-//    return updateString;
+
   }
 }

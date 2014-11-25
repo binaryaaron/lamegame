@@ -11,6 +11,7 @@ public class Camera {
 	private Vector3f xAxis;
 	private Vector3f yAxis;
 	private Vector3f zAxis;
+	public Entity followObj;
 	
 	public Camera(){
 		
@@ -114,23 +115,7 @@ public class Camera {
     
   }
   
-  public void setNewBasis(float rotX,float rotY,float rotZ){
-    xAxis.x=(float)(Math.cos(rotX)*Math.cos(rotZ)-Math.sin(rotX)*Math.cos(rotY)*Math.sin(rotZ));
-    xAxis.y=(float)(Math.cos(rotX)*Math.cos(rotZ)+Math.cos(rotX)*Math.cos(rotY)*Math.sin(rotZ));
-    xAxis.z=(float)(Math.sin(rotY)*Math.sin(rotZ));
-
-    yAxis.x=(float)(-Math.cos(rotX)*Math.sin(rotZ)-Math.sin(rotX)*Math.cos(rotY)*Math.cos(rotZ));
-    yAxis.y=(float)(-Math.sin(rotX)*Math.sin(rotZ)+Math.cos(rotX)*Math.cos(rotY)*Math.cos(rotZ));
-    yAxis.z=(float)(Math.sin(rotY)*Math.cos(rotZ));
-    
-    zAxis.x=(float)(Math.sin(rotY)*Math.sin(rotX));
-    zAxis.y=(float)(-Math.sin(rotY)*Math.cos(rotX));
-    zAxis.z=(float)(Math.cos(rotY));
-    
-    
-    
-    
-  }
+ 
   
   public void rotate(float rotX,float rotY,float rotZ) {
 	    this.pitch += rotX;
