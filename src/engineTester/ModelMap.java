@@ -34,7 +34,8 @@ public class ModelMap {
 	    RawModel ship2 = OBJLoader.loadObjModel("SpaceShip31", loader, true);
 	    RawModel modelAsteroid = OBJLoader.loadObjModel("SquareRock3", loader,  true);
 	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  false);
-	    RawModel text = FontLoader.loadFontModel("0123456789:;<=>?", loader,  true, 20);
+	    //change text label here
+	    RawModel text = FontLoader.loadFontModel("totally works u guyz", loader,  true, 20);
 	        
 	    ModelTexture shipTexture = new ModelTexture(loader.loadTexture("SciFi_FighterMK_diffuse"));
 	    ModelTexture ship2Texture = new ModelTexture(loader.loadTexture("space_frigate_6_color"));

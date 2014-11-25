@@ -70,12 +70,15 @@ public class FontLoader
         int letterVal = (int)character;;
         //calculate the position of the letter on the png
         float uv_x = (letterVal%16)/16.0f;
+        //0.9375 is an offset that flips the y 180 and down a row
         float uv_y = (float)0.9375-(letterVal/16)/16.0f;
+        //defines an offset for shortening letter whitespace
+        float spaceOffset = 0.017f;
         System.out.println(character+" " + uv_x);
-        Vector2f uv_up_left = new Vector2f(uv_x, uv_y);
-        Vector2f uv_up_right = new Vector2f(uv_x+1.0f/16.0f, uv_y);
-        Vector2f uv_down_right = new Vector2f(uv_x+1.0f/16.0f,(uv_y+1.0f/16.0f));
-        Vector2f uv_down_left = new Vector2f(uv_x, (uv_y+1.0f/16.0f));
+        Vector2f uv_up_left = new Vector2f(uv_x+spaceOffset, uv_y);
+        Vector2f uv_up_right = new Vector2f(uv_x+1.0f/16.0f-spaceOffset, uv_y);
+        Vector2f uv_down_right = new Vector2f(uv_x+1.0f/16.0f-spaceOffset,(uv_y+1.0f/16.0f));
+        Vector2f uv_down_left = new Vector2f(uv_x+spaceOffset, (uv_y+1.0f/16.0f));
 
         
         textures.add(uv_down_left);
