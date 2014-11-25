@@ -292,9 +292,13 @@ public class MainGameLoop
       
       
       Vector3f pos=player.getPosition();
-      testInput=wc.updateClientGameState("Play,"+pos.x+","+pos.y+","+pos.z+","+player.getRotX()+","+player.getRotY()+","+player.getRotZ()+","+0.3);
+      String toSend="Play,"+pos.x+","+pos.y+","+pos.z+","+player.getRotX()+","+player.getRotY()+","+player.getRotZ()+","+0.3;
+      testInput=wc.updateClientGameState(toSend);
       renderList.clear();
       renderList=parseGameStateString(testInput,modelMap);
+      //maybe the parse game state string needs to "flush" objects, as in its not updating them because it doesn't
+      //consider them volatile?
+      
       
       
       float yOff = 1;

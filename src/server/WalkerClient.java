@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -47,7 +48,9 @@ public class WalkerClient extends Thread
     try
     {
       mySocket=new Socket(hostName, socketVal);
-      out=new PrintWriter(mySocket.getOutputStream());
+//      out=new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream(),"UTF-8"),true);
+      out=new PrintWriter(mySocket.getOutputStream(),true);
+//      out=new PrintWriter(mySocket.getOutputStream());
       in=new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
     } catch (UnknownHostException e)
     {
@@ -60,7 +63,6 @@ public class WalkerClient extends Thread
     }
     
     //initialize ServerPackage
-  
     this.start();
   }
   
@@ -70,18 +72,13 @@ public class WalkerClient extends Thread
     // TODO delete this after
     outputToServer="Play,0,0,4,0,0,0,0.3;";
     out.println(outputToServer);
-    out.close();
-    
+   
     try
     {
       while((inputFromServer=in.readLine())!=null)
       {
-    	
-    	outputToServer=inputFromServer;
-    	out.println(outputToServer);
-    	out.flush();
         serverResponded=true;
-        System.out.println(inputFromServer);
+        System.out.println(inputFromServer);        
       }
     } catch (IOException e1)
     {
@@ -104,9 +101,10 @@ public class WalkerClient extends Thread
   
   public synchronized String updateClientGameState(String updateString)
   {
-	serverResponded=false;
-   
-    return inputFromServer;
+    serverResponded=false;
+    outputToServer=updateString;
+    out.println(outputToServer);
 
+    return inputFromServer;
   }
 }
