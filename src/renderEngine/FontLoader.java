@@ -1,8 +1,5 @@
 package renderEngine;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +8,6 @@ import models.Vertex;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 
 import world.BoxUtilities;
 
@@ -20,8 +15,8 @@ public class FontLoader
 {
 
   /**
-   * build a new Raw Model by parsing a font.png file.
-   * The target .obj file must contain vertex coordinates, uv, normal vectors, and face indices
+   * build a new Raw Model by parsing text given
+   * size determines how large the text created should be.
    * simpleShape is true for lowpoly objects. A more expensive, more accurate method is employed 
    * for simple shapes
    * 
@@ -30,29 +25,10 @@ public class FontLoader
    * @param simpleShape
    * @return
    */
-  public static RawModel loadFontModel(String fileName, Loader loader,
-      boolean simpleShape, String text, int x, int y, int size)
+  public static RawModel loadFontModel(String text, Loader loader,
+      boolean simpleShape, int size)
   {
-
-    //Read file all obj files must be in res folder
-    Texture texture;
-    
-    try 
-    {
-      texture =TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
-    } 
-    catch (FileNotFoundException e) 
-    {
-    
-      e.printStackTrace();
-    } 
-    catch (IOException e) 
-    {
-      e.printStackTrace();
-    }
     //co-ordinates of the character on the png
- 
-    String line;
     List<Vector3f> vertices = new ArrayList<>();
     List<Vector2f> textures = new ArrayList<>();
     List<Vector3f> normals = new ArrayList<>();
@@ -71,125 +47,77 @@ public class FontLoader
     //parse 
     try
     {
+      //assign vertices based on the size of the text
       for(int i = 0; i < text.length(); i++)
       {
-        Vector3f up_left = new Vector3f(x+i*size, y+size,0);
-        Vector3f up_right = new Vector3f(x+i*size+size, y+size,0);
-        Vector3f down_right = new Vector3f(x+i*size, y,0);
-        Vector3f down_left = new Vector3f(x+i*size+size, y,0);
+        Vector3f up_left = new Vector3f(i*size, size,0);
+        Vector3f up_right = new Vector3f(i*size+size, size,0);
+        Vector3f down_right = new Vector3f(i*size+size, 0,0);
+        Vector3f down_left = new Vector3f(i*size, 0,0);
         
-        vertices.add(up_left);
+        //add the indices to make a square
         vertices.add(down_left);
-        vertices.add(up_right);
-        
         vertices.add(down_right);
         vertices.add(up_right);
-        vertices.add(down_left);
-        
+        vertices.add(up_left);
+
+        System.out.println("v "+down_left.x+" "+down_left.y+" "+down_left.z);
+        System.out.println("v "+down_right.x+" "+down_right.y+" "+down_right.z);
+        System.out.println("v "+up_right.x+" "+up_right.y+" "+up_right.z);
+        System.out.println("v "+up_left.x+" "+up_left.y+" "+up_left.z);
+      }
+      for(int i = 0; i < text.length(); i++)
+      {
+        //create the texture coordinates based on the input text
         char character = text.charAt(i);
         float uv_x = (character%16)/16.0f;
         float uv_y = (character/16)/16.0f;
         
         Vector2f uv_up_left = new Vector2f(uv_x, uv_y);
         Vector2f uv_up_right = new Vector2f(uv_x+1.0f/16.0f, uv_y);
-        Vector2f uv_down_right = new Vector2f(uv_x, uv_y+1.0f/16.0f);
-        Vector2f uv_down_left = new Vector2f(uv_x+1.0f/16.0f, uv_y+1.0f/16.0f);
-        
-        textures.add(uv_up_left);
-        textures.add(uv_down_left);
-        textures.add(uv_up_right);
-        
-        textures.add(uv_down_right);
-        textures.add(uv_down_left);
-        textures.add(uv_down_left);
+        Vector2f uv_down_right = new Vector2f(uv_x+1.0f/16.0f,(uv_y+1.0f/16.0f));
+        Vector2f uv_down_left = new Vector2f(uv_x, (uv_y+1.0f/16.0f));
 
-        normals.add(new Vector3f(0,0,0));
-        normals.add(new Vector3f(0,0,0));
-        normals.add(new Vector3f(0,0,0));
+        
+        textures.add(uv_down_left);
+        textures.add(uv_down_right);
+        textures.add(uv_up_right);
+        textures.add(uv_up_left);
+
+        System.out.println("vt "+uv_down_left.x+" "+uv_down_left.y);
+        System.out.println("vt "+uv_down_right.x+" "+uv_down_right.y);
+        System.out.println("vt "+uv_up_right.x+" "+uv_up_right.y);
+        System.out.println("vt "+uv_up_left.x+" "+uv_up_left.y);
       }
+      for(int i = 0; i < text.length(); i++)
+      {
+        //normals are garbage
+        normals.add(new Vector3f(0,0,1));
+        normals.add(new Vector3f(0,0,1));
+        normals.add(new Vector3f(0,0,1));
+        normals.add(new Vector3f(0,0,1));
+        System.out.println("vn 0.000000 0.000000 1.000000");
+        System.out.println("vn 0.000000 0.000000 1.000000");
+        System.out.println("vn 0.000000 0.000000 1.000000");
+        System.out.println("vn 0.000000 0.000000 1.000000");
+      }
+      //create a 3d normals array list
       for (int j = 0; j < vertices.size() * 3; j++)
       {
         normalsArrayList.add(null);
       }
-
+      //create a 2d texture array list 
       for (int j = 0; j < vertices.size() * 2; j++)
       {
         textureArrayList.add(null);
       }
+      //add faces(quad)
       for(int i = 0; i < text.length(); i++)
       {
-        String []vertex1 = new String[]{""+i*3+1,""+i*3+1,""+i*3+1};
-        String []vertex2 = new String[]{""+i*3+2,""+i*3+2,""+i*3+2};
-        String []vertex3 = new String[]{""+i*3+3,""+i*3+3,""+i*3+3};
-        System.out.println("hi");
-        processVertex(vertex1, indices, textures, normals, vertices,
-            textureArrayList, normalsArrayList, proccessedVertecies,
-            simpleShape);
-        processVertex(vertex2, indices, textures, normals, vertices,
-            textureArrayList, normalsArrayList, proccessedVertecies,
-            simpleShape);
-        processVertex(vertex3, indices, textures, normals, vertices,
-            textureArrayList, normalsArrayList, proccessedVertecies,
-            simpleShape);        
-      }
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-      
-      /**while (true)
-      { 
-        
-        
-        if (line.startsWith("v "))
-        {
-          Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]),
-              Float.parseFloat(currentLine[2]),
-              Float.parseFloat(currentLine[3]));
-          vertices.add(vertex);
-        }
-        else if (line.startsWith("vt "))
-        {
-          Vector2f texture = new Vector2f(Float.parseFloat(currentLine[1]),
-              Float.parseFloat(currentLine[2]));
-          textures.add(texture);
-        }
-        else if (line.startsWith("vn "))
-        {
-          Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]),
-              Float.parseFloat(currentLine[2]),
-              Float.parseFloat(currentLine[3]));
-          normals.add(normal);
-        }
-        else if (line.startsWith("f "))
-        {
-
-          for (int i = 0; i < vertices.size() * 3; i++)
-          {
-            normalsArrayList.add(null);
-          }
-
-          for (int i = 0; i < vertices.size() * 2; i++)
-          {
-            textureArrayList.add(null);
-          }
-
-          break;
-        }
-      }
-
-      while (line != null)
-      {
-        if (!line.startsWith("f "))
-        {
-          line = reader.readLine();
-          continue;
-        }
-        String[] currentLine = line.split(" ");
-        String[] vertex1 = currentLine[1].split("/");
-        String[] vertex2 = currentLine[2].split("/");
-        String[] vertex3 = currentLine[3].split("/");
+        //these are the coordinates for the first triangle of the quad
+        String []vertex1 = new String[]{""+(i*4+4),""+(i*4+1),""+(i*4+1)};
+        String []vertex2 = new String[]{""+(i*4+2),""+(i*4+3),""+(i*4+1)};
+        String []vertex3 = new String[]{""+(i*4+1),""+(i*4+4),""+(i*4+1)};
         processVertex(vertex1, indices, textures, normals, vertices,
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);
@@ -199,26 +127,39 @@ public class FontLoader
         processVertex(vertex3, indices, textures, normals, vertices,
             textureArrayList, normalsArrayList, proccessedVertecies,
             simpleShape);
-        line = reader.readLine();
+
+        System.out.println("f "+(i*4+1)+"/"+(i*4+1)+"/"+(i*4+1)+" "+(i*4+4)+"/"+(i*4+2)+"/"+(i*4+1)+" "+(i*4+2)+"/"+(i*4+3)+"/"+(i*4+1));
+        //second triangle of the quad
+        String []vertex4 = new String[]{""+(i*4+4),""+(i*4+1),""+(i*4+1)};
+        String []vertex5 = new String[]{""+(i*4+3),""+(i*4+2),""+(i*4+1)};
+        String []vertex6 = new String[]{""+(i*4+2),""+(i*4+3),""+(i*4+1)};
+        processVertex(vertex4, indices, textures, normals, vertices,
+            textureArrayList, normalsArrayList, proccessedVertecies,
+            simpleShape);
+        processVertex(vertex5, indices, textures, normals, vertices,
+            textureArrayList, normalsArrayList, proccessedVertecies,
+            simpleShape);
+        processVertex(vertex6, indices, textures, normals, vertices,
+            textureArrayList, normalsArrayList, proccessedVertecies,
+            simpleShape);      
+        System.out.println("f "+(i*4+4)+"/"+(i*4+2)+"/"+(i*4+1)+" "+(i*4+3)+"/"+(i*4+3)+"/"+(i*4+1)+" "+(i*4+2)+"/"+(i*4+4)+"/"+(i*4+1));
       }
-
-      reader.close();
     }
-
     catch (Exception e)
     {
       e.printStackTrace();
-    }*/
+    }
 
     verticesArray = new float[vertices.size() * 3];
     indicesArray = new int[indices.size()];
     textureArray = new float[textureArrayList.size()];
     normalsArray = new float[normalsArrayList.size()];
-
+    
     for (int i = 0; i < textureArrayList.size(); i++)
     {
-      textureArray[i] = textureArrayList.get(i);
+      textureArray[i] = textureArrayList.get(i);  
     }
+    
     for (int i = 0; i < normalsArrayList.size(); i++)
     {
       normalsArray[i] = normalsArrayList.get(i);

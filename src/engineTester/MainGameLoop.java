@@ -69,8 +69,8 @@ public class MainGameLoop
 
     else
     {
-      testInput = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
-          + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
+      testInput = "S001,0,0,20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.5;"
+          + "T001,0,0,100,0,0,0,1;" + "Cam,0,0,1,0,180,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
@@ -214,7 +214,6 @@ public class MainGameLoop
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
-
       }
 
       renderer.processSkyBox(skyBoxEntity);

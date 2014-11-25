@@ -7,11 +7,12 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.RawModel;
+import models.Vertex;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import models.RawModel;
-import models.Vertex;
 import world.BoxUtilities;
 
 public class OBJLoader
@@ -57,7 +58,6 @@ public class OBJLoader
 
     List<Float> normalsArrayList = new ArrayList<>();
     List<Float> textureArrayList = new ArrayList<>();
-
     int[] indicesArray = null;
     
     //parse 
