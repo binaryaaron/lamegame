@@ -37,6 +37,7 @@ public class MasterRenderer
   private SkyBoxShader skyBoxShader = new SkyBoxShader();
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+  private Map<TexturedModel, List<Entity>> hudEntities = new HashMap<>();
   private SkyBox skyBox;
   private Camera camera;
   /**
@@ -70,11 +71,17 @@ public class MasterRenderer
     skyBoxShader.loadViewMatrix(camera);
     skyBoxRenderer.render(skyBox);
     skyBoxShader.stop();
-    shader.start();
     
+    shader.start();
     shader.loadLight(sun);
     shader.loadViewMatrix(camera);
     renderer.render(entities);
+    shader.stop();
+
+    shader.start();
+    shader.loadLight(sun);
+    shader.loadViewMatrix(new Camera());
+    renderer.render(hudEntities);
     shader.stop();
 
 
@@ -115,7 +122,23 @@ public class MasterRenderer
     }
 
   }
-
+  
+  public void processHudEntity(Entity entity)
+  {
+    TexturedModel entityModel = entity.getModel();
+    List<Entity> batch = entities.get(entityModel);
+    if (batch != null)
+    {
+      batch.add(entity);
+    }
+    else
+    {
+      List<Entity> newBatch = new ArrayList<Entity>();
+      newBatch.add(entity);
+      hudEntities.put(entityModel, newBatch);
+    }
+    
+  }
   /**
    * Sets up a scene for rendering
    */

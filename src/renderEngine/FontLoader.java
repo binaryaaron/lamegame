@@ -74,7 +74,6 @@ public class FontLoader
         float uv_y = (float)0.9375-(letterVal/16)/16.0f;
         //defines an offset for shortening letter whitespace
         float spaceOffset = 0.017f;
-        System.out.println(character+" " + uv_x);
         Vector2f uv_up_left = new Vector2f(uv_x+spaceOffset, uv_y);
         Vector2f uv_up_right = new Vector2f(uv_x+1.0f/16.0f-spaceOffset, uv_y);
         Vector2f uv_down_right = new Vector2f(uv_x+1.0f/16.0f-spaceOffset,(uv_y+1.0f/16.0f));
@@ -184,6 +183,8 @@ public class FontLoader
         indicesArray, BoxUtilities.createBoundingBoxFromVertices(vertarray));
   }
 
+  
+  
   /**
    * @param vertexData
    * @param indices

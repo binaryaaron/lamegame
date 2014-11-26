@@ -3,6 +3,7 @@ package entities;
 import models.TexturedModel;
 
 import org.lwjgl.util.vector.Vector3f;
+
 import world.BoundingBox;
 
 public class Entity {
@@ -106,6 +107,4 @@ public class Entity {
 	public void setRotZ(float rotZ) {
 		this.rotZ = rotZ;
 	}
-
-
 }

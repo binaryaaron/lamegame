@@ -6,7 +6,8 @@ import toolbox.MathUtil;
 import entities.Camera;
 import entities.Light;
 
-public class SkyBoxShader extends ShaderProgram{
+public class SkyBoxShader extends ShaderProgram
+{
 
 	private static final String VERTEX_FILE="src/shaders/skyVertexShader.txt";
 	private static final String FRAGMENT_FILE="src/shaders/skyFragmentShader.txt";

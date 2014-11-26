@@ -61,19 +61,20 @@ public class MainGameLoop
     // format: ID,x,y,z,rotx,rot,y,rotz,scale
     String testInput;
 
+    //A stands for asteroid, S for ship, T for text. H stands for a hud element
     if (PHYSICS_DEBUG)
     {
       testInput = "A001,1,0,-5,0,0,0,1;" + "A002,-1,0,-5,0,0,0,0.5";
 
     }
-
     else
     {
       testInput = "S001,0,0,20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.5;"
-          + "T001,0,0,-100,0,0,0,1;" + "Cam,0,0,1,0,0,0,1";
+          + "HT001,0,0,-10,0,0,0,1;" + "T002,0,0,10,0,0,0,1;" + "Cam,0,0,1,0,0,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
+    List<Entity> hudRenderList = new ArrayList<>();
 
     String[] sceneInfo = testInput.split(";");
     for (String object : sceneInfo)
@@ -97,8 +98,7 @@ public class MainGameLoop
         camera.setYaw(yr);
         camera.setRoll(zr);
       }
-
-      else
+      else if(!object.startsWith("H"))
       {
 
         id = currentLine[0];
@@ -106,6 +106,14 @@ public class MainGameLoop
         Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(
             id), new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
+      }
+      else
+      {
+        id = currentLine[0].substring(1);
+
+        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(
+            id), new Vector3f(x, y, z), xr, yr, zr, s);
+        hudRenderList.add(tmp_Entity);
       }
     }
 
@@ -215,10 +223,15 @@ public class MainGameLoop
       {
         renderer.processEntity(ent);
       }
-
+      for (Entity ent : hudRenderList)
+      {
+        renderer.processHudEntity(ent);
+      }
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
 
+      //!TESTING!
+      //renderList.get(2).setModel((modelMap.getCompletedText(""+System.currentTimeMillis())));
       DisplayManager.updateDisplay();
       if (PRINT_FPS)
       {
