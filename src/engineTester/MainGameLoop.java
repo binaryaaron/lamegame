@@ -70,7 +70,8 @@ public class MainGameLoop
     else
     {
       testInput = "S001,0,0,20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.5;"
-          + "HT001,-2,0,-10,0,0,0,1;" + "T002,0,0,10,0,0,0,1;" + "Cam,0,0,1,0,0,0,1";
+          + "H001,-0.13,-0.08,-0.2,1,0,0,0.01;" + "H002,-0.13,0.07,-0.2,1,0,0,0.01;"+ 
+          "H003,-0.0,0.08,-0.2,1,0,0,0.01;"+ "Cam,0,0,1,0,0,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
@@ -109,7 +110,7 @@ public class MainGameLoop
       }
       else
       {
-        id = currentLine[0].substring(1);
+        id = currentLine[0];
 
         Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(
             id), new Vector3f(x, y, z), xr, yr, zr, s);
