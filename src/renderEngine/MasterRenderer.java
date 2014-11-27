@@ -91,7 +91,7 @@ public class MasterRenderer
   public void processSkyBox(SkyBox skyBox)
   {
    this.skyBox=skyBox;
-
+   this.skyBox.getSkyEntity().position=camera.position;
   }
 
   /**

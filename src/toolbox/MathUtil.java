@@ -3,86 +3,84 @@ package toolbox;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ra4king.opengl.util.math.Matrix4;
+import com.ra4king.opengl.util.math.Vector3;
+
 import entities.Camera;
 import entities.Entity;
 
-public class MathUtil {
-	
-	
-	
-public static Matrix4f createTransformationMatrix(Vector3f translation,float rx,float ry,float rz,float scale){
-		
+public class MathUtil
+{
 
-		
-		
-		
-		Matrix4f matrix = new Matrix4f();
-		matrix.setIdentity();
-		
-		Matrix4f.translate(translation,matrix,matrix);
-		Matrix4f.rotate((float)Math.toRadians(rx), new Vector3f(1,0,0), matrix, matrix);
-		Matrix4f.rotate((float)Math.toRadians(ry),  new Vector3f(0,1,0), matrix, matrix);
-		Matrix4f.rotate((float)Math.toRadians(rz),   new Vector3f(0,0,1), matrix, matrix);
-		Matrix4f.scale(new Vector3f(scale,scale,scale), matrix, matrix);
-		
-		return matrix;
-	}
-	
-	public static Matrix4f createTransformationMatrix(Entity entity){
-		
-		Vector3f translation=entity.getPosition();
-		float rx=entity.getRotX();
-		float ry=entity.getRotY();
-		float rz=entity.getRotZ();
-		float scale=entity.getScale();
-		
-		
-		
-		Matrix4f matrix = new Matrix4f();
-		matrix.setIdentity();
-		//Vector3f.add(new Vector3f(0,0,-1), translation, entity.front);
-		
-		
-		Matrix4f.translate(translation,matrix,matrix);
-		//Matrix4f.mul(matrix, entity.rotationMatrix, matrix);
-		
-		Matrix4f.rotate((float)Vector3f.angle(new Vector3f(0,entity.front.y,entity.front.z),new Vector3f(0,0,1) ), new Vector3f(1,0,0), matrix, matrix);
-		//Matrix4f.rotate((float)Vector3f.angle(entity.front,new Vector3f(0,0,1) ), new Vector3f(0,1,0), matrix, matrix);
-		Matrix4f.rotate((float)(entity.getRotZ()),   entity.zAxis, matrix, matrix);
-		
-		
-		
-		Matrix4f.scale(new Vector3f(scale,scale,scale), matrix, matrix);
-		
-		return matrix;
-	}
-	
-	public static Matrix4f createViewMatrix(Camera camera){
-		
-		Matrix4f matrix =new Matrix4f();
-		Entity entity =camera.followObj;
-		Matrix4f.rotate((float)Vector3f.angle(new Vector3f(0,entity.front.y,entity.front.z),new Vector3f(0,0,1) ), new Vector3f(1,0,0), matrix, matrix);
-		
-		System.out.println((float)Vector3f.angle(new Vector3f(0,entity.front.y,entity.front.z),new Vector3f(0,0,1) ));
-		//Matrix4f.rotate((float)Vector3f.angle(entity.front,new Vector3f(0,0,-1) ),  new Vector3f(0,1,0), matrix, matrix);
-		//Matrix4f.rotate((float)Vector3f.angle(entity.front,new Vector3f(0,0,-1) ),   new Vector3f(0,0,1), matrix, matrix);
-		updateDirectionPoints(entity,matrix);
-		Vector3f cameraPos=camera.getPosition();
-		Vector3f negativeCameraPos= new Vector3f(cameraPos.x,cameraPos.y,cameraPos.z);
-		Matrix4f.translate(negativeCameraPos, matrix, matrix);
-		return matrix;
-		
-	}
-	
-	private static void updateDirectionPoints(Entity entity,Matrix4f matrix){
-		
-		//entity.front=new Vector3f(matrix.m20,matrix.m21,matrix.m22);
-		//entity.right=new Vector3f(matrix.m00,matrix.m01,matrix.m02);
-		System.out.println(entity.front);
-		System.out.println(entity.right);
-		System.out.println(matrix);
-		
-		
-	}
+  //translation for global world objects
+  public static Matrix4f createTransformationMatrix(Vector3f translation,
+      float rx, float ry, float rz, float scale)
+  {
+
+    Matrix4f matrix = new Matrix4f();
+    matrix.setIdentity();
+
+    Matrix4f.translate(translation, matrix, matrix);
+    Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1, 0, 0), matrix,
+        matrix);
+    Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0, 1, 0), matrix,
+        matrix);
+    Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0, 0, 1), matrix,
+        matrix);
+    //Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
+
+    return createTransformationMatrix(new Entity(null,translation,0,0,0,scale));
+    //return matrix;
+  }
+
+  public static Matrix4f createTransformationMatrix(Entity entity)
+  {
+    
+    float scale = entity.getScale();
+    Matrix4f matrix = new Matrix4f();
+    Matrix4 viewMatrix = entity.orientation.toMatrix().translate(
+        new Vector3(entity.position.x, entity.position.y, entity.position.z));
+
+    matrix = mat4fToMat4(viewMatrix.inverse());
+   
+    Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
+
+    return matrix;
+  }
+
+  public static Matrix4f createViewMatrix(Camera camera)
+  {
+
+    Matrix4f matrix = new Matrix4f();
+    Matrix4 viewMatrix = camera.orientation.toMatrix().translate(
+        new Vector3(camera.position.x, camera.position.y, camera.position.z));
+    matrix = mat4fToMat4(viewMatrix);
+
+    return matrix;
+
+  }
+
+  public static Matrix4f mat4fToMat4(Matrix4 viewMatrix)
+  {
+    Matrix4f matrix = new Matrix4f();
+    matrix.m00 = viewMatrix.get(0, 0);
+    matrix.m01 = viewMatrix.get(0, 1);
+    matrix.m02 = viewMatrix.get(0, 2);
+    matrix.m03 = viewMatrix.get(0, 3);
+    matrix.m10 = viewMatrix.get(1, 0);
+    matrix.m11 = viewMatrix.get(1, 1);
+    matrix.m12 = viewMatrix.get(1, 2);
+    matrix.m13 = viewMatrix.get(1, 3);
+    matrix.m20 = viewMatrix.get(2, 0);
+    matrix.m21 = viewMatrix.get(2, 1);
+    matrix.m22 = viewMatrix.get(2, 2);
+    matrix.m23 = viewMatrix.get(2, 3);
+    matrix.m30 = viewMatrix.get(3, 0);
+    matrix.m31 = viewMatrix.get(3, 1);
+    matrix.m32 = viewMatrix.get(3, 2);
+    matrix.m33 = viewMatrix.get(3, 3);
+
+    return matrix;
+  }
 
 }

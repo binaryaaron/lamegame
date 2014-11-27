@@ -3,8 +3,13 @@ package entities;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+
 public class Camera {
-	private Vector3f position=new Vector3f(0,0,0);
+	public Vector3f position=new Vector3f(0,0,0);
+	
+	 public Quaternion orientation;
 	private  float pitch;
 	private float yaw;
 	private float roll;
@@ -14,45 +19,19 @@ public class Camera {
 	public Entity followObj;
 	
 	public Camera(){
-		
+	  orientation=new Quaternion();
 		xAxis=new Vector3f(1f,0f,0f);
 		yAxis=new Vector3f(0f,1f,0f);
 		zAxis=new Vector3f(0f,0f,1f);
 	}
 	
+	public void quadTranslate(Vector3 vec3){
+    this.position.x=vec3.x();
+    this.position.y=vec3.y();
+    this.position.z=vec3.z();
+  }
 	
-	
-	public void move(){
 
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-			pitch++;
-
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-			pitch--;
-		}
-
-		
-		
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-			yaw-=1;
-
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-			yaw+=1;
-
-		}
-		
-		
-		
-		
-		
-	}
-	
-	
-	
 	
 	
 	
