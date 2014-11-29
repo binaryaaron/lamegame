@@ -89,6 +89,12 @@ public class MainLoopServer
       {
         e.printStackTrace();
       }
+      
+      //wait for 1 connection to the server
+      while(myServer.threadList.size()<1)
+      {
+        //do nothing
+      }
 
       //get first line of input from server
       for(WalkerThread wt: myServer.threadList)

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.LinkedList;
 
-public class WalkerServer
+public class WalkerServer extends Thread
 {  
   private static final int PORT=4444;
   private static ServerSocket myServerSocket;
@@ -23,9 +23,22 @@ public class WalkerServer
       System.exit(-1);
     }
     
+    this.start();
+  }
+  
+  public void run()
+  {
     while(listening)
     {
-      WalkerThread newThread=new WalkerThread(myServerSocket.accept(),IDgen);
+      WalkerThread newThread=null;
+      try
+      {
+        newThread=new WalkerThread(myServerSocket.accept(),IDgen);
+      } catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+      
       System.out.println("socket connection accepted");
       newThread.start();
       IDgen++;
