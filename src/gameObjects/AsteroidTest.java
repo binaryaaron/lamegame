@@ -1,4 +1,4 @@
-package entities;
+package gameObjects;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,11 +37,6 @@ public class AsteroidTest
 
   @Test public void testAsteroidSize() throws Exception
   {
-    System.out.println("Asteroid Size: " + ass.getBox().getMax());
-  }
-
-  @Test public void testToString() throws Exception
-  {
-    System.out.println(ass.toString());
+    System.out.println("Asteroid Size: " + ass.getBBox().getMax());
   }
 }

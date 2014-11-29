@@ -1,4 +1,4 @@
-package entities;
+package gameObjects;
 
 import org.junit.After;
 import org.junit.Before;
@@ -6,16 +6,16 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class PlayerTest
+public class PlayerObjectTest
 {
-  Player p1;
-  Player p2;
+  PlayerObject p1;
+  PlayerObject p2;
 
 
   @Before public void setUp() throws Exception
   {
-     p1 = new Player();
-     p2 = new Player();
+     p1 = new PlayerObject();
+     p2 = new PlayerObject();
   }
 
   @After public void tearDown() throws Exception
@@ -55,8 +55,8 @@ public class PlayerTest
   @Test public void testGetPlayerId() throws Exception
   {
     System.out.println(p1);
-    assertTrue(p1.getIntId() == 1);
-    assertTrue(p2.getIntId() == 2);
+    assertTrue(p1.getPlayerId() == 1);
+    assertTrue(p2.getPlayerId() == 2);
   }
 
   @Test public void testCompareTo() throws Exception

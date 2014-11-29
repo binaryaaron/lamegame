@@ -1,38 +1,37 @@
-package entities;
+package gameObjects;
 
 import world.BoundingBox;
 
 /**
- * Player is the concrete implementation of Player. It holds data for
+ * PlayerObject is the concrete implementation of Player. It holds data for
  * every relevant player field, including position, velocity, acceleration,
  * health, id, and boolean flags to denote if the person is playing(connected)
  * or alive.
  * Created by aarongonzales on 11/14/14.
  */
-public class Player extends Entity implements Comparable<Player>
+public class PlayerObject extends GameObject implements Comparable<PlayerObject>
 {
   public static short PLAYER_COUNT = 0;
-  private final int intId;
+  private final short playerId;
   private Boolean alive = true;
   private Boolean playing = true;
   private static Boolean DEBUG = true;
   private static final int SIZE = 5;
-  private String id;
 
   /**
-   * Default constructor for a Player. Initializes position to
+   * Default constructor for a PlayerObject. Initializes position to
    * 0,0,0
    */
-  public Player()
+  public PlayerObject()
   {
     // check for number of players
     if (PLAYER_COUNT == 4)
     {
       System.out.println("Cannot create more than four players!");
-      intId = -1;
+      playerId = -1;
       return;
     }
-    if(DEBUG) System.out.println("Initializing Player");
+    if(DEBUG) System.out.println("Initializing PlayerObject");
     //Each player starts in a different part of the world
     if (PLAYER_COUNT == 0)
     {
@@ -42,13 +41,10 @@ public class Player extends Entity implements Comparable<Player>
     {
       this.initPlayer();
     }
-    vel.set(0,0,0);
+    velocity.set(0,0,0);
     PLAYER_COUNT++;
-    this.intId = PLAYER_COUNT;
+    this.playerId = PLAYER_COUNT;
     this.hitPoints = 1000;
-    // check this
-    this.id = String.format("%03d", PLAYER_COUNT);
-    this.mass = 50;
   }
 
   /**
@@ -59,9 +55,9 @@ public class Player extends Entity implements Comparable<Player>
   private void initPlayerOne()
   {
     this.position.set(0,0,0);
-    //this.model = true;
+    this.model = true;
 
-    this.box = new BoundingBox(position, SIZE, SIZE, SIZE);
+    this.bbox = new BoundingBox(position, SIZE, SIZE, SIZE);
     //this.bbox = new BoundingBox(new Vector3f(-10, -10, -10), new Vector3f(10,10,10));
 
   }
@@ -78,8 +74,8 @@ public class Player extends Entity implements Comparable<Player>
   private void initPlayer()
   {
     this.position.set(PLAYER_COUNT*50, 0, 0);
-    //this.model = true;
-    this.box = new BoundingBox(position, SIZE, SIZE, SIZE);
+    this.model = true;
+    this.bbox = new BoundingBox(position, SIZE, SIZE, SIZE);
   }
 
   /**
@@ -116,9 +112,9 @@ public class Player extends Entity implements Comparable<Player>
     this.alive = alive;
   }
 
-  public int getIntId()
+  public short getPlayerId()
   {
-    return intId;
+    return playerId;
   }
 
   /**
@@ -143,10 +139,10 @@ public class Player extends Entity implements Comparable<Player>
    * @return player with lower id
    */
   @Override
-  public int compareTo(Player otherPlayerObject)
+  public int compareTo(PlayerObject otherPlayerObject)
   {
-    return (this.getIntId() > otherPlayerObject.getIntId() ) ? -1: (this.getIntId() > otherPlayerObject
-        .getIntId()) ? 1:0 ;
+    return (this.getPlayerId() > otherPlayerObject.getPlayerId() ) ? -1: (this.getPlayerId() > otherPlayerObject
+        .getPlayerId()) ? 1:0 ;
   }
 
   /**
@@ -164,10 +160,10 @@ public class Player extends Entity implements Comparable<Player>
    * Kills this player object. Should send a signal to the screen and say
    * that the player is dead, allowing the player to respawn or something
    * could assign a new player with the same ID as this one ...?
-   * @param ent the game object to die
+   * @param go the game object to die
    */
-  //@Override
-  protected void uponDeath(Entity ent)
+  @Override
+  protected void uponDeath(GameObject go)
   {
     System.out.println("I'm dead!");
   }
@@ -175,15 +171,15 @@ public class Player extends Entity implements Comparable<Player>
   /**
    * Converts the player's current stats to a string for sending back and forth
    * across the network
-   * @return String with the intId, position, velocity, health, and other fields
+   * @return String with the playerId, position, velocity, health, and other fields
    */
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
     String delimiter = ":";
-    result.append("P" + id + delimiter );
+    result.append(playerId + delimiter );
     result.append(position + delimiter);
-    result.append(vel + delimiter);
+    result.append(velocity + delimiter);
     result.append(hitPoints + delimiter );
     result.append(alive + delimiter);
     result.append(playing + delimiter);
@@ -201,10 +197,10 @@ public class Player extends Entity implements Comparable<Player>
     String NEW_LINE = System.getProperty("line.separator");
 
     result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-    result.append(" PlayerID: " + id + NEW_LINE);
+    result.append(" PlayerID: " + playerId + NEW_LINE);
     result.append(" Health: " + hitPoints + NEW_LINE);
     result.append(" Position: " + position + NEW_LINE);
-    result.append(" Velocity: " + vel + NEW_LINE );
+    result.append(" Velocity: " + velocity + NEW_LINE );
     result.append(" Alive: " + alive + NEW_LINE);
     result.append(" Playing: " + playing + NEW_LINE);
     result.append("}");

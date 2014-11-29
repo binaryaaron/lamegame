@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.Asteroid;
+import gameObjects.Asteroid;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -143,14 +143,13 @@ public class MainGameLoop
         Entity Asteroid1 = renderList.get(1);
         Entity Asteroid2 = renderList.get(0);
 
-
         long time = System.currentTimeMillis();
         if (time - lastTime > 25)
         {
           for (Entity ent : renderList)
           {
             ent.move();
-            //System.out.println(ent);
+            System.out.println(ent);
             for (Entity other : renderList)
             {
               if (BoxUtilities.collision(ent.getBox(), other.getBox()))

@@ -8,8 +8,8 @@ import java.util.Stack;
 import sun.misc.Unsafe;
 
 /**
- * Usage: server.MemoryUtil.sizeOf( object ) server.MemoryUtil.deepSizeOf( object )
- * server.MemoryUtil.ADDRESS_MODE
+ * Usage: MemoryUtil.sizeOf( object ) MemoryUtil.deepSizeOf( object )
+ * MemoryUtil.ADDRESS_MODE
  */
 public class MemoryUtil
 {

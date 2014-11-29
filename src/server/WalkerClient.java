@@ -3,9 +3,13 @@ package server;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.AllPermission;
@@ -14,55 +18,40 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
-/**
- * Annotate me!
- */
-public class WalkerClient
+public class WalkerClient extends Thread
 {
   public boolean printlocation=false;
   public static String hostName="Manticore";
   public static int socketVal=4444;
   
-  public  ServerPackage myServerPackage=null;
-  private static LinkedList<ServerPackage> allPackageList=new LinkedList<>();
+  Socket mySocket=null;
+  PrintWriter out=null;
+  BufferedReader in=null;
   
-  private static Point location=new Point(1, 1);
-  private final  int xBound=500;
-  private final  int yBound=500;
-  private int myID;
+  private volatile String inputFromServer="Play,0,0,4,0,0,0,0.3";
+  private String outputToServer;
+  
+  private boolean serverResponded=false;
 
   public static void main(String[] args) throws IOException
   {
     new WalkerClient(args);
   }
-
-  /**
-   * Default constructor.
-   * @param args from main
-   * @throws IOException
-   */
+  
   public WalkerClient(String[] args) throws IOException
-  {
-    Picture myPicture=new Picture(xBound,yBound);
-    Graphics myGraphics=myPicture.getOffScreenGraphics();
-    myGraphics.setColor(Color.WHITE);
-    myGraphics.fillRect(0, 0, xBound, yBound);
-    
-    //TODO consider adding an ID number to each instance of Client
-    Random rand=new Random();
-    Socket mySocket=null;
-    ObjectOutputStream outToServer=null;
-    ObjectInputStream inFromServer=null;
+  {    
     if(args.length>0)
     {
-      hostName = args[0];
+      hostName=args[0];
     }
     
     try
     {
       mySocket=new Socket(hostName, socketVal);
-      outToServer=new ObjectOutputStream(mySocket.getOutputStream());
-      inFromServer=new ObjectInputStream(mySocket.getInputStream());
+//      out=new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream(),"UTF-8"),true);
+      out=new PrintWriter(mySocket.getOutputStream(),true);
+//      out=new PrintWriter(mySocket.getOutputStream());
+      in=new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
     } catch (UnknownHostException e)
     {
       System.err.println("Don't know about host: "+hostName);
@@ -74,68 +63,48 @@ public class WalkerClient
     }
     
     //initialize ServerPackage
-    boolean firstPackage=true;
-    Point startPoint=new Point(255,255);
-    myServerPackage=new ServerPackage(-1);//-1 represents unknown ID number
-    myServerPackage.currentP=startPoint;
-    outToServer.writeObject(myServerPackage);
+    this.start();
+  }
+  
+  public void run()
+  {
+    System.out.println("clientUpdate1:"+inputFromServer);
+    // TODO delete this after
+    outputToServer="Play,0,0,4,0,0,0,0.3;";
+    out.println(outputToServer);
+   
     try
     {
-      while((allPackageList=(LinkedList<ServerPackage>) inFromServer.readObject())!=null)
+      while((inputFromServer=in.readLine())!=null)
       {
-        final long startTime = System.currentTimeMillis();
-        if(firstPackage)//get ID from first Package
-        {
-          myID=allPackageList.getFirst().PACKID;
-          firstPackage=false;
-        }
-        myServerPackage=allPackageList.getFirst();
-        location.x=myServerPackage.currentP.x;
-        location.y=myServerPackage.currentP.y;
-        if(printlocation)System.out.println("Server:("+location.x+","+location.y+")");
-        
-        //////////draw map        
-        //other players
-        for (ServerPackage sp : allPackageList)
-        {
-          System.out.println("elements to draw: " + allPackageList.size());
-//          if(sp.PACKID==myID)break;//don't redraw current player
-          Point point = sp.currentP;
-          myGraphics.setColor(Color.GREEN);
-          myGraphics.fillRect(point.x - 1, point.y - 1, 3, 3);
-          myGraphics.setColor(Color.RED);
-          myGraphics.fillRect(point.x, point.y, 1, 1);
-        }
-      //this player
-        myGraphics.setColor(Color.DARK_GRAY);
-        myGraphics.fillRect(location.x-1, location.y-1, 3, 3);
-        myGraphics.setColor(Color.CYAN);
-        myGraphics.fillRect(location.x, location.y, 1, 1);
-        myPicture.repaint();
-        ////
-        
-        int xStep=rand.nextInt(3)-1;//create new random x/y steps of -1,0, or 1
-        int yStep=rand.nextInt(3)-1;
-        Point newLoc=new Point(location.x+xStep,location.y+yStep);//add steps to new point
-        myServerPackage.prevP.x=myServerPackage.currentP.x;//pass currentP to prevP
-        myServerPackage.prevP.y=myServerPackage.currentP.y;
-        myServerPackage.currentP.x=newLoc.x;//update currentP
-        myServerPackage.currentP.y=newLoc.y;
-        
-        outToServer.writeUnshared(myServerPackage);
-//        outToServer.reset();
-        final long endTime=System.currentTimeMillis();
-        System.out.println("Total execution time: "+(endTime-startTime));
+        serverResponded=true;
+        System.out.println(inputFromServer);        
       }
-    } catch (NumberFormatException e)
+    } catch (IOException e1)
     {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e)
+      e1.printStackTrace();
+    }
+
+    try
+    {
+      out.close();
+      in.close();
+      mySocket.close();
+    } catch (IOException e)
     {
       e.printStackTrace();
     }
-    outToServer.close();
-    inFromServer.close();
-    mySocket.close();
+    System.out.println("clientUpdate2:"+inputFromServer);
+  }
+  
+  
+  
+  public synchronized String updateClientGameState(String updateString)
+  {
+    serverResponded=false;
+    outputToServer=updateString;
+    out.println(outputToServer);
+
+    return inputFromServer;
   }
 }
