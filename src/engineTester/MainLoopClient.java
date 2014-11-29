@@ -8,6 +8,7 @@ package engineTester;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
+import server.WalkerClient;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
@@ -34,11 +36,12 @@ import world.BoxUtilities;
 
 import javax.swing.*;
 
-public class MainGameLoop
+public class MainLoopClient
 {
 
   public final static boolean PRINT_FPS = false;
   private final static boolean PHYSICS_DEBUG = true;
+  public static WalkerClient myClient=null;
 
   public static void main(String[] args)
   {
@@ -65,32 +68,41 @@ public class MainGameLoop
 
     // this will be information read from a socket
     // format: ID,x,y,z,rotx,rot,y,rotz,scale
-    String testInput;
+    String outPutToServer=null;
+    String inputFromServer=null;
 
     if (PHYSICS_DEBUG)
     {
-      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
+      //start new client
+      try
+      {
+        myClient=new WalkerClient(args);
+      } catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+      
+      //send first string from client to server      
+      outPutToServer = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
           "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
           "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
           + "A002,-4,-3,-20,0,0,0,0.5;";
-
+      inputFromServer=myClient.updateClientGameState(outPutToServer);//maybe this should wait for a response
     }
 
     else
     {
-      testInput = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
-          + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
+      outPutToServer = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;" + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
-
-    String[] sceneInfo = testInput.split(";");
+    String[] sceneInfo = inputFromServer.split(";");
     for (String object : sceneInfo)
     {
       String[] currentLine = object.split(",");
       String id;
       float x, y, z, xr, yr, zr, s;
-      // translate all imput data into appropriate entities;
+      // translate all input data into appropriate entities;
       x = Float.parseFloat(currentLine[1]);
       y = Float.parseFloat(currentLine[2]);
       z = Float.parseFloat(currentLine[3]);
@@ -109,11 +121,8 @@ public class MainGameLoop
 
       else
       {
-
         id = currentLine[0];
-
-        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(
-            id), new Vector3f(x, y, z), xr, yr, zr, s);
+        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(id), new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
       }
     }
@@ -143,6 +152,7 @@ public class MainGameLoop
         Entity Asteroid1 = renderList.get(1);
         Entity Asteroid2 = renderList.get(0);
 
+        /*update move happens on server, not client
         long time = System.currentTimeMillis();
         if (time - lastTime > 25)
         {
@@ -161,9 +171,9 @@ public class MainGameLoop
           }
           lastTime = time;
         }
+        */
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
-            .isKeyDown(Keyboard.KEY_RSHIFT))
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
         {
           scale = 0.0001f;
         }
@@ -183,7 +193,6 @@ public class MainGameLoop
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
         {
           Asteroid2.vel.y -= scale;
-
         }
         // /
         if (Keyboard.isKeyDown(Keyboard.KEY_D))
@@ -206,19 +215,19 @@ public class MainGameLoop
 
       }
 
+      /*camera move calc happens on server
       //camera controls
       else
       {
         camera.move();
       }
+      */
 
-			/* render each entity passed to the client */
+			//render each entity
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
-
       }
-
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
 
@@ -229,7 +238,14 @@ public class MainGameLoop
 
         System.out.println(pu.getFPS());
       }
-
+      
+      //send update string to server
+      outPutToServer="";//clear send string
+      for(Entity ent : renderList)
+      {
+        outPutToServer.concat(ent.toString());
+      }
+      myClient.updateClientGameState(outPutToServer);
     }
 
     renderer.cleanUp();

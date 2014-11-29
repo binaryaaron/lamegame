@@ -11,8 +11,8 @@ public class WalkerServer
   private static boolean listening=true;
   public static LinkedList<WalkerThread> threadList=new LinkedList<>();
   private static int IDgen=0;
-  
-  public static void main(String[] args) throws IOException
+ 
+  public WalkerServer() throws IOException
   {
     try
     {
@@ -40,4 +40,9 @@ public class WalkerServer
       }
     }
   }
+  
+//  public static void main(String[] args) throws IOException
+//  {
+//    new WalkerServer();
+//  }
 }

@@ -48,9 +48,7 @@ public class WalkerClient extends Thread
     try
     {
       mySocket=new Socket(hostName, socketVal);
-//      out=new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream(),"UTF-8"),true);
       out=new PrintWriter(mySocket.getOutputStream(),true);
-//      out=new PrintWriter(mySocket.getOutputStream());
       in=new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
     } catch (UnknownHostException e)
     {
@@ -69,9 +67,6 @@ public class WalkerClient extends Thread
   public void run()
   {
     System.out.println("clientUpdate1:"+inputFromServer);
-    // TODO delete this after
-    outputToServer="Play,0,0,4,0,0,0,0.3;";
-    out.println(outputToServer);
    
     try
     {
@@ -97,7 +92,11 @@ public class WalkerClient extends Thread
     System.out.println("clientUpdate2:"+inputFromServer);
   }
   
-  
+  public void firstSend(String output)//TODO unnecessary method?
+  {
+    outputToServer=output;
+    out.println(outputToServer);
+  }
   
   public synchronized String updateClientGameState(String updateString)
   {

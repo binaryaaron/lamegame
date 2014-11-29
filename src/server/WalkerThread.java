@@ -19,7 +19,7 @@ public class WalkerThread extends Thread
 { 
   public boolean printlocation=true;
   public boolean printclients=false;
-  private String inputFromClient;
+  private String inputFromClient=null;
 //  private LinkedList<Point> playersLocationList=new LinkedList<>();
   private String outputToClient;
   
@@ -77,6 +77,16 @@ public class WalkerThread extends Thread
   {
     outputToClient=updateString;
     out.println(outputToClient);
+    return inputFromClient;
+  }
+  
+  public String getClientInput()//called at the beginning to wait for first client input
+  {
+    while(inputFromClient==null)
+    {
+      //do nothing
+    }
+    
     return inputFromClient;
   }
 }
