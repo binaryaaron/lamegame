@@ -21,7 +21,7 @@ import javax.swing.ImageIcon;
 public class WalkerClient extends Thread
 {
   public boolean printlocation=false;
-  public static String hostName="Manticore";
+  public static String hostName="Glados";
   public static int socketVal=4444;
   
   Socket mySocket=null;
@@ -33,10 +33,10 @@ public class WalkerClient extends Thread
   
   private boolean serverResponded=false;
 
-  public static void main(String[] args) throws IOException
-  {
-    new WalkerClient(args);
-  }
+//  public static void main(String[] args) throws IOException
+//  {
+//    new WalkerClient(args);
+//  }
   
   public WalkerClient(String[] args) throws IOException
   {    

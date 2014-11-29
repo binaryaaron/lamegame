@@ -68,7 +68,7 @@ public class MainLoopClient
 
     // this will be information read from a socket
     // format: ID,x,y,z,rotx,rot,y,rotz,scale
-    String outPutToServer=null;
+    String outputToServer=null;
     String inputFromServer=null;
 
     if (PHYSICS_DEBUG)
@@ -83,16 +83,24 @@ public class MainLoopClient
       }
       
       //send first string from client to server      
-      outPutToServer = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
+      outputToServer = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
           "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
           "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
           + "A002,-4,-3,-20,0,0,0,0.5;";
-      inputFromServer=myClient.updateClientGameState(outPutToServer);//maybe this should wait for a response
+      myClient.firstSend(outputToServer);
+      try//wait 1 sec for response from server
+      {
+        Thread.sleep(1000);
+      } catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+      inputFromServer=myClient.updateClientGameState(outputToServer);//maybe this should wait for a response
     }
 
     else
     {
-      outPutToServer = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;" + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
+      outputToServer = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;" + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
@@ -171,7 +179,7 @@ public class MainLoopClient
           }
           lastTime = time;
         }
-        */
+        //*/
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
         {
@@ -240,12 +248,12 @@ public class MainLoopClient
       }
       
       //send update string to server
-      outPutToServer="";//clear send string
+      outputToServer="";//clear send string
       for(Entity ent : renderList)
       {
-        outPutToServer.concat(ent.toString());
+        outputToServer.concat(ent.toString());
       }
-      myClient.updateClientGameState(outPutToServer);
+      myClient.updateClientGameState(outputToServer);
     }
 
     renderer.cleanUp();
