@@ -43,6 +43,7 @@ public class MainLoopServer
   public final static boolean PRINT_FPS = false;
   private final static boolean PHYSICS_DEBUG = true;
   public static WalkerServer myServer;
+  private static int loop=0;
 
   public static void main(String[] args)
   {
@@ -84,24 +85,32 @@ public class MainLoopServer
       }
       
       //wait for 1 connection to the server
-      while(myServer.threadList.size()<1)
+//       while(myServer.threadList.size()==0)
+//      {
+//        //do nothing
+//      }
+      try
       {
-        //do nothing
+        Thread.sleep(5000);
+      } catch (InterruptedException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
 
       //get first line of input from server
       //TODO unnecessary if server does all calc (it knows start location)
-      for(WalkerThread wt: myServer.threadList)
-      {
-        inputFromClient=wt.getClientInput();
-      }
+//      for(WalkerThread wt: myServer.threadList)
+//      {
+//        inputFromClient=wt.getClientInput();
+//      }
 
 //      if(testInput==null)
 //      {
-//        testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
-//          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
-//          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
-//          + "A002,-4,-3,-20,0,0,0,0.5;";
+      inputFromClient = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
+          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
+          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
+          + "A002,-4,-3,-20,0,0,0,0.5;";
 //      }
     }
 
@@ -126,7 +135,7 @@ public class MainLoopServer
       yr = Float.parseFloat(currentLine[5]);
       zr = Float.parseFloat(currentLine[6]);
       s = Float.parseFloat(currentLine[7]);
-      System.out.println(object.charAt(0));
+//      System.out.println(object.charAt(0));
       if (object.startsWith("Cam"))
       {
         camera.setPosition(new Vector3f(x, y, z));
@@ -176,7 +185,7 @@ public class MainLoopServer
           for (Entity ent : renderList)
           {
             ent.move();
-            System.out.println(ent);
+//            System.out.println(ent);
             for (Entity other : renderList)
             {
               if (BoxUtilities.collision(ent.getBox(), other.getBox()))
@@ -197,46 +206,47 @@ public class MainLoopServer
                 
         inputFromClient=getInput();
         //detecting keys should only happen on client side
-        
-        if (inputFromClient.equals("KEY_LSHIFT") || inputFromClient.equals("KEY_RSHIFT"))
+        if(inputFromClient!=null)
         {
-          scale = 0.0001f;
-        }
-
-        if (inputFromClient.equals("KEY_RIGHT"))
-        {
-          Asteroid2.vel.x +=scale;
-        }
-        if (inputFromClient.equals("KEY_LEFT"))
-        {
-          Asteroid2.vel.x -=scale;
-        }
-        if (inputFromClient.equals("KEY_UP"))
-        {
-          Asteroid2.vel.y += scale;
-        }
-        if (inputFromClient.equals("KEY_DOWN"))
-        {
-          Asteroid2.vel.y -= scale;
-
-        }
-        // /
-        if (inputFromClient.equals("KEY_D"))
-        {
-          Asteroid1.vel.x += scale;
-        }
-        if (inputFromClient.equals("KEY_A"))
-        {
-          Asteroid1.vel.x -= scale;
-        }
-        if (inputFromClient.equals("KEY_W"))
-        {
-          Asteroid1.vel.y += scale;
-
-        }
-        if (inputFromClient.equals("KEY_S"))
-        {
-          Asteroid1.vel.y -= scale;
+          if (inputFromClient.equals("KEY_LSHIFT") || inputFromClient.equals("KEY_RSHIFT"))
+          {
+            scale = 0.0001f;
+          }
+          if (inputFromClient.equals("KEY_RIGHT"))
+          {
+            Asteroid2.vel.x +=scale;
+          }
+          if (inputFromClient.equals("KEY_LEFT"))
+          {
+            Asteroid2.vel.x -=scale;
+          }
+          if (inputFromClient.equals("KEY_UP"))
+          {
+            Asteroid2.vel.y += scale;
+          }
+          if (inputFromClient.equals("KEY_DOWN"))
+          {
+            Asteroid2.vel.y -= scale;
+  
+          }
+          // /
+          if (inputFromClient.equals("KEY_D"))
+          {
+            Asteroid1.vel.x += scale;
+          }
+          if (inputFromClient.equals("KEY_A"))
+          {
+            Asteroid1.vel.x -= scale;
+          }
+          if (inputFromClient.equals("KEY_W"))
+          {
+            Asteroid1.vel.y += scale;
+  
+          }
+          if (inputFromClient.equals("KEY_S"))
+          {
+            Asteroid1.vel.y -= scale;
+          }
         }
         
       }
@@ -250,7 +260,7 @@ public class MainLoopServer
       
       for(WalkerThread wt: myServer.threadList)
       {
-        wt.updateServerGameState(outputToClient);
+//        wt.updateServerGameState(outputToClient);
       }      
       
 			//render each entity passed to the client      
@@ -277,10 +287,12 @@ public class MainLoopServer
   }//end of main
   
   public static String getInput()
-  {
+  {    
     //start with first element in walker thread, expand to multiplayer
     String input=myServer.threadList.get(0).inputFromClient;
     myServer.threadList.get(0).inputReceived=true;
+//    if(loop%4==0)myServer.threadList.get(0).inputFromClient=null;
+    loop++;
     return input;
   }
 }
