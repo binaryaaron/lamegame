@@ -43,7 +43,7 @@ public class MainLoopServer
   public final static boolean PRINT_FPS = false;
   private final static boolean PHYSICS_DEBUG = true;
   public static WalkerServer myServer;
-  private static int loop=0;
+  private static int loop = 0;
 
   public static void main(String[] args)
   {
@@ -70,29 +70,31 @@ public class MainLoopServer
 
     // this will be information read from a socket
     // format: ID,x,y,z,rotx,rot,y,rotz,scale
-    String inputFromClient=null;
-    String outputToClient=null;
+    String inputFromClient = null;
+    String outputToClient = null;
 
     if (PHYSICS_DEBUG)
     {
       //start server
       try
       {
-        myServer=new WalkerServer();
-      } catch (IOException e)
+        myServer = new WalkerServer();
+      }
+      catch (IOException e)
       {
         e.printStackTrace();
       }
-      
+
       //wait for 1 connection to the server
-//       while(myServer.threadList.size()==0)
-//      {
-//        //do nothing
-//      }
+      //       while(myServer.threadList.size()==0)
+      //      {
+      //        //do nothing
+      //      }
       try
       {
         Thread.sleep(5000);
-      } catch (InterruptedException e)
+      }
+      catch (InterruptedException e)
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -100,23 +102,25 @@ public class MainLoopServer
 
       //get first line of input from server
       //TODO unnecessary if server does all calc (it knows start location)
-//      for(WalkerThread wt: myServer.threadList)
-//      {
-//        inputFromClient=wt.getClientInput();
-//      }
+      //      for(WalkerThread wt: myServer.threadList)
+      //      {
+      //        inputFromClient=wt.getClientInput();
+      //      }
 
-//      if(testInput==null)
-//      {
+      //      if(testInput==null)
+      //      {
       inputFromClient = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
-          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
-          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
+          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;" +
+          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"
+          + "A002,-4,-2,-20,0,0,0,0.5;"
           + "A002,-4,-3,-20,0,0,0,0.5;";
-//      }
+      //      }
     }
 
     else
     {
-      inputFromClient = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;" + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
+      inputFromClient = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
+          + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
@@ -135,7 +139,7 @@ public class MainLoopServer
       yr = Float.parseFloat(currentLine[5]);
       zr = Float.parseFloat(currentLine[6]);
       s = Float.parseFloat(currentLine[7]);
-//      System.out.println(object.charAt(0));
+      //      System.out.println(object.charAt(0));
       if (object.startsWith("Cam"))
       {
         camera.setPosition(new Vector3f(x, y, z));
@@ -148,7 +152,8 @@ public class MainLoopServer
       {
         id = currentLine[0];
 
-        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(id), new Vector3f(x, y, z), xr, yr, zr, s);
+        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(id),
+            new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
       }
     }
@@ -185,7 +190,7 @@ public class MainLoopServer
           for (Entity ent : renderList)
           {
             ent.move();
-//            System.out.println(ent);
+            //            System.out.println(ent);
             for (Entity other : renderList)
             {
               if (BoxUtilities.collision(ent.getBox(), other.getBox()))
@@ -197,73 +202,78 @@ public class MainLoopServer
           }
           lastTime = time;
         }
-        
+
         //camera controls
         else
         {
           camera.move();
         }
-                
-        inputFromClient=getInput();
+
+        inputFromClient = getInput();
+
+        String[] clientInput = inputFromClient.split(";");
         //detecting keys should only happen on client side
-        if(inputFromClient!=null)
+
+        for (String input : clientInput)
         {
-          if (inputFromClient.equals("KEY_LSHIFT") || inputFromClient.equals("KEY_RSHIFT"))
+          if (input.equals("KEY_LSHIFT") || inputFromClient
+              .equals("KEY_RSHIFT"))
           {
             scale = 0.0001f;
           }
-          if (inputFromClient.equals("KEY_RIGHT"))
+          if (input.equals("KEY_RIGHT"))
           {
-            Asteroid2.vel.x +=scale;
+            Asteroid2.vel.x += scale;
           }
-          if (inputFromClient.equals("KEY_LEFT"))
+          if (input.equals("KEY_LEFT"))
           {
-            Asteroid2.vel.x -=scale;
+            Asteroid2.vel.x -= scale;
           }
-          if (inputFromClient.equals("KEY_UP"))
+          if (input.equals("KEY_UP"))
           {
             Asteroid2.vel.y += scale;
           }
-          if (inputFromClient.equals("KEY_DOWN"))
+          if (input.equals("KEY_DOWN"))
           {
             Asteroid2.vel.y -= scale;
-  
+
           }
           // /
-          if (inputFromClient.equals("KEY_D"))
+          if (input.equals("KEY_D"))
           {
             Asteroid1.vel.x += scale;
           }
-          if (inputFromClient.equals("KEY_A"))
+          if (input.equals("KEY_A"))
           {
             Asteroid1.vel.x -= scale;
           }
-          if (inputFromClient.equals("KEY_W"))
+          if (input.equals("KEY_W"))
           {
             Asteroid1.vel.y += scale;
-  
+
           }
-          if (inputFromClient.equals("KEY_S"))
+          if (input.equals("KEY_S"))
           {
             Asteroid1.vel.y -= scale;
           }
+
         }
-        
+
       }
-      
+
       /////instead of rendering, build strings and send them to the client
-      outputToClient="";//clear the String
-      for(Entity ent:renderList)
+      outputToClient = "";//clear the String
+      for (Entity ent : renderList)
       {
         outputToClient.concat(ent.toString());
       }
-      
-      for(WalkerThread wt: myServer.threadList)
+
+      for (WalkerThread wt : myServer.threadList)
       {
-//        wt.updateServerGameState(outputToClient);
-      }      
-      
-			//render each entity passed to the client      
+        //        wt.updateServerGameState(outputToClient);
+      }
+
+      //render each entity passed to the client
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
@@ -271,25 +281,25 @@ public class MainLoopServer
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
       DisplayManager.updateDisplay();
-      
+
       if (PRINT_FPS)
       {
         pu.updateFPS();
         System.out.println(pu.getFPS());
-      }      
+      }
 
     }//end of while(!display...)
-    
+
     renderer.cleanUp();
     loader.cleanUp();
-    DisplayManager.closeDisplay();    
-    
+    DisplayManager.closeDisplay();
+
   }//end of main
-  
+
   public static String getInput()
-  {    
+  {
     //start with first element in walker thread, expand to multiplayer
-    String input=myServer.threadList.get(0).getClientInput();
+    String input = myServer.threadList.get(0).getClientInput();
     loop++;
     return input;
   }
