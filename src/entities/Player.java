@@ -175,7 +175,7 @@ public class Player extends Entity implements Comparable<Player>
   /**
    * Converts the player's current stats to a string for sending back and forth
    * across the network
-   * @return String with the intId, position, velocity, health, and other fields
+   * @return String with the intId, position, health, and other fields
    */
   @Override
   public String toString() {
@@ -183,7 +183,6 @@ public class Player extends Entity implements Comparable<Player>
     String delimiter = ":";
     result.append("P" + id + delimiter );
     result.append(position + delimiter);
-    result.append(vel + delimiter);
     result.append(hitPoints + delimiter );
     result.append(alive + delimiter);
     result.append(playing + delimiter);

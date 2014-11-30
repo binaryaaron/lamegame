@@ -74,7 +74,6 @@ public class Asteroid extends Entity
     String delimiter = ":";
     result.append("A" + id + delimiter );
     result.append(position + delimiter);
-    result.append(vel + delimiter);
     result.append(hitPoints + delimiter );
     return result.toString();
   }

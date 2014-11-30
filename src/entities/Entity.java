@@ -17,12 +17,31 @@ public class Entity {
 	private static Boolean DEBUG = true;
 	protected int hitPoints;
 	protected float mass;
+  private String id;
+
 
 
 	public Entity(){}
 
 	public Entity(TexturedModel model, Vector3f position, float rotX,
 			float rotY, float rotZ,float scale) {
+		this.model = model;
+		this.position = position;
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale=scale;
+		box = model.getRawModel().getBoundingBox().deepCopy();
+		box.scale(0.9f*scale);
+		box.translate(position);
+	}
+
+	/**
+	 * Constructor that takes an additional string for the id. used to pass the id from the textured model's id.
+	 */
+	public Entity(String id, TexturedModel model, Vector3f position, float rotX,
+			float rotY, float rotZ,float scale) {
+		this.id = id;
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;
@@ -205,12 +224,18 @@ public class Entity {
 	}
 
 	/**
-	 * Unimplemented in this class
-	 * @return
+	 * toString allows the entity to be parsed by the server's string
+	 * handlers. it builds the string by id, position, and hitpoints
+	 * @return String
 	 */
 	@Override public String toString()
 	{
-		return null;
+		StringBuilder result = new StringBuilder();
+		String delimiter = ":";
+		result.append(id + delimiter);
+		result.append(position + delimiter);
+		result.append(hitPoints + delimiter );
+		return result.toString();
 	}
 
 	/**
@@ -252,5 +277,13 @@ public class Entity {
 		//unimplemented in GameObject()
 	}
 
+	/**
+	 * Gets the entity's id.
+	 * @return
+	 */
+	public String getId()
+	{
+		return id;
+	}
 
 }
