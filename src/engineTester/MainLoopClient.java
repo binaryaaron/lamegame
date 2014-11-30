@@ -92,7 +92,7 @@ public class MainLoopClient
 
     try
     {
-      myClient = new WalkerClient(null);
+      myClient = new WalkerClient(args);
     }
     catch (IOException e)
     {
@@ -108,32 +108,36 @@ public class MainLoopClient
       renderList.clear();
       for (String object : sceneInfo)
       {
-        String[] currentLine = object.split(",");
-        String id;
-        float x, y, z, xr, yr, zr, s;
-        // translate all imput data into appropriate entities;
-        x = Float.parseFloat(currentLine[1]);
-        y = Float.parseFloat(currentLine[2]);
-        z = Float.parseFloat(currentLine[3]);
-        xr = Float.parseFloat(currentLine[4]);
-        yr = Float.parseFloat(currentLine[5]);
-        zr = Float.parseFloat(currentLine[6]);
-        s = Float.parseFloat(currentLine[7]);
-        //      System.out.println(object.charAt(0));
-        if (object.startsWith("Cam"))
+        if (!object.equals(""))
         {
-          camera.setPosition(new Vector3f(x, y, z));
-          camera.setPitch(xr);
-          camera.setYaw(yr);
-          camera.setRoll(zr);
-        }
-        else
-        {
-          id = currentLine[0];
+          String[] currentLine = object.split(",");
+          String id;
+          float x, y, z, xr, yr, zr, s;
+          // translate all imput data into appropriate entities;
+          x = Float.parseFloat(currentLine[1]);
+          y = Float.parseFloat(currentLine[2]);
+          z = Float.parseFloat(currentLine[3]);
+          xr = Float.parseFloat(currentLine[4]);
+          yr = Float.parseFloat(currentLine[5]);
+          zr = Float.parseFloat(currentLine[6]);
+          s = Float.parseFloat(currentLine[7]);
+          //      System.out.println(object.charAt(0));
+          if (object.startsWith("Cam"))
+          {
+            camera.setPosition(new Vector3f(x, y, z));
+            camera.setPitch(xr);
+            camera.setYaw(yr);
+            camera.setRoll(zr);
+          }
+          else
+          {
+            id = currentLine[0];
 
-          Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
-              new Vector3f(x, y, z), xr, yr, zr, s);
-          renderList.add(tmp_Entity);
+            Entity tmp_Entity = new Entity(id,
+                modelMap.getTexturedModelList().get(id),
+                new Vector3f(x, y, z), xr, yr, zr, s);
+            renderList.add(tmp_Entity);
+          }
         }
       }
 
