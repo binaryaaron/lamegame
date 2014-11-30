@@ -74,13 +74,6 @@ public class MainLoopServer
 
     if (PHYSICS_DEBUG)
     {
-      /*
-       * start here:
-       * server should reveive the below asteroid list from the client, then parse it/ calculate it.
-       * instead of adding it to the render list, it should build an updated string, and pass that
-       * to the client
-       */
-      
       //start server
       try
       {
@@ -97,6 +90,7 @@ public class MainLoopServer
       }
 
       //get first line of input from server
+      //TODO unnecessary if server does all calc (it knows start location)
       for(WalkerThread wt: myServer.threadList)
       {
         inputFromClient=wt.getClientInput();
@@ -113,8 +107,7 @@ public class MainLoopServer
 
     else
     {
-      inputFromClient = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
-          + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
+      inputFromClient = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;" + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
@@ -201,50 +194,51 @@ public class MainLoopServer
         {
           camera.move();
         }
-
+                
+        inputFromClient=getInput();
         //detecting keys should only happen on client side
-        /*
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+        
+        if (inputFromClient.equals("KEY_LSHIFT") || inputFromClient.equals("KEY_RSHIFT"))
         {
           scale = 0.0001f;
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+        if (inputFromClient.equals("KEY_RIGHT"))
         {
           Asteroid2.vel.x +=scale;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+        if (inputFromClient.equals("KEY_LEFT"))
         {
           Asteroid2.vel.x -=scale;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+        if (inputFromClient.equals("KEY_UP"))
         {
           Asteroid2.vel.y += scale;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+        if (inputFromClient.equals("KEY_DOWN"))
         {
           Asteroid2.vel.y -= scale;
 
         }
         // /
-        if (Keyboard.isKeyDown(Keyboard.KEY_D))
+        if (inputFromClient.equals("KEY_D"))
         {
           Asteroid1.vel.x += scale;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A))
+        if (inputFromClient.equals("KEY_A"))
         {
           Asteroid1.vel.x -= scale;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_W))
+        if (inputFromClient.equals("KEY_W"))
         {
           Asteroid1.vel.y += scale;
 
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S))
+        if (inputFromClient.equals("KEY_S"))
         {
           Asteroid1.vel.y -= scale;
         }
-        */
+        
       }
       
       /////instead of rendering, build strings and send them to the client
@@ -257,9 +251,8 @@ public class MainLoopServer
       for(WalkerThread wt: myServer.threadList)
       {
         wt.updateServerGameState(outputToClient);
-      }
+      }      
       
-      /*
 			//render each entity passed to the client      
       for (Entity ent : renderList)
       {
@@ -273,16 +266,21 @@ public class MainLoopServer
       {
         pu.updateFPS();
         System.out.println(pu.getFPS());
-      }
-      */
+      }      
 
     }//end of while(!display...)
-
-    /*
+    
     renderer.cleanUp();
     loader.cleanUp();
-    DisplayManager.closeDisplay();
-    */
+    DisplayManager.closeDisplay();    
     
   }//end of main
+  
+  public static String getInput()
+  {
+    //start with first element in walker thread, expand to multiplayer
+    String input=myServer.threadList.get(0).inputFromClient;
+    myServer.threadList.get(0).inputReceived=true;
+    return input;
+  }
 }

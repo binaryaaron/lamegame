@@ -15,8 +15,8 @@ import java.net.UnknownHostException;
 import java.security.AllPermission;
 import java.util.LinkedList;
 import java.util.Random;
-
 import javax.swing.ImageIcon;
+import org.lwjgl.input.Keyboard;
 
 public class WalkerClient extends Thread
 {
@@ -33,10 +33,10 @@ public class WalkerClient extends Thread
   
   private boolean serverResponded=false;
 
-//  public static void main(String[] args) throws IOException
-//  {
-//    new WalkerClient(args);
-//  }
+  public static void main(String[] args) throws IOException
+  {
+    new WalkerClient(args);
+  }
   
   public WalkerClient(String[] args) throws IOException
   {    
@@ -66,19 +66,59 @@ public class WalkerClient extends Thread
   
   public void run()
   {
-    System.out.println("clientUpdate1:"+inputFromServer);
-   
-    try
+    while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
     {
-      while((inputFromServer=in.readLine())!=null)
+      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
       {
-        serverResponded=true;
-        System.out.println(inputFromServer);        
+        out.println("KEY_LSHIFT");
       }
-    } catch (IOException e1)
-    {
-      e1.printStackTrace();
+  
+      if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+      {
+        out.println("KEY_RIGHT");
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+      {
+        out.println("KEY_LEFT");
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+      {
+        out.println("KEY_UP");
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+      {
+        out.println("KEY_DOWN");
+      }
+      // /
+      if (Keyboard.isKeyDown(Keyboard.KEY_D))
+      {
+        out.println("KEY_D");
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_A))
+      {
+        out.println("KEY_A");
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_W))
+      {
+        out.println("KEY_W");
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_S))
+      {
+        out.println("KEY_S");
+      }
     }
+   
+//    try
+//    {
+//      while((inputFromServer=in.readLine())!=null)
+//      {
+//        serverResponded=true;
+//        System.out.println(inputFromServer);        
+//      }
+//    } catch (IOException e1)
+//    {
+//      e1.printStackTrace();
+//    }
 
     try
     {

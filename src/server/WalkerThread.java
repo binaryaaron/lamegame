@@ -19,9 +19,9 @@ public class WalkerThread extends Thread
 { 
   public boolean printlocation=true;
   public boolean printclients=false;
-  private String inputFromClient=null;
-//  private LinkedList<Point> playersLocationList=new LinkedList<>();
-  private String outputToClient;
+  public String inputFromClient=null;
+  public String outputToClient=null;
+  public boolean inputReceived=false;
   
   private Socket myClientSocket = null;
   PrintWriter out=null;
@@ -37,20 +37,23 @@ public class WalkerThread extends Thread
   {
     try
     {
-//      out=new PrintWriter(myClientSocket.getOutputStream());
       out=new PrintWriter(myClientSocket.getOutputStream(),true);
-//      out=new PrintWriter(myClientSocket.getOutputStream());
       in=new BufferedReader(new InputStreamReader(myClientSocket.getInputStream()));
       int loop = 0;
       
+      //input from client will be an action (like move left), output will be a list of objects to render
       while ((inputFromClient = in.readLine()) != null)
       {
-        // if(loop%60==0)
-        System.out.println("intput from client= " + inputFromClient + "\n"+ loop);// delete this
+        //input from client shall only receive actions (move, fire) from the client, everything else will happen on the server (not graphics)
+        inputReceived=false;
+        while(!inputReceived)
+        {
+          //wait for MainLoopServer to fetch input
+        }
+        
+        outputToClient=null;//first test, don't send anything
+        if(outputToClient!=null)out.println(outputToClient);
         loop++;
-        // for initial server test, call the getter method to update from this
-        outputToClient = inputFromClient;// test version, this is not testing or updating the input, just bouncing it
-        out.println(outputToClient);
       }
     } 
     catch (java.net.SocketException e)
