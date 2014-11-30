@@ -90,21 +90,9 @@ public class MainLoopClient
     String hostName = "Manticore";
     int socketVal = 4444;
 
-    Socket mySocket = null;
-    PrintWriter out = null;
-    BufferedReader in = null;
-
     try
     {
-      mySocket = new Socket(hostName, socketVal);
-      out = new PrintWriter(mySocket.getOutputStream(), true);
-      in = new BufferedReader(
-          new InputStreamReader(mySocket.getInputStream()));
-    }
-    catch (UnknownHostException e)
-    {
-      System.err.println("Don't know about host: " + hostName);
-      System.exit(1);
+      myClient = new WalkerClient(null);
     }
     catch (IOException e)
     {
@@ -194,7 +182,7 @@ public class MainLoopClient
       {
         toSend += "KEY_S;";
       }
-      out.println(toSend);
+      myClient.sendToServer(toSend);
       DisplayManager.updateDisplay();
       try
       {

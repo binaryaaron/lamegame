@@ -93,6 +93,11 @@ public class WalkerClient extends Thread
     }
     System.out.println("clientUpdate2:"+inputFromServer);
   }
+
+  public void sendToServer(String toSend)
+  {
+    out.println(toSend);
+  }
   
   public void firstSend(String output)//TODO unnecessary method?
   {
