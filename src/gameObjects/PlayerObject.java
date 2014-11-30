@@ -171,7 +171,7 @@ public class PlayerObject extends GameObject implements Comparable<PlayerObject>
   /**
    * Converts the player's current stats to a string for sending back and forth
    * across the network
-   * @return String with the playerId, position, velocity, health, and other fields
+   * @return String with the intId, position, health, and other fields
    */
   @Override
   public String toString() {
@@ -179,7 +179,6 @@ public class PlayerObject extends GameObject implements Comparable<PlayerObject>
     String delimiter = ":";
     result.append(playerId + delimiter );
     result.append(position + delimiter);
-    result.append(velocity + delimiter);
     result.append(hitPoints + delimiter );
     result.append(alive + delimiter);
     result.append(playing + delimiter);

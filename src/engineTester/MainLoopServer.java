@@ -50,6 +50,7 @@ public class MainLoopServer
 
     DisplayManager.createDisplay();
     Loader loader = new Loader();
+
     ModelMap modelMap = new ModelMap();
 
     // create skybox, this is not an entity so it is seperate
