@@ -33,23 +33,21 @@ public class WalkerClient extends Thread
   PrintWriter out=null;
   BufferedReader in=null;
   
-  private volatile String inputFromServer="Play,0,0,4,0,0,0,0.3";
+  private volatile String inputFromServer="";
   private String outputToServer;
-  
-  private boolean serverResponded=false;
 
   public static void main(String[] args) throws IOException
   {
     new WalkerClient(args);
   }
-  
+
   public WalkerClient(String[] args) throws IOException
-  {    
+  {
     if(args.length>0)
     {
       hostName=args[0];
     }
-    
+
     try
     {
       mySocket=new Socket(hostName, socketVal);
@@ -72,68 +70,17 @@ public class WalkerClient extends Thread
   
   public void run()
   {
-    while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
-    {
-      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-      {
-        out.println("KEY_LSHIFT");
-      }
-  
-      if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-      {
-        System.out.println("KEY_RIGHT");
-        out.println("KEY_RIGHT");
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-      {
-        out.println("KEY_LEFT");
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-      {
-        out.println("KEY_UP");
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-      {
-        out.println("KEY_DOWN");
-      }
-      // /
-      if (Keyboard.isKeyDown(Keyboard.KEY_D))
-      {
-        out.println("KEY_D");
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_A))
-      {
-        out.println("KEY_A");
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_W))
-      {
-        out.println("KEY_W");
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_S))
-      {
-        out.println("KEY_S");
-      }
-      try
-      {
-        Thread.sleep(25);
-      } catch (InterruptedException e)
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
    
-//    try
-//    {
-//      while((inputFromServer=in.readLine())!=null)
-//      {
-//        serverResponded=true;
-//        System.out.println(inputFromServer);        
-//      }
-//    } catch (IOException e1)
-//    {
-//      e1.printStackTrace();
-//    }
+    try
+    {
+      while((inputFromServer=in.readLine())!=null)
+      {
+        System.out.println(inputFromServer);
+      }
+    } catch (IOException e1)
+    {
+      e1.printStackTrace();
+    }
 
     try
     {
@@ -153,12 +100,8 @@ public class WalkerClient extends Thread
     out.println(outputToServer);
   }
   
-  public synchronized String updateClientGameState(String updateString)
+  public synchronized String getInputFromServer()
   {
-    serverResponded=false;
-    outputToServer=updateString;
-    out.println(outputToServer);
-
     return inputFromServer;
   }
 }

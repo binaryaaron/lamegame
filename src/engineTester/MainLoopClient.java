@@ -84,125 +84,158 @@ public class MainLoopClient
     long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
 
+    //controls for physics testing with two asteroids
+    //wasd control leftest asteroid, arrows control rightmost.
+    //holding shift will slow down the shifting speed.
+    String hostName = "Manticore";
+    int socketVal = 4444;
+
+    Socket mySocket = null;
+    PrintWriter out = null;
+    BufferedReader in = null;
+
+    try
+    {
+      mySocket = new Socket(hostName, socketVal);
+      out = new PrintWriter(mySocket.getOutputStream(), true);
+      in = new BufferedReader(
+          new InputStreamReader(mySocket.getInputStream()));
+    }
+    catch (UnknownHostException e)
+    {
+      System.err.println("Don't know about host: " + hostName);
+      System.exit(1);
+    }
+    catch (IOException e)
+    {
+      System.err
+          .println("Couldn't get I/O for the connection to: " + hostName);
+      System.exit(1);
+    }
+
     /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
+      String[] sceneInfo = myClient.getInputFromServer().split(";");
+      renderList.clear();
+      for (String object : sceneInfo)
+      {
+        String[] currentLine = object.split(",");
+        String id;
+        float x, y, z, xr, yr, zr, s;
+        // translate all imput data into appropriate entities;
+        x = Float.parseFloat(currentLine[1]);
+        y = Float.parseFloat(currentLine[2]);
+        z = Float.parseFloat(currentLine[3]);
+        xr = Float.parseFloat(currentLine[4]);
+        yr = Float.parseFloat(currentLine[5]);
+        zr = Float.parseFloat(currentLine[6]);
+        s = Float.parseFloat(currentLine[7]);
+        //      System.out.println(object.charAt(0));
+        if (object.startsWith("Cam"))
+        {
+          camera.setPosition(new Vector3f(x, y, z));
+          camera.setPitch(xr);
+          camera.setYaw(yr);
+          camera.setRoll(zr);
+        }
+        else
+        {
+          id = currentLine[0];
+
+          Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
+              new Vector3f(x, y, z), xr, yr, zr, s);
+          renderList.add(tmp_Entity);
+        }
+      }
+
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         break;
       }
 
-      //controls for physics testing with two asteroids
-      //wasd control leftest asteroid, arrows control rightmost.
-      //holding shift will slow down the shifting speed.
-      String hostName = "Manticore";
-      int socketVal = 4444;
+      String toSend = "";
+      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
+          .isKeyDown(Keyboard.KEY_RSHIFT))
+      {
+        toSend += "KEY_LSHIFT;";
+      }
 
-      Socket mySocket = null;
-      PrintWriter out = null;
-      BufferedReader in = null;
-
+      if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+      {
+        toSend += "KEY_RIGHT;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+      {
+        toSend += "KEY_LEFT;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+      {
+        toSend += "KEY_UP;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+      {
+        toSend += "KEY_DOWN;";
+      }
+      // /
+      if (Keyboard.isKeyDown(Keyboard.KEY_D))
+      {
+        toSend += "KEY_D;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_A))
+      {
+        toSend += "KEY_A;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_W))
+      {
+        toSend += "KEY_W;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_S))
+      {
+        toSend += "KEY_S;";
+      }
+      out.println(toSend);
+      DisplayManager.updateDisplay();
       try
       {
-        mySocket = new Socket(hostName, socketVal);
-        out = new PrintWriter(mySocket.getOutputStream(), true);
-        in = new BufferedReader(
-            new InputStreamReader(mySocket.getInputStream()));
+        Thread.sleep(25);
       }
-      catch (UnknownHostException e)
+      catch (InterruptedException e)
       {
-        System.err.println("Don't know about host: " + hostName);
-        System.exit(1);
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
-      catch (IOException e)
+
+      for (Entity ent : renderList)
       {
-        System.err
-            .println("Couldn't get I/O for the connection to: " + hostName);
-        System.exit(1);
+        renderer.processEntity(ent);
       }
 
-      while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+      renderer.processSkyBox(skyBoxEntity);
+      renderer.render(light, camera);
+
+      DisplayManager.updateDisplay();
+
+      if (PRINT_FPS)
       {
-        String toSend = "";
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
-            .isKeyDown(Keyboard.KEY_RSHIFT))
-        {
-          toSend += "KEY_LSHIFT;";
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-        {
-          toSend += "KEY_RIGHT;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-        {
-          toSend += "KEY_LEFT;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-        {
-          toSend += "KEY_UP;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-        {
-          toSend += "KEY_DOWN;";
-        }
-        // /
-        if (Keyboard.isKeyDown(Keyboard.KEY_D))
-        {
-          toSend += "KEY_D;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A))
-        {
-          toSend += "KEY_A;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_W))
-        {
-          toSend += "KEY_W;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S))
-        {
-          toSend += "KEY_S;";
-        }
-        DisplayManager.updateDisplay();
-        try
-        {
-          Thread.sleep(25);
-        }
-        catch (InterruptedException e)
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+        pu.updateFPS();
+        System.out.println(pu.getFPS());
       }
 
+      //send update string to server
+      outputToServer = "";//clear send string
+      for (
+          Entity ent
+          : renderList)
+
+      {
+        outputToServer.concat(ent.toString());
+      }
+
+      renderer.cleanUp();
+      loader.cleanUp();
+      DisplayManager.closeDisplay();
     }
-
-    for (Entity ent : renderList)
-    {
-      renderer.processEntity(ent);
-    }
-    renderer.processSkyBox(skyBoxEntity);
-    renderer.render(light, camera);
-
-    DisplayManager.updateDisplay();
-    if (PRINT_FPS)
-    {
-      pu.updateFPS();
-
-      System.out.println(pu.getFPS());
-    }
-
-    //send update string to server
-    outputToServer = "";//clear send string
-    for (Entity ent : renderList)
-    {
-      outputToServer.concat(ent.toString());
-    }
-    myClient.updateClientGameState(outputToServer);
-
-    renderer.cleanUp();
-    loader.cleanUp();
-    DisplayManager.closeDisplay();
   }
 
 }

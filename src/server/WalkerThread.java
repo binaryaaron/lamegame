@@ -78,11 +78,9 @@ public class WalkerThread extends Thread
     }
   }
   
-  public String updateServerGameState(String updateString)//TODO maybe call this a getter
+  public void updateServerGameState(String updateString)//TODO maybe call this a getter
   {
-    outputToClient=updateString;
-    out.println(outputToClient);
-    return inputFromClient;
+    out.println(updateString);
   }
   
   public String getClientInput()//called at the beginning to wait for first client input

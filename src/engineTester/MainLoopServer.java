@@ -153,7 +153,7 @@ public class MainLoopServer
       {
         id = currentLine[0];
 
-        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(id),
+        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
             new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
       }
@@ -266,12 +266,12 @@ public class MainLoopServer
       outputToClient = "";//clear the String
       for (Entity ent : renderList)
       {
-        outputToClient.concat(ent.toString());
+        outputToClient += ent.toString() + ";";
       }
 
       for (WalkerThread wt : myServer.threadList)
       {
-        //        wt.updateServerGameState(outputToClient);
+        wt.updateServerGameState(outputToClient);
       }
 
       //render each entity passed to the client

@@ -23,20 +23,6 @@ public class Entity {
 
 	}
 
-	public Entity(TexturedModel model, Vector3f position, float rotX,
-			float rotY, float rotZ,float scale) {
-		super();
-		this.model = model;
-		this.position = position;
-		this.rotX = rotX;
-		this.rotY = rotY;
-		this.rotZ = rotZ;
-		this.scale=scale;
-		box = model.getRawModel().getBoundingBox().deepCopy();
-		box.scale(0.9f*scale);
-		box.translate(position);
-	}
-
 	/**
 	 * Constructor that takes an additional string for the id. used to pass the id from the textured model's id.
 	 */
@@ -216,9 +202,15 @@ public class Entity {
 	@Override public String toString()
 	{
 		StringBuilder result = new StringBuilder();
-		String delimiter = ":";
+		String delimiter = ",";
 		result.append(id + delimiter);
-		result.append(position + delimiter);
+		result.append(position.x + delimiter);
+		result.append(position.y + delimiter);
+		result.append(position.z + delimiter);
+		result.append(rotX + delimiter);
+		result.append(rotY + delimiter);
+		result.append(rotZ + delimiter);
+		result.append(scale + delimiter);
 		result.append(hitPoints + delimiter );
 		return result.toString();
 	}
