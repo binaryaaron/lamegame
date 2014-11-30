@@ -57,7 +57,7 @@ public class MainLoopServer
     RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
     ModelTexture skyTexture = new ModelTexture(
         loader.loadTexture("SkyBox2"));
-    TexturedModel texturedSkyBox = new TexturedModel(skyBox, skyTexture);
+    TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox, skyTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 
     //create lights and camera for the player. camera position should be set in

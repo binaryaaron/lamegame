@@ -40,11 +40,11 @@ public class ModelMap {
 	    ModelTexture stoneTexture = new ModelTexture(loader.loadTexture("RockRed2"));
 
 	
-	    TexturedModel texturedModelAsteroid = new TexturedModel(modelAsteroid,asteroidTexture);
-	    TexturedModel texturedModelAsteroid2 = new TexturedModel(stoneAsteroid,asteroidTexture);
-	    TexturedModel texturedModelStone = new TexturedModel(modelAsteroid,stoneTexture);
-	    TexturedModel texturedShip = new TexturedModel(ship, shipTexture);
-	    TexturedModel texturedShip2 = new TexturedModel(ship2, ship2Texture);
+	    TexturedModel texturedModelAsteroid = new TexturedModel("A001",modelAsteroid,asteroidTexture);
+	    TexturedModel texturedModelAsteroid2 = new TexturedModel("A002",stoneAsteroid,asteroidTexture);
+	    TexturedModel texturedModelStone = new TexturedModel("A003",modelAsteroid,stoneTexture);
+	    TexturedModel texturedShip = new TexturedModel("S001",ship, shipTexture);
+	    TexturedModel texturedShip2 = new TexturedModel("S002",ship2, ship2Texture);
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
     texturedModelList.put("A003", texturedModelStone);
