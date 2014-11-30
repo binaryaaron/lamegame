@@ -289,9 +289,7 @@ public class MainLoopServer
   public static String getInput()
   {    
     //start with first element in walker thread, expand to multiplayer
-    String input=myServer.threadList.get(0).inputFromClient;
-    myServer.threadList.get(0).inputReceived=true;
-//    if(loop%4==0)myServer.threadList.get(0).inputFromClient=null;
+    String input=myServer.threadList.get(0).getClientInput();
     loop++;
     return input;
   }

@@ -21,7 +21,6 @@ public class WalkerThread extends Thread
   public boolean printclients=false;
   public String inputFromClient=null;
   public String outputToClient=null;
-  public boolean inputReceived=false;
   
   private Socket myClientSocket = null;
   PrintWriter out=null;
@@ -45,15 +44,18 @@ public class WalkerThread extends Thread
       while ((inputFromClient = in.readLine()) != null)
       {
         //input from client shall only receive actions (move, fire) from the client, everything else will happen on the server (not graphics)
-        inputReceived=false;
-        while(!inputReceived)
-        {
-          //wait for MainLoopServer to fetch input
-        }
         
         outputToClient=null;//first test, don't send anything
         if(outputToClient!=null)out.println(outputToClient);
         loop++;
+        try
+        {
+          Thread.sleep(17);//check for input 60 times a second
+        } catch (InterruptedException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     } 
     catch (java.net.SocketException e)
@@ -84,12 +86,7 @@ public class WalkerThread extends Thread
   }
   
   public String getClientInput()//called at the beginning to wait for first client input
-  {
-    while(inputFromClient==null)
-    {
-      //do nothing
-    }
-    
+  {    
     return inputFromClient;
   }
 }
