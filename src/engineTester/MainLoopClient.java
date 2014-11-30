@@ -8,7 +8,12 @@ package engineTester;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,67 +78,67 @@ public class MainLoopClient
 
     if (PHYSICS_DEBUG)
     {
-      //start new client
-      try
-      {
-        myClient=new WalkerClient(args);
-      } catch (IOException e)
-      {
-        e.printStackTrace();
-      }
-      
-      //send first string from client to server      
-      outputToServer = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
-          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
-          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
-          + "A002,-4,-3,-20,0,0,0,0.5;";
-      myClient.firstSend(outputToServer);
-      try//wait 1 sec for response from server
-      {
-        Thread.sleep(1000);
-      } catch (InterruptedException e)
-      {
-        e.printStackTrace();
-      }
-      inputFromServer=myClient.updateClientGameState(outputToServer);//maybe this should wait for a response
+//      //start new client
+//      try
+//      {
+//        myClient=new WalkerClient(args);
+//      } catch (IOException e)
+//      {
+//        e.printStackTrace();
+//      }
+//      
+//      //send first string from client to server      
+//      outputToServer = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
+//          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
+//          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
+//          + "A002,-4,-3,-20,0,0,0,0.5;";
+//      myClient.firstSend(outputToServer);
+//      try//wait 1 sec for response from server
+//      {
+//        Thread.sleep(1000);
+//      } catch (InterruptedException e)
+//      {
+//        e.printStackTrace();
+//      }
+//      inputFromServer=myClient.updateClientGameState(outputToServer);//maybe this should wait for a response
     }
 
     else
     {
-      outputToServer = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;" + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
+//      outputToServer = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;" + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
-    String[] sceneInfo = inputFromServer.split(";");
-    for (String object : sceneInfo)
-    {
-      String[] currentLine = object.split(",");
-      String id;
-      float x, y, z, xr, yr, zr, s;
-      // translate all input data into appropriate entities;
-      x = Float.parseFloat(currentLine[1]);
-      y = Float.parseFloat(currentLine[2]);
-      z = Float.parseFloat(currentLine[3]);
-      xr = Float.parseFloat(currentLine[4]);
-      yr = Float.parseFloat(currentLine[5]);
-      zr = Float.parseFloat(currentLine[6]);
-      s = Float.parseFloat(currentLine[7]);
-      System.out.println(object.charAt(0));
-      if (object.startsWith("Cam"))
-      {
-        camera.setPosition(new Vector3f(x, y, z));
-        camera.setPitch(xr);
-        camera.setYaw(yr);
-        camera.setRoll(zr);
-      }
-
-      else
-      {
-        id = currentLine[0];
-        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(id), new Vector3f(x, y, z), xr, yr, zr, s);
-        renderList.add(tmp_Entity);
-      }
-    }
+//    String[] sceneInfo = inputFromServer.split(";");
+//    for (String object : sceneInfo)
+//    {
+//      String[] currentLine = object.split(",");
+//      String id;
+//      float x, y, z, xr, yr, zr, s;
+//      // translate all input data into appropriate entities;
+//      x = Float.parseFloat(currentLine[1]);
+//      y = Float.parseFloat(currentLine[2]);
+//      z = Float.parseFloat(currentLine[3]);
+//      xr = Float.parseFloat(currentLine[4]);
+//      yr = Float.parseFloat(currentLine[5]);
+//      zr = Float.parseFloat(currentLine[6]);
+//      s = Float.parseFloat(currentLine[7]);
+//      System.out.println(object.charAt(0));
+//      if (object.startsWith("Cam"))
+//      {
+//        camera.setPosition(new Vector3f(x, y, z));
+//        camera.setPitch(xr);
+//        camera.setYaw(yr);
+//        camera.setRoll(zr);
+//      }
+//
+//      else
+//      {
+//        id = currentLine[0];
+//        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(id), new Vector3f(x, y, z), xr, yr, zr, s);
+//        renderList.add(tmp_Entity);
+//      }
+//    }
 
     if (PRINT_FPS)
     {
@@ -157,8 +162,8 @@ public class MainLoopClient
       if (PHYSICS_DEBUG)
       {
         Float scale = 0.001f;
-        Entity Asteroid1 = renderList.get(1);
-        Entity Asteroid2 = renderList.get(0);
+//        Entity Asteroid1 = renderList.get(1);
+//        Entity Asteroid2 = renderList.get(0);
 
         /*update move happens on server, not client
         long time = System.currentTimeMillis();
@@ -180,45 +185,78 @@ public class MainLoopClient
           lastTime = time;
         }
         //*/
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+        String hostName="Manticore";
+        int socketVal=4444;
+        
+        Socket mySocket=null;
+        PrintWriter out=null;
+        BufferedReader in=null;
+        
+        try
         {
-          scale = 0.0001f;
+          mySocket=new Socket(hostName, socketVal);
+          out=new PrintWriter(mySocket.getOutputStream(),true);
+          in=new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+        } catch (UnknownHostException e)
+        {
+          System.err.println("Don't know about host: "+hostName);
+          System.exit(1);
+        } catch (IOException e)
+        {
+          System.err.println("Couldn't get I/O for the connection to: "+hostName);
+          System.exit(1);
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+        while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
         {
-          Asteroid2.vel.x +=scale;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-        {
-          Asteroid2.vel.x -=scale;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-        {
-          Asteroid2.vel.y += scale;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-        {
-          Asteroid2.vel.y -= scale;
-        }
-        // /
-        if (Keyboard.isKeyDown(Keyboard.KEY_D))
-        {
-          Asteroid1.vel.x += scale;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A))
-        {
-          Asteroid1.vel.x -= scale;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_W))
-        {
-          Asteroid1.vel.y += scale;
-
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S))
-        {
-          Asteroid1.vel.y -= scale;
+          if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+          {
+            out.println("KEY_LSHIFT");
+          }
+      
+          if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+          {
+            System.out.println("KEY_RIGHT");
+            out.println("KEY_RIGHT");
+          }
+          if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+          {
+            out.println("KEY_LEFT");
+          }
+          if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+          {
+            out.println("KEY_UP");
+          }
+          if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+          {
+            out.println("KEY_DOWN");
+          }
+          // /
+          if (Keyboard.isKeyDown(Keyboard.KEY_D))
+          {
+            out.println("KEY_D");
+          }
+          if (Keyboard.isKeyDown(Keyboard.KEY_A))
+          {
+            out.println("KEY_A");
+          }
+          if (Keyboard.isKeyDown(Keyboard.KEY_W))
+          {
+            out.println("KEY_W");
+          }
+          if (Keyboard.isKeyDown(Keyboard.KEY_S))
+          {
+            out.println("KEY_S");
+          }
+          DisplayManager.updateDisplay();
+          try
+          {
+            Thread.sleep(25);
+          } catch (InterruptedException e)
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
         }
 
       }

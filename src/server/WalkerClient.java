@@ -15,13 +15,18 @@ import java.net.UnknownHostException;
 import java.security.AllPermission;
 import java.util.LinkedList;
 import java.util.Random;
+
 import javax.swing.ImageIcon;
+
 import org.lwjgl.input.Keyboard;
+
+import renderEngine.DisplayManager;
+import renderEngine.MasterRenderer;
 
 public class WalkerClient extends Thread
 {
   public boolean printlocation=false;
-  public static String hostName="Glados";
+  public static String hostName="Manticore";
   public static int socketVal=4444;
   
   Socket mySocket=null;
@@ -61,6 +66,7 @@ public class WalkerClient extends Thread
     }
     
     //initialize ServerPackage
+    
     this.start();
   }
   
@@ -75,6 +81,7 @@ public class WalkerClient extends Thread
   
       if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
       {
+        System.out.println("KEY_RIGHT");
         out.println("KEY_RIGHT");
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
@@ -105,6 +112,14 @@ public class WalkerClient extends Thread
       if (Keyboard.isKeyDown(Keyboard.KEY_S))
       {
         out.println("KEY_S");
+      }
+      try
+      {
+        Thread.sleep(25);
+      } catch (InterruptedException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
     }
    
