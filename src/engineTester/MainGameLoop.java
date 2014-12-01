@@ -33,7 +33,7 @@ public class MainGameLoop
 
   public final static boolean PRINT_FPS = false;
   private final static boolean PHYSICS_DEBUG = false;
-
+  private final static boolean HUD_DEBUG = true;
   public static void main(String[] args)
   {
 
@@ -67,7 +67,7 @@ public class MainGameLoop
       testInput = "A001,1,0,-5,0,0,0,1;" + "A002,-1,0,-5,0,0,0,0.5";
 
     }
-    else
+    else if(HUD_DEBUG)
     {
       testInput = "S001,0,0,20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.5;"
           + "H001,-0.13,-0.08,-0.2,1,0,0,0.01;" + "H002,-0.13,0.07,-0.2,1,0,0,0.01;"+ 
@@ -230,9 +230,14 @@ public class MainGameLoop
       }
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
+      if(HUD_DEBUG)
+      {
+       //hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"%"));
 
-      //!TESTING!
-      //renderList.get(2).setModel((modelMap.getCompletedText(""+System.currentTimeMillis())));
+       hudRenderList.get(2).setModel((modelMap.setScoreText(""+System.currentTimeMillis())));
+       //hudRenderList.get(0)
+       //hudRenderList.get(2)
+      }
       DisplayManager.updateDisplay();
       if (PRINT_FPS)
       {

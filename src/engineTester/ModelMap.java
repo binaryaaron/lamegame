@@ -89,18 +89,18 @@ public class ModelMap {
 
   public TexturedModel setSpeedText(String input)
   {
-    this.speedLabel = FontLoader.loadFontModel(input, loader,  true, 20);
+    this.speedLabel = FontLoader.loadFontModel(input, loader,  true, 1);
     return (new TexturedModel(this.speedLabel, new ModelTexture(loader.loadTexture("font"))));  
   }
   public TexturedModel setScoreText(String input)
   {
-    this.speedLabel = FontLoader.loadFontModel(input, loader,  true, 20);
-    return (new TexturedModel(this.speedLabel, new ModelTexture(loader.loadTexture("font"))));  
+    this.scoreLabel = FontLoader.loadFontModel(input, loader,  true, 1);
+    return (new TexturedModel(this.scoreLabel, new ModelTexture(loader.loadTexture("font"))));  
   }
-  public TexturedModel getSpeedText(String input)
+  public TexturedModel setHealthText(String input)
   {
-    this.speedLabel = FontLoader.loadFontModel(input, loader,  true, 20);
-    return (new TexturedModel(this.speedLabel, new ModelTexture(loader.loadTexture("font"))));  
+    this.healthLabel = FontLoader.loadFontModel(input, loader,  true, 1);
+    return (new TexturedModel(this.healthLabel, new ModelTexture(loader.loadTexture("font"))));  
   }
 	
 
