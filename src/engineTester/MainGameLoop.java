@@ -6,12 +6,9 @@
  */
 package engineTester;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.Asteroid;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -27,12 +24,11 @@ import renderEngine.OBJLoader;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
+import world.BoxUtilities;
+import audio.AudioManager;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import world.BoxUtilities;
-
-import javax.swing.*;
 
 public class MainGameLoop
 {
@@ -44,6 +40,7 @@ public class MainGameLoop
   {
 
     DisplayManager.createDisplay();
+    AudioManager.createAudio();
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
 
@@ -222,7 +219,7 @@ public class MainGameLoop
 
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
-
+      AudioManager.updateAudio();
       DisplayManager.updateDisplay();
       if (PRINT_FPS)
       {
