@@ -75,7 +75,7 @@ public class WalkerClient extends Thread
     {
       while((inputFromServer=in.readLine())!=null)
       {
-        System.out.println(inputFromServer);
+//        System.out.println(inputFromServer);
       }
     } catch (IOException e1)
     {

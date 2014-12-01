@@ -100,7 +100,7 @@ public class MainLoopClient
           .println("Couldn't get I/O for the connection to: " + hostName);
       System.exit(1);
     }
-
+    myClient.sendToServer("Ready");
     /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
@@ -146,7 +146,7 @@ public class MainLoopClient
         break;
       }
 
-      String toSend = "";
+      String toSend = ";";
       if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
           .isKeyDown(Keyboard.KEY_RSHIFT))
       {
@@ -188,15 +188,15 @@ public class MainLoopClient
       }
       myClient.sendToServer(toSend);
       DisplayManager.updateDisplay();
-      try
-      {
-        Thread.sleep(25);
-      }
-      catch (InterruptedException e)
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+//      try
+//      {
+//        Thread.sleep(25);
+//      }
+//      catch (InterruptedException e)
+//      {
+//        // TODO Auto-generated catch block
+//        e.printStackTrace();
+//      }
 
       for (Entity ent : renderList)
       {
@@ -205,7 +205,6 @@ public class MainLoopClient
 
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
-
       DisplayManager.updateDisplay();
 
       if (PRINT_FPS)
@@ -223,10 +222,9 @@ public class MainLoopClient
       {
         outputToServer.concat(ent.toString());
       }
-
-      renderer.cleanUp();
-      loader.cleanUp();
-      DisplayManager.closeDisplay();
+//      renderer.cleanUp();
+//      loader.cleanUp();
+//      DisplayManager.closeDisplay();
     }
   }
 
