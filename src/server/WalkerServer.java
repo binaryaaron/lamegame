@@ -24,6 +24,9 @@ public class WalkerServer extends Thread
     }
     
     this.start();
+    while ((getNumConnections())<1)
+    {//don't return until server gets a connection
+    }
   }
   
   public void run()
@@ -39,7 +42,7 @@ public class WalkerServer extends Thread
         e.printStackTrace();
       }
       
-      System.out.println("socket connection accepted");
+      System.out.println("socket connection accepted "+IDgen);
       newThread.start();
       IDgen++;
       threadList.add(newThread);
@@ -48,14 +51,15 @@ public class WalkerServer extends Thread
         WalkerThread wt=threadList.get(i);
         if(!wt.isAlive())
         {
-          threadList.remove(wt);
+//          threadList.remove(wt);
         }
       }
     }
   }
   
-//  public static void main(String[] args) throws IOException
-//  {
-//    new WalkerServer();
-//  }
+  public synchronized int getNumConnections()
+  {
+    int n=threadList.size();    
+    return n;
+  }
 }

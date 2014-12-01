@@ -44,6 +44,7 @@ public class MainLoopServer
   private final static boolean PHYSICS_DEBUG = true;
   public static WalkerServer myServer;
   private static int loop = 0;
+  private volatile static int clientConnections;
 
   public static void main(String[] args)
   {
@@ -86,38 +87,19 @@ public class MainLoopServer
         e.printStackTrace();
       }
 
-      //wait for 1 connection to the server
-      //       while(myServer.threadList.size()==0)
-      //      {
-      //        //do nothing
-      //      }
-      try
-      {
-        Thread.sleep(10000);
-      }
-      catch (InterruptedException e)
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      // wait for 1 connection to the server
+//      while ((clientConnections=myServer.threadList.size())<1)
+//      {
+//        System.out.println("client connections: "+clientConnections);
+//      }
 
-      //get first line of input from server
-      //TODO unnecessary if server does all calc (it knows start location)
-      //      for(WalkerThread wt: myServer.threadList)
-      //      {
-      //        inputFromClient=wt.getClientInput();
-      //      }
-
-      //      if(testInput==null)
-      //      {
       inputFromClient = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
           "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;" +
           "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"
           + "A002,-4,-2,-20,0,0,0,0.5;"
           + "A002,-4,-3,-20,0,0,0,0.5;";
-      //      }
     }
-
+    
     else
     {
       inputFromClient = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
@@ -191,75 +173,76 @@ public class MainLoopServer
           for (Entity ent : renderList)
           {
             ent.move();
-            //            System.out.println(ent);
+            // System.out.println(ent);
             for (Entity other : renderList)
             {
               if (BoxUtilities.collision(ent.getBox(), other.getBox()))
               {
-                PhysicsUtilities.elasticCollision(200, ent.vel, 200,
-                    other.vel);
+                PhysicsUtilities.elasticCollision(200, ent.vel, 200, other.vel);
               }
             }
           }
           lastTime = time;
         }
 
-        //camera controls
+        // camera controls
         else
         {
           camera.move();
         }
 
+        // while(getInput()!="Ready")
+        // {
+        // //wait
+        // }
+
         inputFromClient = getInput();
-
-        String[] clientInput = inputFromClient.split(";");
-        //detecting keys should only happen on client side
-
-        for (String input : clientInput)
+        if (inputFromClient != null)
         {
-          if (input.equals("KEY_LSHIFT") || inputFromClient
-              .equals("KEY_RSHIFT"))
+          String[] clientInput = inputFromClient.split(";");
+          for (String input : clientInput)
           {
-            scale = 0.0001f;
-          }
-          if (input.equals("KEY_RIGHT"))
-          {
-            Asteroid2.vel.x += scale;
-          }
-          if (input.equals("KEY_LEFT"))
-          {
-            Asteroid2.vel.x -= scale;
-          }
-          if (input.equals("KEY_UP"))
-          {
-            Asteroid2.vel.y += scale;
-          }
-          if (input.equals("KEY_DOWN"))
-          {
-            Asteroid2.vel.y -= scale;
+            if (input.equals("KEY_LSHIFT")
+                || inputFromClient.equals("KEY_RSHIFT"))
+            {
+              scale = 0.0001f;
+            }
+            if (input.equals("KEY_RIGHT"))
+            {
+              Asteroid2.vel.x += scale;
+            }
+            if (input.equals("KEY_LEFT"))
+            {
+              Asteroid2.vel.x -= scale;
+            }
+            if (input.equals("KEY_UP"))
+            {
+              Asteroid2.vel.y += scale;
+            }
+            if (input.equals("KEY_DOWN"))
+            {
+              Asteroid2.vel.y -= scale;
+            }
+            //
+            if (input.equals("KEY_D"))
+            {
+              Asteroid1.vel.x += scale;
+            }
+            if (input.equals("KEY_A"))
+            {
+              Asteroid1.vel.x -= scale;
+            }
+            if (input.equals("KEY_W"))
+            {
+              Asteroid1.vel.y += scale;
 
+            }
+            if (input.equals("KEY_S"))
+            {
+              Asteroid1.vel.y -= scale;
+            }
           }
-          // /
-          if (input.equals("KEY_D"))
-          {
-            Asteroid1.vel.x += scale;
-          }
-          if (input.equals("KEY_A"))
-          {
-            Asteroid1.vel.x -= scale;
-          }
-          if (input.equals("KEY_W"))
-          {
-            Asteroid1.vel.y += scale;
-
-          }
-          if (input.equals("KEY_S"))
-          {
-            Asteroid1.vel.y -= scale;
-          }
-
         }
-
       }
 
       /////instead of rendering, build strings and send them to the client
@@ -274,7 +257,7 @@ public class MainLoopServer
         wt.updateServerGameState(outputToClient);
       }
 
-      //render each entity passed to the client
+      // render each entity passed to the client
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);

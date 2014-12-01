@@ -21,6 +21,7 @@ public class WalkerThread extends Thread
   public boolean printclients=false;
   public String inputFromClient=null;
   public String outputToClient=null;
+  public int ID;
   
   private Socket myClientSocket = null;
   PrintWriter out=null;
@@ -30,6 +31,7 @@ public class WalkerThread extends Thread
   {
     super("WalkerThread");
     this.myClientSocket = mySocket;
+    this.ID=ID;
   }
 
   public void run()
@@ -80,8 +82,9 @@ public class WalkerThread extends Thread
   
   public void updateServerGameState(String updateString)//TODO maybe call this a getter
   {
+    while(out==null){/*wait for print writer to initialize*/}
     out.println(updateString);
-  }
+   }
   
   public String getClientInput()//called at the beginning to wait for first client input
   {    
