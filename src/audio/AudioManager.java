@@ -18,9 +18,11 @@ public class AudioManager
   /** The aif source effect */
   private static Audio aifEffect;
   /** The ogg stream thats been loaded */
-  private static Audio oggStream;
+  private static Audio songStream;
   /** The mod stream thats been loaded */
   private static Audio modStream;
+
+  private static Audio laser01;
 
   /**
    * Initialise resources
@@ -32,14 +34,14 @@ public class AudioManager
     {
       // you can play oggs by loading the complete thing into
       // a sound
-      oggEffect = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/Ouroboros.ogg"));
-
+      laser01 = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/laser01.ogg"));
       // or setting up a stream to read from. Note that the argument becomes
       // a URL here so it can be reopened when the stream is complete. Probably
       // should have reset the stream by thats not how the original stuff worked
-      oggStream = AudioLoader.getStreamingAudio("OGG", ResourceLoader.getResource("res/sounds/Ouroboros.ogg"));
+      songStream = AudioLoader.getStreamingAudio("OGG", ResourceLoader.getResource("res/sounds/Ouroboros.ogg"));
 
-      oggStream.playAsMusic(1.0f, 1.0f, true);
+      //oggStream.playAsMusic(1.0f, 1.0f, true);
+     
       // can load mods (XM, MOD) using ibxm which is then played through OpenAL. MODs
       // are always streamed based on the way IBXM works
       //modStream = AudioLoader.getStreamingAudio("MOD", ResourceLoader.getResource("res/sounds/SMB-X.XM"));
@@ -54,8 +56,7 @@ public class AudioManager
 
       // you can play wavs by loading the complete thing into
       // a sound
-      wavEffect = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("res/sounds/laser.wav"));
-      System.out.println("HELLO " +System.getProperty("user.dir"));
+      //wavEffect = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("res/sounds/laser01.wav"));
     } 
     catch (IOException e) 
     {
@@ -72,36 +73,19 @@ public class AudioManager
     {
       if (Keyboard.getEventKeyState()) 
       {
-        if (Keyboard.getEventKey() == Keyboard.KEY_Q) 
+        if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) 
         {
           // play as a one off sound effect
-          oggEffect.playAsSoundEffect(1.0f, 1.0f, false);
-        }
-        if (Keyboard.getEventKey() == Keyboard.KEY_W) 
-        {
-          // replace the music thats currently playing with
-          // the ogg
-          oggStream.playAsMusic(1.0f, 1.0f, true);
-        }
-        if (Keyboard.getEventKey() == Keyboard.KEY_E) 
-        {
-          // replace the music thats currently playing with
-          // the mod
-          //modStream.playAsMusic(1.0f, 1.0f, true);
+          playRandomLaser();
         }
         if (Keyboard.getEventKey() == Keyboard.KEY_R) 
         {
-          // play as a one off sound effect
-          aifEffect.playAsSoundEffect(1.0f, 1.0f, false);
-        }
-        if (Keyboard.getEventKey() == Keyboard.KEY_T) 
-        {
-          // play as a one off sound effect
-          wavEffect.playAsSoundEffect(1.0f, 1.0f, false);
+          // replace the music thats currently playing with
+          // the ogg
+          songStream.playAsMusic(1.0f, 1.0f, true);
         }
       }
     }
-
     // polling is required to allow streaming to get a chance to
     // queue buffers.
     SoundStore.get().poll(0);
@@ -110,5 +94,10 @@ public class AudioManager
   public static void closeAudio()
   {
     AL.destroy();
+  }
+  private static void playRandomLaser()
+  {
+    float pitchRand = (float)(Math.random()*0.15f);
+    laser01.playAsSoundEffect(1.0f-pitchRand, 1.0f, false);
   }
 }
