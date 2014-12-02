@@ -147,6 +147,7 @@ public class MainLoopServer
     //TODO change server to no display output, loop while threadlist is not empty
     while (!Display.isCloseRequested())
     {
+      long startingTime = System.nanoTime();
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         break;

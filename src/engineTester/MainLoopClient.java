@@ -56,15 +56,15 @@ public class MainLoopClient
 
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
-    ModelTexture skyTexture = new ModelTexture(
-        loader.loadTexture("SkyBox2"));
-    TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox, skyTexture);
+    ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
+    TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox,
+        skyTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 
-    //create lights and camera for the player. camera position should be set in
-    //parsing routine
-    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(
-        1.0f, 1.0f, 1.0f));
+    // create lights and camera for the player. camera position should be set in
+    // parsing routine
+    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
+        1.0f, 1.0f));
     Camera camera = new Camera();
     MasterRenderer renderer = new MasterRenderer(camera);
 
@@ -84,9 +84,9 @@ public class MainLoopClient
     long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
 
-    //controls for physics testing with two asteroids
-    //wasd control leftest asteroid, arrows control rightmost.
-    //holding shift will slow down the shifting speed.
+    // controls for physics testing with two asteroids
+    // wasd control leftest asteroid, arrows control rightmost.
+    // holding shift will slow down the shifting speed.
     String hostName = "Manticore";
     int socketVal = 4444;
 
@@ -96,14 +96,13 @@ public class MainLoopClient
     }
     catch (IOException e)
     {
-      System.err
-          .println("Couldn't get I/O for the connection to: " + hostName);
+      System.err.println("Couldn't get I/O for the connection to: " + hostName);
       System.exit(1);
     }
-    myClient.sendToServer("Ready");
     /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
+      long startingTime = System.currentTimeMillis();
       String[] sceneInfo = myClient.getInputFromServer().split(";");
       renderList.clear();
       for (String object : sceneInfo)
@@ -113,7 +112,7 @@ public class MainLoopClient
           String[] currentLine = object.split(",");
           String id;
           float x, y, z, xr, yr, zr, s;
-          // translate all imput data into appropriate entities;
+          // translate all input data into appropriate entities;
           x = Float.parseFloat(currentLine[1]);
           y = Float.parseFloat(currentLine[2]);
           z = Float.parseFloat(currentLine[3]);
@@ -121,7 +120,7 @@ public class MainLoopClient
           yr = Float.parseFloat(currentLine[5]);
           zr = Float.parseFloat(currentLine[6]);
           s = Float.parseFloat(currentLine[7]);
-          //      System.out.println(object.charAt(0));
+          // System.out.println(object.charAt(0));
           if (object.startsWith("Cam"))
           {
             camera.setPosition(new Vector3f(x, y, z));
@@ -133,9 +132,8 @@ public class MainLoopClient
           {
             id = currentLine[0];
 
-            Entity tmp_Entity = new Entity(id,
-                modelMap.getTexturedModelList().get(id),
-                new Vector3f(x, y, z), xr, yr, zr, s);
+            Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
+                .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
             renderList.add(tmp_Entity);
           }
         }
@@ -147,8 +145,8 @@ public class MainLoopClient
       }
 
       String toSend = ";";
-      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
-          .isKeyDown(Keyboard.KEY_RSHIFT))
+      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
+          || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
       {
         toSend += "KEY_LSHIFT;";
       }
@@ -187,17 +185,6 @@ public class MainLoopClient
         toSend += "KEY_S;";
       }
       myClient.sendToServer(toSend);
-      DisplayManager.updateDisplay();
-//      try
-//      {
-//        Thread.sleep(25);
-//      }
-//      catch (InterruptedException e)
-//      {
-//        // TODO Auto-generated catch block
-//        e.printStackTrace();
-//      }
-
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
@@ -213,16 +200,18 @@ public class MainLoopClient
         System.out.println(pu.getFPS());
       }
 
-      //send update string to server
-      outputToServer = "";//clear send string
-	  for (Entity ent : renderList) {
-		outputToServer.concat(ent.toString());
-	  }
-
+      // send update string to server
+      outputToServer = "";// clear send string
+      for (Entity ent : renderList)
+      {
+        outputToServer.concat(ent.toString());
+      }
+      long endTime = System.currentTimeMillis();
+      System.out.println("execution time "+(endTime-startingTime));
     }
-//  renderer.cleanUp();
-//  loader.cleanUp();
-//  DisplayManager.closeDisplay();
+    // renderer.cleanUp();
+    // loader.cleanUp();
+    // DisplayManager.closeDisplay();
   }
 
 }
