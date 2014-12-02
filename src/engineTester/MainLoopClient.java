@@ -144,47 +144,53 @@ public class MainLoopClient
         break;
       }
 
-      String toSend = ";";
-      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
-          || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+      long time = System.currentTimeMillis();
+      if (time - lastTime > 17)
       {
-        toSend += "KEY_LSHIFT;";
-      }
+        lastTime = time;
 
-      if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-      {
-        toSend += "KEY_RIGHT;";
+        String toSend = ";";
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
+            || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+        {
+          toSend += "KEY_LSHIFT;";
+        }
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+        {
+          toSend += "KEY_RIGHT;";
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+        {
+          toSend += "KEY_LEFT;";
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+        {
+          toSend += "KEY_UP;";
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+        {
+          toSend += "KEY_DOWN;";
+        }
+        // /
+        if (Keyboard.isKeyDown(Keyboard.KEY_D))
+        {
+          toSend += "KEY_D;";
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_A))
+        {
+          toSend += "KEY_A;";
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_W))
+        {
+          toSend += "KEY_W;";
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_S))
+        {
+          toSend += "KEY_S;";
+        }
+        myClient.sendToServer(toSend);
       }
-      if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-      {
-        toSend += "KEY_LEFT;";
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-      {
-        toSend += "KEY_UP;";
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-      {
-        toSend += "KEY_DOWN;";
-      }
-      // /
-      if (Keyboard.isKeyDown(Keyboard.KEY_D))
-      {
-        toSend += "KEY_D;";
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_A))
-      {
-        toSend += "KEY_A;";
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_W))
-      {
-        toSend += "KEY_W;";
-      }
-      if (Keyboard.isKeyDown(Keyboard.KEY_S))
-      {
-        toSend += "KEY_S;";
-      }
-      myClient.sendToServer(toSend);
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
@@ -207,7 +213,7 @@ public class MainLoopClient
         outputToServer.concat(ent.toString());
       }
       long endTime = System.currentTimeMillis();
-      System.out.println("execution time "+(endTime-startingTime));
+      // System.out.println("execution time " + (endTime - startingTime));
     }
     // renderer.cleanUp();
     // loader.cleanUp();

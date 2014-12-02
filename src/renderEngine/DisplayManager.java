@@ -12,7 +12,7 @@ public class DisplayManager
 
   private static final int WIDTH = 1560;
   private static final int HEIGHT = 1080;
-  private static final int FPS_CAP = 60;
+  private static final int FPS_CAP = 120;
 
   public static void createDisplay()
   {
@@ -39,7 +39,7 @@ public class DisplayManager
 
   public static void updateDisplay()
   {
-    Display.sync(FPS_CAP);
+//    Display.sync(FPS_CAP);
     Display.update();
 
   }
