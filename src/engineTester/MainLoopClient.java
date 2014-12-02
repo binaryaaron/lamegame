@@ -215,17 +215,14 @@ public class MainLoopClient
 
       //send update string to server
       outputToServer = "";//clear send string
-      for (
-          Entity ent
-          : renderList)
+	  for (Entity ent : renderList) {
+		outputToServer.concat(ent.toString());
+	  }
 
-      {
-        outputToServer.concat(ent.toString());
-      }
-//      renderer.cleanUp();
-//      loader.cleanUp();
-//      DisplayManager.closeDisplay();
     }
+//  renderer.cleanUp();
+//  loader.cleanUp();
+//  DisplayManager.closeDisplay();
   }
 
 }

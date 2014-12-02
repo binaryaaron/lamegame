@@ -26,7 +26,7 @@ import renderEngine.MasterRenderer;
 public class WalkerClient extends Thread
 {
   public boolean printlocation=false;
-  public static String hostName="Manticore";
+  public static String hostName="64.106.21.160";
   public static int socketVal=4444;
   
   Socket mySocket=null;

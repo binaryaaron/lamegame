@@ -162,7 +162,7 @@ public class MainLoopServer
         Entity Asteroid2 = renderList.get(0);
 
         long time = System.currentTimeMillis();
-        if (time - lastTime > 25)
+        if (time - lastTime > 17)
         {
           for (Entity ent : renderList)
           {
@@ -177,13 +177,13 @@ public class MainLoopServer
             }
           }
           lastTime = time;
-        }
+        
 
         // camera controls
-        else
-        {
-          camera.move();
-        }
+//        else
+//        {
+//          camera.move();
+//        }
 
         for (int i = 0; i < myServer.threadList.size(); i++)
         {
@@ -244,21 +244,23 @@ public class MainLoopServer
       {
         outputToClient += ent.toString() + ";";
       }
-
-      for (WalkerThread wt : myServer.threadList)
+      }
+//      for (WalkerThread wt : myServer.threadList)
+      for (int i=0;i<myServer.threadList.size();i++)
       {
+    	WalkerThread wt=myServer.threadList.get(i);
         wt.updateServerGameState(outputToClient);
       }
 
       // render each entity passed to the client
-      for (Entity ent : renderList)
-      {
-        renderer.processEntity(ent);
-      }
-      
-      renderer.processSkyBox(skyBoxEntity);
-      renderer.render(light, camera);
-      DisplayManager.updateDisplay();
+//      for (Entity ent : renderList)
+//      {
+//        renderer.processEntity(ent);
+//      }
+//      
+//      renderer.processSkyBox(skyBoxEntity);
+//      renderer.render(light, camera);
+//      DisplayManager.updateDisplay();
 
       if (PRINT_FPS)
       {
@@ -276,7 +278,6 @@ public class MainLoopServer
 
   public static String getInput(int i)
   {
-    System.out.println("connections: "+myServer.threadList.size());
     //start with first element in walker thread, expand to multiplayer
     String input = myServer.threadList.get(i).getClientInput();
     loop++;
