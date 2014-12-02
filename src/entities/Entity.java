@@ -17,7 +17,7 @@ public class Entity {
 	//the three rotation floats are rotation relative to the world
 	public Vector3f position;
 
-  private Vector3f rotation;
+    private Vector3f rotation;
 	private float rotX,rotY,rotZ;
 	public Vector3f xAxis,yAxis,zAxis,worldxAxis,worldyAxis,worldzAxis,center,front,right;
 	public Quaternion orientation;

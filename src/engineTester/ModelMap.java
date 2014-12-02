@@ -34,12 +34,15 @@ public class ModelMap {
 	    RawModel modelAsteroid = OBJLoader.loadObjModel("SquareRock3", loader,  true);
 	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  false);
 	    RawModel planetObj = OBJLoader.loadObjModel("planet", loader,  true);
+	    RawModel laserObj = OBJLoader.loadObjModel("lasers", loader,  true);
+	    
 
 	    ModelTexture shipTexture = new ModelTexture(loader.loadTexture("SciFi_FighterMK_diffuse"));
 	    ModelTexture ship2Texture = new ModelTexture(loader.loadTexture("space_frigate_6_color"));
 	    ModelTexture asteroidTexture = new ModelTexture(loader.loadTexture("stone_texture"));
 	    ModelTexture stoneTexture = new ModelTexture(loader.loadTexture("RockRed2"));
 	    ModelTexture planetTexture = new ModelTexture(loader.loadTexture("planet"));
+	    ModelTexture laserTexture = new ModelTexture(loader.loadTexture("laser"));
 	
 	    TexturedModel texturedModelAsteroid = new TexturedModel(modelAsteroid,asteroidTexture);
 	    TexturedModel texturedModelAsteroid2 = new TexturedModel(stoneAsteroid,asteroidTexture);
@@ -47,11 +50,14 @@ public class ModelMap {
 	    TexturedModel texturedShip = new TexturedModel(ship, shipTexture);
 	    TexturedModel texturedShip2 = new TexturedModel(ship2, ship2Texture);
 	    TexturedModel texturedPlanet = new TexturedModel(planetObj, planetTexture);
+	    TexturedModel texturedLaser = new TexturedModel(laserObj, laserTexture);
+	    
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
     texturedModelList.put("A003", texturedModelStone);
     texturedModelList.put("S002", texturedShip);
     texturedModelList.put("S001", texturedShip2);
+    texturedModelList.put("lase", texturedLaser);
     texturedModelList.put("Plan", texturedPlanet);
     
     

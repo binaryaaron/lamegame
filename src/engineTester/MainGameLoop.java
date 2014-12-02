@@ -50,7 +50,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import javafx.scene.media.*;
+//import javafx.scene.media.*;
 
 import java.net.*;
 
@@ -80,15 +80,16 @@ public class MainGameLoop
   
   
 	  public final static boolean PRINT_FPS = false;
-	  public final static boolean MUSIC = true;
+	  public final static boolean MUSIC = false;
 	  private final static boolean PHYSICS_DEBUG = false;
 	  private final static boolean ASTEROIDS =true;
 	  private final static boolean SERVER_TEST=false;
 	  private static int nAsteroids=200;
 	  static Entity player;
+	  
+	  
   public static void main(String[] args) throws IOException
   {
-	//String ipAddress=args[0];
 	    DisplayManager.createDisplay();
 	    Loader loader = new Loader();
 	    ModelMap modelMap = new ModelMap();
@@ -97,17 +98,22 @@ public class MainGameLoop
 	    camera.followObj=player;
 	    
 	    // create skybox, this is not an entity so it is seperate
-	    RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
-	    ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
+	    RawModel skyBox = OBJLoader.loadObjModel("StarDome", loader, true);
+	    ModelTexture skyTexture = new ModelTexture(loader.loadTexture("Skym"));
 	    TexturedModel texturedSkyBox = new TexturedModel(skyBox, skyTexture);
 	    SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
+	    
+	    RawModel ring = OBJLoader.loadObjModel("Ring", loader, true);
+	    ModelTexture ringTexture = new ModelTexture(loader.loadTexture("RedSkyTrans"));
+	    TexturedModel texturedRing = new TexturedModel(ring, ringTexture);
+	    SkyBox ringEntity = new SkyBox(loader, texturedRing);
 
 	    modelMap.getTexturedModelList().put("Play",
 	        modelMap.getTexturedModelList().get("S002"));
 	    // create lights and camera for the player. camera position should be set in
 	    // parsing routine
 	    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
-	        1.0f, 1.0f));
+	        0.5f, 0.5f));
 	   
 	    MasterRenderer renderer = new MasterRenderer(camera);
 
@@ -118,7 +124,7 @@ public class MainGameLoop
 	    String testInput;
 
 	    if(MUSIC){
-	      new javafx.embed.swing.JFXPanel();
+	    //  new javafx.embed.swing.JFXPanel();
 	    String bip = "res/explosion-04.wav";
 
 	    playSound(bip);
@@ -259,14 +265,20 @@ public class MainGameLoop
 
         //pitch
         int dy = Mouse.getDY();
-        if(dy != 0)
-           orientation = Utils.angleAxisDeg(-dy*rotSpeed, new Vector3(1, 0, 0)).mult(orientation);
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+           orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(1, 0, 0)).mult(orientation);
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_S)){
+            orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(1, 0, 0)).mult(orientation);
+         }
         //yaw
         int dx = Mouse.getDX();
-        if(dx != 0)
-           orientation = Utils.angleAxisDeg(dx*rotSpeed, new Vector3(0, 1, 0)).mult(orientation);
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_A)){
+           orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(0, 1, 0)).mult(orientation);
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+            orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(0, 1, 0)).mult(orientation);
+         }
         //roll
         if(Keyboard.isKeyDown(Keyboard.KEY_E))
            orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(0, 0, 1)).mult(orientation);
@@ -279,14 +291,14 @@ public class MainGameLoop
 
         Vector3 delta = new Vector3();
         
-        if(Keyboard.isKeyDown(Keyboard.KEY_S))
+        if(Keyboard.isKeyDown(Keyboard.KEY_UP))
            delta.z(-speed);
-        if(Keyboard.isKeyDown(Keyboard.KEY_W))
+        if(Keyboard.isKeyDown(Keyboard.KEY_DOWN))
            delta.z(delta.z() + speed);
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_D))
+        if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
            delta.x(-speed);
-        if(Keyboard.isKeyDown(Keyboard.KEY_A))
+        if(Keyboard.isKeyDown(Keyboard.KEY_LEFT))
            delta.x(delta.x() + speed);
 
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
@@ -385,14 +397,20 @@ public class MainGameLoop
 
         //pitch
         int dy = Mouse.getDY();
-        if(dy != 0)
-           orientation = Utils.angleAxisDeg(-dy*rotSpeed, new Vector3(1, 0, 0)).mult(orientation);
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+           orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(1, 0, 0)).mult(orientation);
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_S)){
+            orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(1, 0, 0)).mult(orientation);
+         }
         //yaw
         int dx = Mouse.getDX();
-        if(dx != 0)
-           orientation = Utils.angleAxisDeg(dx*rotSpeed, new Vector3(0, 1, 0)).mult(orientation);
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_A)){
+           orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(0, 1, 0)).mult(orientation);
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+            orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(0, 1, 0)).mult(orientation);
+         }
         //roll
         if(Keyboard.isKeyDown(Keyboard.KEY_E))
            orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(0, 0, 1)).mult(orientation);
@@ -405,20 +423,21 @@ public class MainGameLoop
 
         Vector3 delta = new Vector3();
         
-        if(Keyboard.isKeyDown(Keyboard.KEY_S))
+        if(Keyboard.isKeyDown(Keyboard.KEY_DOWN))
            delta.z(-speed);
-        if(Keyboard.isKeyDown(Keyboard.KEY_W))
+        if(Keyboard.isKeyDown(Keyboard.KEY_UP))
            delta.z(delta.z() + speed);
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_D))
+        if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
            delta.x(-speed);
-        if(Keyboard.isKeyDown(Keyboard.KEY_A))
+        if(Keyboard.isKeyDown(Keyboard.KEY_LEFT))
            delta.x(delta.x() + speed);
 
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
            delta.y(-speed);
         if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
            delta.y(delta.y() + speed);
+
 
        Vector3 deltaCam=delta.copy();
        deltaCam.y(-2*player.getScale());
@@ -542,6 +561,8 @@ public class MainGameLoop
       }
       camera.followObj=player;
       
+      
+      renderer.processSkyBox(ringEntity);
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
 
@@ -660,12 +681,4 @@ public class MainGameLoop
     
     
     
-    static void playMP3(String fileName) {
-      new javafx.embed.swing.JFXPanel();
-      String uriString = new File(fileName).toURI().toString();
-      MediaPlayer mp=new MediaPlayer(new Media(uriString));
-      mp.setAutoPlay(true);
-      //mp.play();
-      
-  }
 }
