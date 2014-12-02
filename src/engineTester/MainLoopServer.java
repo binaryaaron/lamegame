@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import gameObjects.Asteroid;
@@ -70,11 +71,10 @@ public class MainLoopServer
 
     PerformanceUtilities pu = new PerformanceUtilities();
 
-    // this will be information read from a socket
-    // format: ID,x,y,z,rotx,rot,y,rotz,scale
-    String inputFromClient = null;
+
     String outputToClient = null;
 
+    String startString;
     if (PHYSICS_DEBUG)
     {
       //start server
@@ -85,15 +85,10 @@ public class MainLoopServer
       catch (IOException e)
       {
         e.printStackTrace();
-      }
-
-      // wait for 1 connection to the server
-//      while ((clientConnections=myServer.threadList.size())<1)
-//      {
-//        System.out.println("client connections: "+clientConnections);
-//      }
-
-      inputFromClient = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
+      }      
+     
+      //TODO for testing purposes, start input from client. 1 client has connected to get here:
+       startString= "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
           "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;" +
           "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"
           + "A002,-4,-2,-20,0,0,0,0.5;"
@@ -102,13 +97,12 @@ public class MainLoopServer
     
     else
     {
-      inputFromClient = "S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"
-          + "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
+      startString="S001,0,0,-20,0,0,0,0.01;" + "S002,0,15,-20,0,0,0,0.3;"+ "A001,4,2,-3,0,0,0,1;" + "Cam,0,0,3,0,90,0,1";
     }
 
     List<Entity> renderList = new ArrayList<>();
 
-    String[] sceneInfo = inputFromClient.split(";");
+    String[] sceneInfo = startString.split(";");
     for (String object : sceneInfo)
     {
       String[] currentLine = object.split(",");
@@ -191,55 +185,54 @@ public class MainLoopServer
           camera.move();
         }
 
-        // while(getInput()!="Ready")
-        // {
-        // //wait
-        // }
-
-        inputFromClient = getInput();
-        if (inputFromClient != null)
+        for (int i = 0; i < myServer.threadList.size(); i++)
         {
-          String[] clientInput = inputFromClient.split(";");
-          for (String input : clientInput)
+          String inputFromClient=myServer.inputFromClient.get(i);
+          inputFromClient = getInput(i);
+          if (inputFromClient != null)
           {
-            if (input.equals("KEY_LSHIFT")
-                || inputFromClient.equals("KEY_RSHIFT"))
+            String[] clientInput = inputFromClient.split(";");
+            for (String input : clientInput)
             {
-              scale = 0.0001f;
-            }
-            if (input.equals("KEY_RIGHT"))
-            {
-              Asteroid2.vel.x += scale;
-            }
-            if (input.equals("KEY_LEFT"))
-            {
-              Asteroid2.vel.x -= scale;
-            }
-            if (input.equals("KEY_UP"))
-            {
-              Asteroid2.vel.y += scale;
-            }
-            if (input.equals("KEY_DOWN"))
-            {
-              Asteroid2.vel.y -= scale;
-            }
-            //
-            if (input.equals("KEY_D"))
-            {
-              Asteroid1.vel.x += scale;
-            }
-            if (input.equals("KEY_A"))
-            {
-              Asteroid1.vel.x -= scale;
-            }
-            if (input.equals("KEY_W"))
-            {
-              Asteroid1.vel.y += scale;
+              if (input.equals("KEY_LSHIFT")
+                  || inputFromClient.equals("KEY_RSHIFT"))
+              {
+                scale = 0.0001f;
+              }
+              if (input.equals("KEY_RIGHT"))
+              {
+                Asteroid2.vel.x += scale;
+              }
+              if (input.equals("KEY_LEFT"))
+              {
+                Asteroid2.vel.x -= scale;
+              }
+              if (input.equals("KEY_UP"))
+              {
+                Asteroid2.vel.y += scale;
+              }
+              if (input.equals("KEY_DOWN"))
+              {
+                Asteroid2.vel.y -= scale;
+              }
+              //
+              if (input.equals("KEY_D"))
+              {
+                Asteroid1.vel.x += scale;
+              }
+              if (input.equals("KEY_A"))
+              {
+                Asteroid1.vel.x -= scale;
+              }
+              if (input.equals("KEY_W"))
+              {
+                Asteroid1.vel.y += scale;
 
-            }
-            if (input.equals("KEY_S"))
-            {
-              Asteroid1.vel.y -= scale;
+              }
+              if (input.equals("KEY_S"))
+              {
+                Asteroid1.vel.y -= scale;
+              }
             }
           }
         }
@@ -247,7 +240,7 @@ public class MainLoopServer
 
       /////instead of rendering, build strings and send them to the client
       outputToClient = "";//clear the String
-      for (Entity ent : renderList)
+      for (Entity ent : renderList)//TODO do I need a for each thread here?
       {
         outputToClient += ent.toString() + ";";
       }
@@ -262,6 +255,7 @@ public class MainLoopServer
       {
         renderer.processEntity(ent);
       }
+      
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
       DisplayManager.updateDisplay();
@@ -280,10 +274,11 @@ public class MainLoopServer
 
   }//end of main
 
-  public static String getInput()
+  public static String getInput(int i)
   {
+    System.out.println("connections: "+myServer.threadList.size());
     //start with first element in walker thread, expand to multiplayer
-    String input = myServer.threadList.get(0).getClientInput();
+    String input = myServer.threadList.get(i).getClientInput();
     loop++;
     return input;
   }

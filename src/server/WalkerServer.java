@@ -2,6 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class WalkerServer extends Thread
@@ -10,6 +11,8 @@ public class WalkerServer extends Thread
   private static ServerSocket myServerSocket;
   private static boolean listening=true;
   public static LinkedList<WalkerThread> threadList=new LinkedList<>();
+  public static ArrayList<String> inputFromClient=new ArrayList<>();
+  
   private static int IDgen=0;
  
   public WalkerServer() throws IOException
@@ -37,6 +40,9 @@ public class WalkerServer extends Thread
       try
       {
         newThread=new WalkerThread(myServerSocket.accept(),IDgen);
+        String input="";
+        String output="";
+        inputFromClient.add(input);
       } catch (IOException e)
       {
         e.printStackTrace();
@@ -51,7 +57,7 @@ public class WalkerServer extends Thread
         WalkerThread wt=threadList.get(i);
         if(!wt.isAlive())
         {
-//          threadList.remove(wt);
+          threadList.remove(wt);
         }
       }
     }
