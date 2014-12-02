@@ -10,8 +10,8 @@ import org.lwjgl.opengl.PixelFormat;
 public class DisplayManager
 {
 
-  private static final int WIDTH = 800;
-  private static final int HEIGHT = 600;
+  private static  int width = 800;
+  private static  int height = 600;
   private static final int FPS_CAP = 120;
 
   public static void createDisplay()
@@ -29,9 +29,8 @@ public class DisplayManager
           System.out.println(current.getWidth() + "x" + current.getHeight() + "x" +
                               current.getBitsPerPixel() + " " + current.getFrequency() + "Hz");
       }
-      Display.setDisplayMode(modes[0]);  
-      Display.setVSyncEnabled(true);
-      Display.setFullscreen(true);
+      Display.setDisplayMode(modes[modes.length-1]);  
+
       Display.create(new PixelFormat(),attribs);
       //Display.create();
       Display.setTitle("ThinMatrixTutorialWindow");
@@ -42,7 +41,7 @@ public class DisplayManager
       e.printStackTrace();
     }
 
-    GL11.glViewport(0, 0, WIDTH, HEIGHT);
+    GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 
   }
 
