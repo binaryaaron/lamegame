@@ -103,11 +103,11 @@ public class MainGameLoop
 	    TexturedModel texturedSkyBox = new TexturedModel(skyBox, skyTexture);
 	    SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 //	    
-	    RawModel laser = OBJLoader.loadObjModel("laser", loader, true);
-	    ModelTexture laserTexture = new ModelTexture(loader.loadTexture("laser"));
+	    RawModel laser = OBJLoader.loadObjModel("missle", loader, true);
+	    ModelTexture laserTexture = new ModelTexture(loader.loadTexture("Missle"));
 	    TexturedModel texturedLaser = new TexturedModel(laser, laserTexture);
 	    Entity laserEntity = new Entity(texturedLaser,new Vector3f(0,0,0), 0,
-				0, 0,0.3f);
+				0, 0,2f);
 
 	    modelMap.getTexturedModelList().put("Play",
 	        modelMap.getTexturedModelList().get("S002"));
