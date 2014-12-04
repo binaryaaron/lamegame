@@ -42,11 +42,10 @@ public class ModelMap {
 	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  false);
 	    //change text label here
 	    speedLabel = FontLoader.loadFontModel("78", loader,  true, 1);
-	    healthLabel = FontLoader.loadFontModel("100%", loader,  true, 1);
+	    healthLabel = FontLoader.loadFontModel("0%", loader,  true, 1);
 	    scoreLabel = FontLoader.loadFontModel("3 frags", loader,  true, 1);
-      speedLabel = FontLoader.loadFontModel("78", loader,  true, 1);
-      xLabel = FontLoader.loadFontModel("78", loader,  true, 1);
-      yLabel = FontLoader.loadFontModel("78", loader,  true, 1);
+      xLabel = FontLoader.loadFontModel("X", loader,  true, 1);
+      yLabel = FontLoader.loadFontModel("Y", loader,  true, 1);
 	        
 	    ModelTexture shipTexture = new ModelTexture(loader.loadTexture("SciFi_FighterMK_diffuse"));
 	    ModelTexture ship2Texture = new ModelTexture(loader.loadTexture("space_frigate_6_color"));
@@ -55,7 +54,7 @@ public class ModelMap {
 	    textTx = new ModelTexture(loader.loadTexture("font"));
       ModelTexture speedTexture = new ModelTexture(loader.loadTexture("font"));
       ModelTexture healthTexture = new ModelTexture(loader.loadTexture("font"));
-      ModelTexture scoreTexture = new ModelTexture(loader.loadTexture("font2"));
+      ModelTexture scoreTexture = new ModelTexture(loader.loadTexture("font"));
 	    ModelTexture xTexture = new ModelTexture(loader.loadTexture("font"));
 	    ModelTexture yTexture = new ModelTexture(loader.loadTexture("font"));
       
@@ -83,26 +82,24 @@ public class ModelMap {
     
 
 	
-	public Map<String, TexturedModel> getTexturedModelList() {
+	public Map<String, TexturedModel> getTexturedModelList() 
+	{
 		return texturedModelList;
 	}
 
   public TexturedModel setSpeedText(String input)
   {
     this.speedLabel = FontLoader.loadFontModel(input, loader,  true, 1);
-    return (new TexturedModel(this.speedLabel, new ModelTexture(loader.loadTexture("font"))));  
+    return (new TexturedModel(this.speedLabel, textTx));  
   }
   public TexturedModel setScoreText(String input)
   {
     this.scoreLabel = FontLoader.loadFontModel(input, loader,  true, 1);
-    return (new TexturedModel(this.scoreLabel, new ModelTexture(loader.loadTexture("font"))));  
+    return (new TexturedModel(this.scoreLabel, textTx));  
   }
   public TexturedModel setHealthText(String input)
   {
     this.healthLabel = FontLoader.loadFontModel(input, loader,  true, 1);
-    return (new TexturedModel(this.healthLabel, new ModelTexture(loader.loadTexture("font"))));  
+    return (new TexturedModel(this.healthLabel, textTx));  
   }
-	
-
-
 }

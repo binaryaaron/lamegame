@@ -31,7 +31,7 @@ import entities.Light;
 public class MainGameLoop
 {
 
-  public final static boolean PRINT_FPS = false;
+  public final static boolean PRINT_FPS = true;
   private final static boolean PHYSICS_DEBUG = false;
   private final static boolean HUD_DEBUG = true;
   public static void main(String[] args)
@@ -91,7 +91,6 @@ public class MainGameLoop
       yr = Float.parseFloat(currentLine[5]);
       zr = Float.parseFloat(currentLine[6]);
       s = Float.parseFloat(currentLine[7]);
-      System.out.println(object.charAt(0));
       if (object.startsWith("Cam"))
       {
         camera.setPosition(new Vector3f(x, y, z));
@@ -122,6 +121,8 @@ public class MainGameLoop
     {
       pu.startFrameCounter();
     }
+    long hudDelay = 100;
+    long hudStart = 0;
     /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
@@ -224,25 +225,23 @@ public class MainGameLoop
       {
         renderer.processEntity(ent);
       }
+      if(HUD_DEBUG&&hudDelay+hudStart <System.currentTimeMillis())
+      {
+       hudStart = System.currentTimeMillis();
+       hudRenderList.get(2).setModel(modelMap.setScoreText((""+System.currentTimeMillis()+"  ")));
+       //hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"% "));
+       //hudRenderList.get(0).setModel(modelMap.setSpeedText(""+pu.getFPS()+"   "));
+      }
       for (Entity ent : hudRenderList)
       {
         renderer.processHudEntity(ent);
       }
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
-      if(HUD_DEBUG)
-      {
-       //hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"%"));
-
-       hudRenderList.get(2).setModel((modelMap.setScoreText(""+System.currentTimeMillis())));
-       //hudRenderList.get(0)
-       //hudRenderList.get(2)
-      }
       DisplayManager.updateDisplay();
       if (PRINT_FPS)
       {
         pu.updateFPS();
-
         System.out.println(pu.getFPS());
       }
 

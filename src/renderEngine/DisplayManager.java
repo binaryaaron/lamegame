@@ -10,8 +10,8 @@ import org.lwjgl.opengl.PixelFormat;
 public class DisplayManager
 {
 
-  private static  int width = 800;
-  private static  int height = 600;
+  private static  int width = 1920;
+  private static  int height = 1080;
   private static final int FPS_CAP = 120;
 
   public static void createDisplay()
@@ -24,16 +24,14 @@ public class DisplayManager
     {
       DisplayMode[] modes = Display.getAvailableDisplayModes();
       
-      for (int i=0;i<modes.length;i++) {
+      for (int i=0;i<modes.length;i++) 
+      {
           DisplayMode current = modes[i];
-          System.out.println(current.getWidth() + "x" + current.getHeight() + "x" +
-                              current.getBitsPerPixel() + " " + current.getFrequency() + "Hz");
       }
-      Display.setDisplayMode(modes[modes.length-1]);  
+      Display.setDisplayMode(modes[modes.length-2]);  
 
       Display.create(new PixelFormat(),attribs);
-      //Display.create();
-      Display.setTitle("ThinMatrixTutorialWindow");
+      Display.setTitle("lamegame");
 
     }
     catch (LWJGLException e)

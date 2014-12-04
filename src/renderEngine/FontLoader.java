@@ -22,9 +22,10 @@ public class FontLoader
    * size determines how large the text created should be.
    * for simple shapes
    * 
-   * @param fileName
+   * @param text
    * @param loader
    * @param simpleShape
+   * @param size
    * @return
    */
   public static RawModel loadFontModel(String text, Loader loader,
