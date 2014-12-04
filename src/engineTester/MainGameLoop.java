@@ -221,7 +221,7 @@ public class MainGameLoop
     
     
     
-    
+    Vector3 velocity = new Vector3();
     
     
     
@@ -392,8 +392,8 @@ public class MainGameLoop
         Vector3 position=new Vector3 (player.position.x,player.position.y,player.position.z);
         Vector3 cameraPos=position.copy();
       //in your update cod
-        float speed = 0.2f;//(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) | Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) ? 20 : 50) * deltaTime / (float)1e9;
-        float rotSpeed = 1.5f * speed;
+        float speed = 0.02f;//(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) | Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) ? 20 : 50) * deltaTime / (float)1e9;
+        float rotSpeed = 0.5f;
 
         //pitch
         int dy = Mouse.getDY();
@@ -442,14 +442,24 @@ public class MainGameLoop
        Vector3 deltaCam=delta.copy();
        deltaCam.y(-2*player.getScale());
        deltaCam.z(-9*player.getScale());
-       
-        position.add(inverse.mult(delta));
-        cameraPos.add(inverse.mult(deltaCam));
-        player.quadTranslate(position);
-        player.orientation=orientation.copy();
+
+        long time = System.currentTimeMillis();
+        if (time - lastTime > 25)
+        {
+          lastTime = time;
+          velocity.add(inverse.mult(delta));
+          //position.add(inverse.mult(delta));
+          cameraPos.add(inverse.mult(deltaCam));
+          cameraPos.add(velocity);
+          position.add(velocity);
+          player.quadTranslate(position);
+          player.orientation=orientation.copy();
+          camera.quadTranslate(cameraPos);
+          camera.orientation=orientation.copy();
+        }
+
         
-        camera.quadTranslate(cameraPos);
-        camera.orientation=orientation.copy();
+
       
  //Mouse.setCursorPosition(50,50);
 
