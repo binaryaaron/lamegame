@@ -98,15 +98,15 @@ public class MainGameLoop
 	    camera.followObj=player;
 	    
 	    // create skybox, this is not an entity so it is seperate
-	    RawModel skyBox = OBJLoader.loadObjModel("StarDome", loader, true);
-	    ModelTexture skyTexture = new ModelTexture(loader.loadTexture("Skym"));
+	    RawModel skyBox = OBJLoader.loadObjModel("SkyDome", loader, true);
+	    ModelTexture skyTexture = new ModelTexture(loader.loadTexture("RedSky"));
 	    TexturedModel texturedSkyBox = new TexturedModel(skyBox, skyTexture);
 	    SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
-	    
-	    RawModel ring = OBJLoader.loadObjModel("Ring", loader, true);
-	    ModelTexture ringTexture = new ModelTexture(loader.loadTexture("RedSkyTrans"));
-	    TexturedModel texturedRing = new TexturedModel(ring, ringTexture);
-	    SkyBox ringEntity = new SkyBox(loader, texturedRing);
+//	    
+//	    RawModel ring = OBJLoader.loadObjModel("Ring", loader, true);
+//	    ModelTexture ringTexture = new ModelTexture(loader.loadTexture("RedSkyTrans"));
+//	    TexturedModel texturedRing = new TexturedModel(ring, ringTexture);
+//	    SkyBox ringEntity = new SkyBox(loader, texturedRing);
 
 	    modelMap.getTexturedModelList().put("Play",
 	        modelMap.getTexturedModelList().get("S002"));
@@ -562,7 +562,7 @@ public class MainGameLoop
       camera.followObj=player;
       
       
-      renderer.processSkyBox(ringEntity);
+     // renderer.processSkyBox(ringEntity);
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
 
