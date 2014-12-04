@@ -34,7 +34,7 @@ public class ModelMap {
 	    RawModel modelAsteroid = OBJLoader.loadObjModel("SquareRock3", loader,  true);
 	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  false);
 	    RawModel planetObj = OBJLoader.loadObjModel("planet", loader,  true);
-	    RawModel laserObj = OBJLoader.loadObjModel("lasers", loader,  true);
+	    RawModel laserObj = OBJLoader.loadObjModel("laser", loader,  true);
 	    
 
 	    ModelTexture shipTexture = new ModelTexture(loader.loadTexture("SciFi_FighterMK_diffuse"));

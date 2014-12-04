@@ -18,14 +18,15 @@ public class Entity {
 	public Vector3f position;
 
     private Vector3f rotation;
-	private float rotX,rotY,rotZ;
-	public Vector3f xAxis,yAxis,zAxis,worldxAxis,worldyAxis,worldzAxis,center,front,right;
+	private float rotX,rotY,rotZ;;
 	public Quaternion orientation;
 	private Matrix4f basis=new Matrix4f();
 	public Matrix4f rotationMatrix=new Matrix4f();
 	public Matrix4f matrix=new Matrix4f();
 	private float scale;
 	private BoundingBox box;
+	public Vector3 qvel = new Vector3(0f,0f,0f);
+	public Vector3 qPos = new Vector3(0f,0f,0f);
 	public Vector3f vel = new Vector3f(0f,0f,0f);
 	float alpha,beta,gamma;;
 
@@ -33,9 +34,7 @@ public class Entity {
 	public Entity(TexturedModel model, Vector3f position, float rotX,
 			float rotY, float rotZ,float scale) {
 		super();
-		center=new Vector3f(0,0,0);
-		front=new Vector3f(0,0,1);
-		right=new Vector3f(1,0,0);
+
 		this.model = model;
 		this.position = position;
 		this.rotation=new Vector3f(rotX,rotY,rotZ);
@@ -48,14 +47,7 @@ public class Entity {
 		beta=0;
 		gamma=0;
 		orientation=new Quaternion();
-		worldxAxis = new Vector3f(1f,0f,0f);
-		worldyAxis = new Vector3f(0f,1f,0f);
-		worldzAxis = new Vector3f(0f,0f,1f);
-		
-		
-		xAxis = new Vector3f(scale,0f,0f);
-		yAxis = new Vector3f(0f,scale,0f);
-		zAxis = new Vector3f(0f,0f,scale);
+
 		
 		//basis will be a matrix that holds the directional vectors
 		basis.setIdentity();
@@ -69,6 +61,13 @@ public class Entity {
 	  this.position.x=vec3.x();
 	  this.position.y=vec3.y();
 	  this.position.z=vec3.z();
+	}
+	
+	public void move(Vector3 vec3)
+	{
+		position.x += vec3.x();
+		position.y += vec3.y();
+		position.z += vec3.z();
 	}
 	public void translate(float dx,float dy,float dz){
 		this.position.x+=dx;
@@ -88,81 +87,11 @@ public class Entity {
 		translate(vel);
 	}
 	
-	public void rotateX(double dx){
-		dx=(dx*(3.141592/180));
-		double sign=Math.signum(dx);
-		Matrix4f.rotate((float) dx, xAxis, basis, basis);
-    updateDirections();
-		//rotX+=dx;
-		front.x+=yAxis.x*dx;
-		front.y+=yAxis.y*dx;
-		front.z+=yAxis.z*dx;
-		
-//		front.y =(float)(front.y*Math.cos(dx)+front.z*Math.sin(dx)*sign);
-//		front.z =(float)(-front.y*Math.sin(dx)*sign+front.z*Math.cos(dx));
-		
-		
+	
 
-		
-		
-	}
-
-	public void rotateY(double dy){
-		dy=Math.toRadians(dy);
-		double sign=Math.signum(dy);
-		front.x+=xAxis.x*dy;
-    front.y+=xAxis.y*dy;
-    front.z+=xAxis.z*dy;
-		
-    right.x+=zAxis.x*dy;
-    right.y+=zAxis.y*dy;
-    right.z+=zAxis.z*dy;
-
-		Matrix4f.rotate((float) dy, yAxis, basis, basis);
-		updateDirections();
-		System.out.println("rotY:"+zAxis+";"+ xAxis+";"+ position);
-
-		
-	}
-	public void rotateZ(double dz){
-		dz=Math.toRadians(dz);
-		double sign=Math.signum(dz);
-//		right.y+=(float) Math.sin(dz);
-//		right.x+=(float) Math.cos(dz);
-//		
-		Matrix4f.rotate((float) dz, zAxis, basis, basis);
-		updateDirections();
-		System.out.println("rotZ");
-	}
 	
 	
-	private void updateDirections(){
-		xAxis.x=basis.m00;
-		xAxis.y=basis.m01;
-		xAxis.z=basis.m02;
-		
-		yAxis.x=basis.m10;
-		yAxis.y=basis.m11;
-		yAxis.z=basis.m12;
-		
-		zAxis.x=basis.m20;
-		zAxis.y=basis.m21;
-		zAxis.z=basis.m22;
-		
-		//euler Angles
-//		float alphaE=Vector3f.angle(xAxis, worldxAxis);
-//		float betaE=Vector3f.angle(yAxis, worldyAxis);
-//		float gammaE=Vector3f.angle(zAxis, worldzAxis);
-//		rotationMatrix=setNewBasis(alphaE,betaE,gammaE);
-		
-		//System.out.println("basis:");
-		//System.out.println(basis);
-		//System.out.println(alpha);
-		//System.out.println(beta);
-		//System.out.println("rotMat:");
-		//System.out.println(rotationMatrix);
-		
-	}
+
 	
 	 public Matrix4f setNewBasis(float rotX,float rotY,float rotZ){
 		 
@@ -245,7 +174,7 @@ public class Entity {
 
 
 	public void setPosition(Vector3f position) {
-		this.position = position;
+		this.position = new Vector3f(position);
 	}
 
 

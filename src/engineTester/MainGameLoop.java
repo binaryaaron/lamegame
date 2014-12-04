@@ -103,10 +103,11 @@ public class MainGameLoop
 	    TexturedModel texturedSkyBox = new TexturedModel(skyBox, skyTexture);
 	    SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 //	    
-//	    RawModel ring = OBJLoader.loadObjModel("Ring", loader, true);
-//	    ModelTexture ringTexture = new ModelTexture(loader.loadTexture("RedSkyTrans"));
-//	    TexturedModel texturedRing = new TexturedModel(ring, ringTexture);
-//	    SkyBox ringEntity = new SkyBox(loader, texturedRing);
+	    RawModel laser = OBJLoader.loadObjModel("laser", loader, true);
+	    ModelTexture laserTexture = new ModelTexture(loader.loadTexture("laser"));
+	    TexturedModel texturedLaser = new TexturedModel(laser, laserTexture);
+	    Entity laserEntity = new Entity(texturedLaser,new Vector3f(0,0,0), 0,
+				0, 0,0.3f);
 
 	    modelMap.getTexturedModelList().put("Play",
 	        modelMap.getTexturedModelList().get("S002"));
@@ -437,8 +438,12 @@ public class MainGameLoop
            delta.y(-speed);
         if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
            delta.y(delta.y() + speed);
-
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
+            laserEntity.setPosition(player.position);
+            laserEntity.orientation=player.orientation.copy();
+            float pv=20f;
+            laserEntity.qvel= inverse.mult(new Vector3(0,0,pv));
+        }
        Vector3 deltaCam=delta.copy();
        deltaCam.y(-2*player.getScale());
        deltaCam.z(-9*player.getScale());
@@ -452,6 +457,7 @@ public class MainGameLoop
           cameraPos.add(inverse.mult(deltaCam));
           cameraPos.add(velocity);
           position.add(velocity);
+          laserEntity.move(laserEntity.qvel);
           player.quadTranslate(position);
           player.orientation=orientation.copy();
           camera.quadTranslate(cameraPos);
@@ -569,6 +575,7 @@ public class MainGameLoop
         renderer.processEntity(ent);
 
       }
+      renderer.processEntity(laserEntity);
       camera.followObj=player;
       
       
