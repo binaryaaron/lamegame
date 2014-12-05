@@ -1,5 +1,6 @@
 package physics;
 
+import com.ra4king.opengl.util.math.Vector3;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -17,25 +18,26 @@ public class PhysicsUtilities
    * @param mass2
    * @param vec2
    */
-  public static void elasticCollision(float mass1, Vector3f vec1, float mass2,
-      Vector3f vec2)
+  public static void elasticCollision(float mass1, Vector3 vec1, float mass2,
+      Vector3 vec2)
   {
-    Vector3f u1 = new Vector3f(vec1);
-    Vector3f u2 = new Vector3f(vec2);
-    Vector3f q1 = new Vector3f(vec1);
-    Vector3f q2 = new Vector3f(vec2);
+    Vector3 u1 = new Vector3(vec1);
+    Vector3 u2 = new Vector3(vec2);
+    Vector3 q1 = new Vector3(vec1);
+    Vector3 q2 = new Vector3(vec2);
 
     float c1 = (mass1 - mass2) / (mass1 + mass2);
     float c2 = (2 * mass2) / (mass1 + mass2);
     float k1 = (mass2 - mass1) / (mass1 + mass2);
     float k2 = (2 * mass1) / (mass1 + mass2);
+    u1.mult(c1);
+    u2.mult(c2);
+    q1.mult(k2);
+    q2.mult(k1);
 
-    u1.scale(c1);
-    u2.scale(c2);
-    q1.scale(k2);
-    q2.scale(k1);
-
-    Vector3f.add(u1, u2, vec1);
-    Vector3f.add(q1, q2, vec2);
+    vec1.set(u1);
+    vec2.set(q1);
+    vec1.add(u2);
+    vec2.add(q2);
   }
 }

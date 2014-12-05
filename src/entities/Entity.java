@@ -38,9 +38,9 @@ public class Entity {
 	private float size;
 	private float halfSize;
 	private BoundingBox box;
-	public Vector3 qvel = new Vector3(0f,0f,0f);
+	public Vector3 vel = new Vector3(0f,0f,0f);
 	public Vector3 qPos = new Vector3(0f,0f,0f);
-	public Vector3f vel = new Vector3f(0f,0f,0f);
+	//public Vector3f vel = new Vector3f(0f,0f,0f);
 
 	
   public Entity(Entity ent)
@@ -66,15 +66,17 @@ public class Entity {
 		orientation.z(rotZ);
 		//basis will be a matrix that holds the directional vectors
 		basis.setIdentity();
-		if (model!=null){
+		if (model!=null) {
 		box = model.getRawModel().getBoundingBox().deepCopy();
 		box.scale(0.9f*scale);
 		size = MathUtil.vectorDist(box.getMax(), box.getMin());
 		halfSize = size * 0.5f;
 		box.translate(position);
+		}
 	}
 
 	public void quadTranslate(Vector3 vec3){
+		this.box.setPosition(vec3);
 	  this.position.x=vec3.x();
 	  this.position.y=vec3.y();
 	  this.position.z=vec3.z();
@@ -82,6 +84,7 @@ public class Entity {
 	
 	public void move(Vector3 vec3)
 	{
+		box.translate(vec3.x(), vec3.y(), vec3.z());
 		position.x += vec3.x();
 		position.y += vec3.y();
 		position.z += vec3.z();
@@ -101,11 +104,8 @@ public class Entity {
 
 	public void move()
 	{
-		translate(vel);
+		move(vel);
 	}
-	
-	
-
 	
 	
 
@@ -192,6 +192,7 @@ public class Entity {
 
 	public void setPosition(Vector3f position) {
 		this.position = new Vector3f(position);
+		this.box.setPosition(position);
 	}
 
 

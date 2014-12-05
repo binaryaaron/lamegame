@@ -82,4 +82,12 @@ public class MathUtil
 
     return matrix;
   }
+
+  public static float vectorDist(Vector3f max, Vector3f min)
+  {
+    float x = max.x - min.x;
+    float y = max.y - min.y;
+    float z = max.z - min.z;
+    return (float) Math.sqrt(x*x + y*y + z*z);
+  }
 }
