@@ -28,6 +28,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector;
 import com.ra4king.opengl.util.math.Vector3;
 
 import physics.PhysicsUtilities;
@@ -53,6 +54,7 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 //import javafx.scene.media.*;
+
 
 import java.net.*;
 
@@ -114,10 +116,6 @@ public class MainGameLoop
     {
       //  new javafx.embed.swing.JFXPanel();
       String bip = "res/explosion-04.wav";
-      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.6;" +
-          "A002,-3,0,-20,0,0,0,0.2;" + "A002,-4,0,-20,0,0,0,0.7;"  +
-          "A002,-5,0,-20,0,0,0,0.3;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
-          + "A002,-4,-3,-20,0,0,0,0.8;";
 
       playSound(bip);
 
@@ -184,9 +182,9 @@ public class MainGameLoop
     }
 
     List<Entity> renderList = parseGameStateString(testInput, modelMap);
-
-    renderList.add(laserEntity);
-    if (PRINT_FPS)
+    List<Entity> missileList = new ArrayList<>();
+   // List<Entity> renderList=new ArrayList<>();
+       if (PRINT_FPS)
     {
       pu.startFrameCounter();
     }
@@ -302,6 +300,8 @@ public class MainGameLoop
            // renderList.addAll(explodeEntity(ent));
             timeTilExplode = 50;
           }
+         // renderList.addAll(objList);
+        //  renderList.addAll(missileList);
           for (Entity ent : renderList)
           {
             ent.move();
@@ -334,6 +334,8 @@ public class MainGameLoop
         Vector3 position = new Vector3(player.position.x, player.position.y,
             player.position.z);
         Vector3 cameraPos = position.copy();
+        Vector3 missilePos = position.copy();
+        
         //in your update cod
         float speed = 0.02f;//(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) | Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) ? 20 : 50) * deltaTime / (float)1e9;
         float rotSpeed = 0.5f;
@@ -387,10 +389,26 @@ public class MainGameLoop
           delta.y(delta.y() + speed);
         if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
         {
-          laserEntity.setPosition(player.position);
-          laserEntity.orientation = player.orientation.copy();
+        	
+        	//fire a missile
+        	
+            Vector3 deltaMis = delta.copy();
+            deltaMis.y(5 * player.getScale());
+            deltaMis.z(-5 * player.getScale());
+        	
+            missilePos.add(inverse.mult(deltaMis));
+         
+        	
+        	Entity missle = new Entity(texturedLaser, new Vector3f(0, 0, 0), 0, 0,
+        	        0, 0.3f);
+        	//missle.setPosition(player.position);
+            missle.quadTranslate(missilePos);
+
+        	missle.orientation = player.orientation.copy();
           float pv = 5f;
-          laserEntity.vel = inverse.mult(new Vector3(0, 0, pv));
+          missle.vel =  player.vel.copy().add(inverse.mult(new Vector3(0, 0, pv)));
+          
+          renderList.add(missle);
         }
         Vector3 deltaCam = delta.copy();
         deltaCam.y(-2 * player.getScale());
@@ -399,6 +417,8 @@ public class MainGameLoop
         long time = System.currentTimeMillis();
         if (time - lastTime > 25)
         {
+         //   renderList.addAll(objList);
+         //   renderList.addAll(missileList);
           for (Entity ent : renderList)
           {
             ent.move();
@@ -512,6 +532,8 @@ public class MainGameLoop
   
       
 			/* render each entity passed to the client */
+    //  renderList.addAll(objList);
+    //  renderList.addAll(missileList);
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
@@ -532,7 +554,7 @@ public class MainGameLoop
       }
 
     }
-
+renderList.clear();
     renderer.cleanUp();
     loader.cleanUp();
     DisplayManager.closeDisplay();
@@ -658,30 +680,33 @@ public class MainGameLoop
     List<Entity> entList = new LinkedList<>();
     float velScale = 0.01f;
     Entity ent1 = new Entity(ent);
-    ent1.translate(ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
-    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
-    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), 0);
+    ent1.translate(ent.getHalfSize() * 0.5f, ent.getHalfSize() * 0.5f,
+        0.5f * ent.getHalfSize() * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), Globals.RAND.nextFloat(),
+        -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     ent1 = new Entity(ent);
-    ent1.translate(-ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
-    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
-    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), 0);
-
+    ent1.translate(-ent.getHalfSize() * 0.5f, ent.getHalfSize() * 0.5f,
+        0.5f * ent.getHalfSize() * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), Globals.RAND.nextFloat(),
+        -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     ent1 = new Entity(ent);
-    ent1.translate(ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
-    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
-    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), 0);
-
+    ent1.translate(ent.getHalfSize() * 0.5f, -ent.getHalfSize() * 0.5f,
+        0.5f * ent.getHalfSize() * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(),
+        -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     ent1 = new Entity(ent);
-    ent1.translate(-ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, -ent.getHalfSize()* Globals.RAND.nextFloat() + 2 * ent.getHalfSize() * Globals.RAND.nextFloat() );
-    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
-    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), 0);
-
+    ent1.translate(-ent.getHalfSize() * 0.5f, -ent.getHalfSize() * 0.5f,
+        -ent.getHalfSize() * Globals.RAND.nextFloat() + 2 * ent.getHalfSize()
+            * Globals.RAND.nextFloat());
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(),
+        -Globals.RAND.nextFloat(),
+        -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
     ent1.vel.scale(0.1f);
     entList.add(ent1);
     return entList;
