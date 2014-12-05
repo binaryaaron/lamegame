@@ -1,10 +1,7 @@
 package physics;
 
-<<<<<<< HEAD
 import com.ra4king.opengl.util.math.Vector3;
-=======
 import entities.Entity;
->>>>>>> collisions
 import org.lwjgl.util.vector.Vector3f;
 
 /**

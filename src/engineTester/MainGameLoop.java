@@ -309,7 +309,7 @@ public class MainGameLoop
             {
               if (BoxUtilities.collision(ent.getBox(), other.getBox()))
               {
-                PhysicsUtilities.elasticCollision(ent, other);
+                PhysicsUtilities.elasticCollision(ent,other);
               }
             }
           }
@@ -416,7 +416,7 @@ public class MainGameLoop
                   System.out.println("Should be a collision here!");
                 }
                 System.out.println("Elastic collision pre vel " + ent.vel);
-                PhysicsUtilities.elasticCollision(200, ent.vel, 200, other.vel);
+                PhysicsUtilities.elasticCollision(ent, other);
                 System.out.println("Elastic collision post vel " + ent.vel);
               }
             }
@@ -426,7 +426,7 @@ public class MainGameLoop
           cameraPos.add(inverse.mult(deltaCam));
           cameraPos.add(player.vel);
           laserEntity.move();
-          player.move();
+          //player.move();
           player.orientation = orientation.copy();
           camera.quadTranslate(cameraPos);
           camera.orientation = orientation.copy();
