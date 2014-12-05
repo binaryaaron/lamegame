@@ -5,6 +5,7 @@ import models.TexturedModel;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
 
@@ -47,8 +48,9 @@ public class Entity {
 		beta=0;
 		gamma=0;
 		orientation=new Quaternion();
-
-		
+		orientation.x(rotX);
+		orientation.y(rotY);
+		orientation.z(rotZ);
 		//basis will be a matrix that holds the directional vectors
 		basis.setIdentity();
 		if (model!=null){

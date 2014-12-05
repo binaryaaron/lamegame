@@ -113,8 +113,8 @@ public class MainGameLoop
 	        modelMap.getTexturedModelList().get("S002"));
 	    // create lights and camera for the player. camera position should be set in
 	    // parsing routine
-	    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
-	        0.5f, 0.5f));
+	    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1f,
+	        0.8f, 0.8f));
 	   
 	    MasterRenderer renderer = new MasterRenderer(camera);
 
@@ -157,21 +157,21 @@ public class MainGameLoop
       }
       else if(ASTEROIDS){
         Random rand=new Random();
-        testInput="Play,300,0,4,0,0,0,0.3;Plan,0,0,0,0,0,0,10;";
+        testInput="Play,1000,0,4,0,0.66,0,0.03;Plan,0,0,0,0,0,0,100;";
         for(int i=0;i<nAsteroids;i++){
           int a=rand.nextInt(2)+1;
           
-          int y=rand.nextInt(2)-1;
+          int y=rand.nextInt(20)-10;
           int r=0;
-          int x=rand.nextInt(300)-150;
-          int z=rand.nextInt(300)-150;
-          while(r<75*75||r>135*135){
-           x=rand.nextInt(300)-150;
-           z=rand.nextInt(300)-150;
+          int x=rand.nextInt(3000)-1500;
+          int z=rand.nextInt(3000)-1500;
+          while(r<562500||r>1822500){
+           x=rand.nextInt(3000)-1500;
+           z=rand.nextInt(3000)-1500;
           r=x*x+z*z;
           }
           
-          float s=rand.nextFloat()*2;
+          float s=rand.nextFloat()*50;
         testInput=testInput.concat("A00"+a+","+x+","+y+","+z+",0,0,0,"+s+";");
         }
         
@@ -187,6 +187,8 @@ public class MainGameLoop
     List<Entity> renderList= parseGameStateString(testInput,modelMap);
 
     
+    
+    
 
     if (PRINT_FPS)
     {
@@ -200,24 +202,7 @@ public class MainGameLoop
     WalkerClient wc=null;
     if(SERVER_TEST)    wc =new WalkerClient(args);
     
-    
-    
-    
-    
-    
-    
-    Entity rightTracker= new Entity(modelMap.getTexturedModelList().get("A001"),
-        new Vector3f(1, 0, 0), 0f, 0f, 0f, 0.1f);
-    Entity frontTracker= new Entity(modelMap.getTexturedModelList().get("A001"),
-        new Vector3f(0, 0, 1), 0f, 0f, 0f, 0.1f);
-     
-     renderList.add(rightTracker);
-     renderList.add(frontTracker);
-    
-    
-    
-    
-    
+
     
     
     
