@@ -4,11 +4,10 @@ import models.TexturedModel;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-
 import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
-
+import toolbox.MathUtil;
 import world.BoundingBox;
 
 public class Entity {
@@ -25,12 +24,29 @@ public class Entity {
 	public Matrix4f rotationMatrix=new Matrix4f();
 	public Matrix4f matrix=new Matrix4f();
 	private float scale;
+
+	public float getSize()
+	{
+		return size;
+	}
+
+	public float getHalfSize()
+	{
+		return halfSize;
+	}
+
+	private float size;
+	private float halfSize;
 	private BoundingBox box;
 	public Vector3 qvel = new Vector3(0f,0f,0f);
 	public Vector3 qPos = new Vector3(0f,0f,0f);
 	public Vector3f vel = new Vector3f(0f,0f,0f);
-	float alpha,beta,gamma;;
 
+	
+  public Entity(Entity ent)
+	{
+		this(ent.model, new Vector3f(ent.position), ent.rotX, ent.rotY, ent.rotZ, ent.scale*0.9f);
+	}
 
 	public Entity(TexturedModel model, Vector3f position, float rotX,
 			float rotY, float rotZ,float scale) {
@@ -44,9 +60,6 @@ public class Entity {
 		this.rotZ = rotZ;
 		this.scale=scale;
 		
-		alpha=0;
-		beta=0;
-		gamma=0;
 		orientation=new Quaternion();
 		orientation.x(rotX);
 		orientation.y(rotY);
@@ -56,7 +69,9 @@ public class Entity {
 		if (model!=null){
 		box = model.getRawModel().getBoundingBox().deepCopy();
 		box.scale(0.9f*scale);
-		box.translate(position);}
+		size = MathUtil.vectorDist(box.getMax(), box.getMin());
+		halfSize = size * 0.5f;
+		box.translate(position);
 	}
 
 	public void quadTranslate(Vector3 vec3){

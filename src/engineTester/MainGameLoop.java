@@ -11,10 +11,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 import gameObjects.Asteroid;
+import gameObjects.Globals;
 import models.RawModel;
 import models.TexturedModel;
 import server.WalkerClient;
@@ -139,7 +141,10 @@ public class MainGameLoop
 	    
     if (PHYSICS_DEBUG)
     {
-      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;";
+      testInput = "A001,1,0,-20,0,0,0,1;" + "A002,-1,0,-20,0,0,0,0.5;" +
+          "A002,-3,0,-20,0,0,0,0.5;" + "A002,-4,0,-20,0,0,0,0.5;"  +
+          "A002,-5,0,-20,0,0,0,0.5;" + "A002,-4,2,-20,0,0,0,0.5;"  + "A002,-4,-2,-20,0,0,0,0.5;"
+          + "A002,-4,-3,-20,0,0,0,0.5;";
 
     }else if(SERVER_TEST)
     {
@@ -197,7 +202,7 @@ public class MainGameLoop
 
     long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
-
+    int timeTilExplode = 50;
     /* Perform object movement as long as the window exists */
     WalkerClient wc=null;
     if(SERVER_TEST)    wc =new WalkerClient(args);
@@ -307,14 +312,28 @@ public class MainGameLoop
         long time = System.currentTimeMillis();
         if (time - lastTime > 25)
         {
-          Asteroid1.move();
-          Asteroid2.move();
-          lastTime = time;
-          if (BoxUtilities.collision(Asteroid1.getBox(), Asteroid2.getBox()))
+          timeTilExplode--;
+          if (timeTilExplode == 0)
           {
-            PhysicsUtilities.elasticCollision(50, Asteroid1.vel, 200,
-                Asteroid2.vel);
+            Entity ent = renderList.get(0);
+            renderList.remove(ent);
+            renderList.addAll(explodeEntity(ent));
+            timeTilExplode = 50;
           }
+          for (Entity ent : renderList)
+          {
+            ent.move();
+            System.out.println(ent);
+            for (Entity other : renderList)
+            {
+              if (BoxUtilities.collision(ent.getBox(), other.getBox()))
+              {
+                PhysicsUtilities.elasticCollision(200, ent.vel, 200,
+                    other.vel);
+              }
+            }
+          }
+          lastTime = time;
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard
@@ -333,11 +352,11 @@ public class MainGameLoop
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP))
         {
-          Asteroid2.vel.y += scale;
+          Asteroid1.vel.z -= scale;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
         {
-          Asteroid2.vel.y -= scale;
+          Asteroid1.vel.z += scale;
 
         }
         // /
@@ -683,4 +702,31 @@ public class MainGameLoop
     
     
     
+  public static List<Entity> explodeEntity(Entity ent)
+  {
+    List<Entity> entList = new LinkedList<>();
+    float velScale = 0.01f;
+    Entity ent1 = new Entity(ent);
+    ent1.translate(ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    ent1 = new Entity(ent);
+    ent1.translate(-ent.getHalfSize()*0.5f, ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    ent1 = new Entity(ent);
+    ent1.translate(ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, 0.5f * ent.getHalfSize()* Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    ent1 = new Entity(ent);
+    ent1.translate(-ent.getHalfSize()*0.5f, -ent.getHalfSize()*0.5f, -ent.getHalfSize()* Globals.RAND.nextFloat() + 2 * ent.getHalfSize() * Globals.RAND.nextFloat() );
+    ent1.vel = new Vector3f(-Globals.RAND.nextFloat(), -Globals.RAND.nextFloat(), -Globals.RAND.nextFloat() + 2f * Globals.RAND.nextFloat());
+    ent1.vel.scale(0.1f);
+    entList.add(ent1);
+    return entList;
+  }
+
 }
