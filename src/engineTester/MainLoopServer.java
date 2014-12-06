@@ -77,6 +77,9 @@ public class MainLoopServer
         laserTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 
+    modelMap.getTexturedModelList()
+        .put("Play", modelMap.getTexturedModelList().get("S002"));
+
     // create lights and camera for the player. camera position should be set in
     // parsing routine
     Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
@@ -163,6 +166,13 @@ public class MainLoopServer
     long lastTime = System.currentTimeMillis();
     float scale;
 
+    Quaternion orientation = player.orientation;
+    Vector3 position = new Vector3(player.position.x,
+        player.position.y, player.position.z);
+    Vector3 cameraPos = position.copy();
+    Vector3 missilePos = position.copy();
+    camera.quadTranslate(cameraPos);
+    camera.orientation = orientation.copy();
     /* Perform object movement as long as the window exists */
     // TODO change server to no display output, loop while threadlist is not
     // empty
@@ -189,11 +199,11 @@ public class MainLoopServer
               scale = 0.01f;
             }
 
-            Quaternion orientation = player.orientation;
-            Vector3 position = new Vector3(player.position.x,
+            orientation = player.orientation;
+            position = new Vector3(player.position.x,
                 player.position.y, player.position.z);
-            Vector3 cameraPos = position.copy();
-            Vector3 missilePos = position.copy();
+            cameraPos = position.copy();
+            missilePos = position.copy();
 
             // in your update cod
             float speed = 0.02f;// (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) |
@@ -273,9 +283,7 @@ public class MainLoopServer
             deltaCam.y(-2 * player.getScale());
             deltaCam.z(-9 * player.getScale());
 
-            long time = System.currentTimeMillis();
-            if (time - lastTime > 25)
-            {
+
               // renderList.addAll(objList);
               // renderList.addAll(missileList);
               for (Entity ent : renderList)
@@ -297,7 +305,6 @@ public class MainLoopServer
                   }
                 }
               }
-              lastTime = time;
               player.vel.add(inverse.mult(delta));
               cameraPos.add(inverse.mult(deltaCam));
               cameraPos.add(player.vel);
@@ -305,7 +312,7 @@ public class MainLoopServer
               player.orientation = orientation.copy();
               camera.quadTranslate(cameraPos);
               camera.orientation = orientation.copy();
-            }
+
           }
         }
       }
@@ -316,7 +323,10 @@ public class MainLoopServer
       {
         outputToClient += ent.toString() + ";";
       }
-      outputToClient += "Cam," + camera.position.x + "," + camera.position.y + "," + camera.position.z + "," + camera.orientation.x() +","+ camera.orientation.y() +","+ camera.orientation.z() +";";
+      outputToClient +=
+          "Cam," + camera.position.x + "," + camera.position.y + ","
+              + camera.position.z + "," + camera.orientation.x() + ","
+              + camera.orientation.y() + "," + camera.orientation.z() + "," + camera.orientation.w() + ";";
 
       // for (WalkerThread wt : myServer.threadList)
       for (int i = 0; i < myServer.threadList.size(); i++)

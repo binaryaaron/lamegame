@@ -123,9 +123,7 @@ public class MainLoopClient
           if (object.startsWith("Cam"))
           {
             camera.setPosition(new Vector3f(x, y, z));
-            camera.setPitch(xr);
-            camera.setYaw(yr);
-            camera.setRoll(zr);
+            camera.orientation.set(xr, yr, zr, s);
           }
           else
           {
