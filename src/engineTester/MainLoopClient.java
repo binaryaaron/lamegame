@@ -44,16 +44,16 @@ import javax.swing.*;
 public class MainLoopClient
 {
 
-  public final static boolean PRINT_FPS = false;
-  public static WalkerClient myClient = null;
+  public final boolean PRINT_FPS = false;
+  public WalkerClient myClient = null;
 
-  public static void main(String[] args)
+  public MainLoopClient(String[] args)
   {
     Entity player = null;
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
-    
+
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyDome", loader, true);
     ModelTexture skyTexture = new ModelTexture(loader.loadTexture("RedSky"));
@@ -101,105 +101,29 @@ public class MainLoopClient
     /* Perform object movement as long as the window exists */
     while (!Display.isCloseRequested())
     {
-      long startingTime = System.currentTimeMillis();
-      String[] sceneInfo = myClient.getInputFromServer().split(";");
-      renderList.clear();
-      for (String object : sceneInfo)
-      {
-        if (!object.equals(""))
-        {
-          String[] currentLine = object.split(",");
-          String id;
-          float x, y, z, xr, yr, zr, s, w;
-          // translate all input data into appropriate entities;
-          x = Float.parseFloat(currentLine[1]);
-          y = Float.parseFloat(currentLine[2]);
-          z = Float.parseFloat(currentLine[3]);
-          xr = Float.parseFloat(currentLine[4]);
-          yr = Float.parseFloat(currentLine[5]);
-          zr = Float.parseFloat(currentLine[6]);
-          w = Float.parseFloat(currentLine[7]);
-          s = Float.parseFloat(currentLine[8]);
-          // System.out.println(object.charAt(0));
-          if (object.startsWith("Cam"))
-          {
-            camera.setPosition(new Vector3f(x, y, z));
-            camera.orientation.set(xr, yr, zr, w);
-          }
-          else
-          {
-            id = currentLine[0];
-
-            Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
-                .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
-            tmp_Entity.orientation.w(w);
-            renderList.add(tmp_Entity);
-            if (id.equals("S002")) player = tmp_Entity;
-          }
-        }
-      }
-
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         break;
       }
 
+      // Get render/objects from server
+      getServerState(renderList, camera, modelMap);
+
+      // Limit keyboard sends
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
-        System.out.println("c" + camera);
-        System.out.println("p" + player);
-        System.out.println(" cam " + camera.orientation.w());
-
         lastTime = time;
-
-        String toSend = ";";
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
-            || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-        {
-          toSend += "KEY_LSHIFT;";
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-        {
-          toSend += "KEY_RIGHT;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-        {
-          toSend += "KEY_LEFT;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-        {
-          toSend += "KEY_UP;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-        {
-          toSend += "KEY_DOWN;";
-        }
-        // /
-        if (Keyboard.isKeyDown(Keyboard.KEY_D))
-        {
-          toSend += "KEY_D;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A))
-        {
-          toSend += "KEY_A;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_W))
-        {
-          toSend += "KEY_W;";
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S))
-        {
-          toSend += "KEY_S;";
-        }
-        myClient.sendToServer(toSend);
+        sendKeyBoard();
       }
+
+      // Render entities from server
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
       }
 
+      // Process rendering
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
       DisplayManager.updateDisplay();
@@ -209,19 +133,98 @@ public class MainLoopClient
         pu.updateFPS();
         System.out.println(pu.getFPS());
       }
-
-      // send update string to server
-      outputToServer = "";// clear send string
-      for (Entity ent : renderList)
-      {
-        outputToServer.concat(ent.toString());
-      }
-      long endTime = System.currentTimeMillis();
-      // System.out.println("execution time " + (endTime - startingTime));
     }
     renderer.cleanUp();
     loader.cleanUp();
     DisplayManager.closeDisplay();
   }
 
+  public void getServerState(List<Entity> renderList, Camera camera, ModelMap modelMap)
+  {
+    String[] sceneInfo = myClient.getInputFromServer().split(";");
+    renderList.clear();
+    for (String object : sceneInfo)
+    {
+      if (!object.equals(""))
+      {
+        String[] currentLine = object.split(",");
+        String id;
+        float x, y, z, xr, yr, zr, s, w;
+        // translate all input data into appropriate entities;
+        x = Float.parseFloat(currentLine[1]);
+        y = Float.parseFloat(currentLine[2]);
+        z = Float.parseFloat(currentLine[3]);
+        xr = Float.parseFloat(currentLine[4]);
+        yr = Float.parseFloat(currentLine[5]);
+        zr = Float.parseFloat(currentLine[6]);
+        w = Float.parseFloat(currentLine[7]);
+        s = Float.parseFloat(currentLine[8]);
+        // System.out.println(object.charAt(0));
+        if (object.startsWith("Cam"))
+        {
+          camera.setPosition(new Vector3f(x, y, z));
+          camera.orientation.set(xr, yr, zr, w);
+        }
+        else
+        {
+          id = currentLine[0];
+
+          Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
+              .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
+          tmp_Entity.orientation.w(w);
+          renderList.add(tmp_Entity);
+        }
+      }
+    }
+  }
+
+  public void sendKeyBoard()
+  {
+    String toSend = ";";
+    if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
+        || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+    {
+      toSend += "KEY_LSHIFT;";
+    }
+
+    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+    {
+      toSend += "KEY_RIGHT;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+    {
+      toSend += "KEY_LEFT;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+    {
+      toSend += "KEY_UP;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+    {
+      toSend += "KEY_DOWN;";
+    }
+    // /
+    if (Keyboard.isKeyDown(Keyboard.KEY_D))
+    {
+      toSend += "KEY_D;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_A))
+    {
+      toSend += "KEY_A;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_W))
+    {
+      toSend += "KEY_W;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_S))
+    {
+      toSend += "KEY_S;";
+    }
+    myClient.sendToServer(toSend);
+  }
+
+  public static void main(String[] args)
+  {
+    new MainLoopClient(args);
+  }
 }
