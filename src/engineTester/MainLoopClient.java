@@ -49,7 +49,7 @@ public class MainLoopClient
 
   public static void main(String[] args)
   {
-
+    Entity player = null;
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
@@ -110,7 +110,7 @@ public class MainLoopClient
         {
           String[] currentLine = object.split(",");
           String id;
-          float x, y, z, xr, yr, zr, s;
+          float x, y, z, xr, yr, zr, s, w;
           // translate all input data into appropriate entities;
           x = Float.parseFloat(currentLine[1]);
           y = Float.parseFloat(currentLine[2]);
@@ -118,12 +118,13 @@ public class MainLoopClient
           xr = Float.parseFloat(currentLine[4]);
           yr = Float.parseFloat(currentLine[5]);
           zr = Float.parseFloat(currentLine[6]);
-          s = Float.parseFloat(currentLine[7]);
+          w = Float.parseFloat(currentLine[7]);
+          s = Float.parseFloat(currentLine[8]);
           // System.out.println(object.charAt(0));
           if (object.startsWith("Cam"))
           {
             camera.setPosition(new Vector3f(x, y, z));
-            camera.orientation.set(xr, yr, zr, s);
+            camera.orientation.set(xr, yr, zr, w);
           }
           else
           {
@@ -131,7 +132,9 @@ public class MainLoopClient
 
             Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
                 .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
+            tmp_Entity.orientation.w(w);
             renderList.add(tmp_Entity);
+            if (id.equals("S002")) player = tmp_Entity;
           }
         }
       }
@@ -144,6 +147,10 @@ public class MainLoopClient
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
+        System.out.println("c" + camera);
+        System.out.println("p" + player);
+        System.out.println(" cam " + camera.orientation.w());
+
         lastTime = time;
 
         String toSend = ";";

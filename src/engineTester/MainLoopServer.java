@@ -284,27 +284,7 @@ public class MainLoopServer
             deltaCam.z(-9 * player.getScale());
 
 
-              // renderList.addAll(objList);
-              // renderList.addAll(missileList);
-              for (Entity ent : renderList)
-              {
-                ent.move();
-                for (Entity other : renderList)
-                {
-                  if (ent == other)
-                  {
-                    continue;
-                  }
-                  if (BoxUtilities.collision(ent.getBox(), other.getBox()))
-                  {
-                    if (ent == player)
-                    {
-                      continue;
-                    }
-                    PhysicsUtilities.elasticCollision(ent, other);
-                  }
-                }
-              }
+
               player.vel.add(inverse.mult(delta));
               cameraPos.add(inverse.mult(deltaCam));
               cameraPos.add(player.vel);
@@ -317,6 +297,35 @@ public class MainLoopServer
         }
       }
 
+      long time = System.currentTimeMillis();
+      if (time - lastTime > 17)
+      {
+        lastTime = time;
+        // renderList.addAll(objList);
+        // renderList.addAll(missileList);
+        for (Entity ent : renderList)
+        {
+          ent.move();
+          for (Entity other : renderList)
+          {
+            if (ent == other)
+            {
+              continue;
+            }
+            if (BoxUtilities.collision(ent.getBox(), other.getBox()))
+            {
+              if (ent == player)
+              {
+                continue;
+              }
+              PhysicsUtilities.elasticCollision(ent, other);
+            }
+          }
+        }
+      }
+
+      camera.position = player.position;
+
       // ///instead of rendering, build strings and send them to the client
       outputToClient = "";// clear the String
       for (Entity ent : renderList)// TODO do I need a for each thread here?
@@ -326,7 +335,7 @@ public class MainLoopServer
       outputToClient +=
           "Cam," + camera.position.x + "," + camera.position.y + ","
               + camera.position.z + "," + camera.orientation.x() + ","
-              + camera.orientation.y() + "," + camera.orientation.z() + "," + camera.orientation.w() + ";";
+              + camera.orientation.y() + "," + camera.orientation.z() + "," + camera.orientation.w() + "," + 0f + ";";
 
       // for (WalkerThread wt : myServer.threadList)
       for (int i = 0; i < myServer.threadList.size(); i++)

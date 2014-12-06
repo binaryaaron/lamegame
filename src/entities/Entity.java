@@ -314,9 +314,10 @@ public class Entity
     result.append(position.x + delimiter);
     result.append(position.y + delimiter);
     result.append(position.z + delimiter);
-    result.append(rotX + delimiter);
-    result.append(rotY + delimiter);
-    result.append(rotZ + delimiter);
+    result.append(orientation.x() + delimiter);
+    result.append(orientation.y() + delimiter);
+    result.append(orientation.z() + delimiter);
+    result.append(orientation.w() + delimiter);
     result.append(scale + delimiter);
     result.append(hitPoints + delimiter);
     return result.toString();
