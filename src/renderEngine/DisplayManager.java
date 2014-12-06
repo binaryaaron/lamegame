@@ -39,7 +39,7 @@ public class DisplayManager
 
   public static void updateDisplay()
   {
-    Display.sync(FPS_CAP);
+//    Display.sync(FPS_CAP);
     Display.update();
 
   }

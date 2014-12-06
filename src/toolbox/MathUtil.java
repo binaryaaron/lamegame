@@ -29,7 +29,7 @@ public class MathUtil
         matrix);
     //Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
 
-    return createTransformationMatrix(new Entity(null,translation,0,0,0,scale));
+    return createTransformationMatrix(new Entity("", null,translation,0,0,0,scale));
     //return matrix;
   }
 

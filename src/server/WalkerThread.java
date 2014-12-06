@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.instrument.Instrumentation;
 import java.net.ServerSocket;
@@ -17,9 +19,9 @@ public class WalkerThread extends Thread
 { 
   public boolean printlocation=true;
   public boolean printclients=false;
-  private String inputFromClient;
-//  private LinkedList<Point> playersLocationList=new LinkedList<>();
-  private String outputToClient;
+  public String inputFromClient=null;
+  public String outputToClient=null;
+  public int ID;
   
   private Socket myClientSocket = null;
   PrintWriter out=null;
@@ -29,23 +31,34 @@ public class WalkerThread extends Thread
   {
     super("WalkerThread");
     this.myClientSocket = mySocket;
+    this.ID=ID;
   }
 
   public void run()
-  {    
+  {
     try
     {
-      out=new PrintWriter(myClientSocket.getOutputStream());
+      out=new PrintWriter(myClientSocket.getOutputStream(),true);
       in=new BufferedReader(new InputStreamReader(myClientSocket.getInputStream()));
       int loop = 0;
       
-      while((inputFromClient=in.readLine())!=null)
+      //input from client will be an action (like move left), output will be a list of objects to render
+      while ((inputFromClient = in.readLine()) != null)
       {
+        //input from client shall only receive actions (move, fire) from the client, everything else will happen on the server (not graphics)
+        
+        outputToClient=null;//first test, don't send anything
+        if(outputToClient!=null)out.println(outputToClient);
         loop++;
-        //for initial server test, call the getter method to update from this loop
-        outputToClient=inputFromClient;//test version, this is not testing or updating the input, just bouncing it
-        out.println(outputToClient);
-      }      
+        try
+        {
+          Thread.sleep(17);//check for input 60 times a second
+        } catch (InterruptedException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
     } 
     catch (java.net.SocketException e)
     {
@@ -67,10 +80,14 @@ public class WalkerThread extends Thread
     }
   }
   
-  public String updateServerGameState(String updateString)//TODO maybe call this a getter
+  public void updateServerGameState(String updateString)//TODO maybe call this a getter
   {
-    outputToClient=updateString;
-    out.println(outputToClient);
+    while(out==null){/*wait for print writer to initialize*/}
+    out.println(updateString);
+   }
+  
+  public String getClientInput()//called at the beginning to wait for first client input
+  {    
     return inputFromClient;
   }
 }

@@ -88,13 +88,13 @@ public class MainGameLoop
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyDome", loader, true);
     ModelTexture skyTexture = new ModelTexture(loader.loadTexture("RedSky"));
-    TexturedModel texturedSkyBox = new TexturedModel(skyBox, skyTexture);
+    TexturedModel texturedSkyBox = new TexturedModel("SkyBox2",skyBox, skyTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
     //
     RawModel laser = OBJLoader.loadObjModel("missle", loader, true);
     ModelTexture laserTexture = new ModelTexture(loader.loadTexture("Missle"));
-    TexturedModel texturedLaser = new TexturedModel(laser, laserTexture);
-    Entity laserEntity = new Entity(texturedLaser, new Vector3f(0, 0, 0), 0, 0,
+    TexturedModel texturedLaser = new TexturedModel("laser", laser, laserTexture);
+    Entity laserEntity = new Entity("laser", texturedLaser, new Vector3f(0, 0, 0), 0, 0,
         0, 2f);
 
     modelMap.getTexturedModelList()
@@ -146,7 +146,6 @@ public class MainGameLoop
       {
         e.printStackTrace();
       }
-      testInput = wc.updateClientGameState("Play,0,0,4,0,0,0,0.3;");
 
     }
     else if (ASTEROIDS)
@@ -399,7 +398,7 @@ public class MainGameLoop
             missilePos.add(inverse.mult(deltaMis));
          
         	
-        	Entity missle = new Entity(texturedLaser, new Vector3f(0, 0, 0), 0, 0,
+        	Entity missle = new Entity("laser", texturedLaser, new Vector3f(0, 0, 0), 0, 0,
         	        0, 0.3f);
         	//missle.setPosition(player.position);
             missle.quadTranslate(missilePos);
@@ -516,15 +515,6 @@ public class MainGameLoop
         //        }
       }
 
-      if (SERVER_TEST)
-      {
-        Vector3f pos = player.getPosition();
-        testInput = wc.updateClientGameState(
-            "Play," + pos.x + "," + pos.y + "," + pos.z + "," + player.getRotX()
-                + "," + player.getRotY() + "," + player.getRotZ() + "," + 0.3);
-        renderList.clear();
-        renderList = parseGameStateString(testInput, modelMap);
-      }
 
       float yOff = 1;
       float zOff = 3;
@@ -589,7 +579,7 @@ renderList.clear();
       if (object.startsWith("Play"))
       {
 
-        player = new Entity(modelMap.getTexturedModelList().get(id),
+        player = new Entity("S002",modelMap.getTexturedModelList().get(id),
             new Vector3f(x, y, z), xr, yr, zr, s);
 
         renderList.add(player);
@@ -598,7 +588,7 @@ renderList.clear();
       else
       {
 
-        Entity tmp_Entity = new Entity(modelMap.getTexturedModelList().get(id),
+        Entity tmp_Entity = new Entity("A001", modelMap.getTexturedModelList().get(id),
             new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
       }

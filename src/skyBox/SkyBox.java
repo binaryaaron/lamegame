@@ -21,7 +21,7 @@ public class SkyBox {
 		
 		this.model=model;
 		this.loader=loader;
-		setSkyEntity(new Entity(model, new Vector3f(0f,0f,0f), 0f,
+		setSkyEntity(new Entity(model.getId(), model, new Vector3f(0f,0f,0f), 0f,
 				0f, 0f,2000f));
 		
 	}
