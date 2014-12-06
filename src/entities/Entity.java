@@ -37,11 +37,44 @@ public class Entity
   private static Boolean DEBUG = true;
   protected int hitPoints;
   private String id;
+  private int clientId = -1;
 
   public Entity()
   {
     
   }
+
+  public Entity(String id, TexturedModel model, Vector3f position, float rotX,
+      float rotY, float rotZ, float scale, int clientId)
+  {
+    super();
+    this.clientId = clientId;
+    this.id = id;
+    this.model = model;
+    this.position = position;
+    this.rotation = new Vector3f(rotX, rotY, rotZ);
+    this.rotX = rotX;
+    this.rotY = rotY;
+    this.rotZ = rotZ;
+    this.scale = scale;
+
+    orientation = new Quaternion();
+    orientation.x(rotX);
+    orientation.y(rotY);
+    orientation.z(rotZ);
+    // basis will be a matrix that holds the directional vectors
+    basis.setIdentity();
+    if (model != null)
+    {
+      box = model.getRawModel().getBoundingBox().deepCopy();
+      box.scale(0.9f * scale);
+      size = MathUtil.vectorDist(box.getMax(), box.getMin());
+      halfSize = size * 0.5f;
+      box.translate(position);
+      mass = initialMass * scale;
+    }
+  }
+
   /**
    * Constructor that takes an additional string for the id. used to pass the id
    * from the textured model's id.
@@ -319,6 +352,7 @@ public class Entity
     result.append(orientation.z() + delimiter);
     result.append(orientation.w() + delimiter);
     result.append(scale + delimiter);
+    result.append(clientId + delimiter);
     result.append(hitPoints + delimiter);
     return result.toString();
   }

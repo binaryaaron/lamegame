@@ -243,6 +243,10 @@ public class MainLoopClient
     {
       toSend += "KEY_RSHIFT;";
     }
+    if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+    {
+      toSend += "KEY_SPACE;";
+    }
     myClient.sendToServer(toSend);
   }
 
