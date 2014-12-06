@@ -49,8 +49,8 @@ public class ModelMap {
 	    TexturedModel texturedModelStone = new TexturedModel("A003",modelAsteroid,stoneTexture);
 	    TexturedModel texturedShip = new TexturedModel("S001",ship, shipTexture);
 	    TexturedModel texturedShip2 = new TexturedModel("S002",ship2, ship2Texture);
-	    TexturedModel texturedPlanet = new TexturedModel("planet",planetObj, planetTexture);
-	    TexturedModel texturedLaser = new TexturedModel("laser",laserObj, laserTexture);
+	    TexturedModel texturedPlanet = new TexturedModel("Plan",planetObj, planetTexture);
+	    TexturedModel texturedLaser = new TexturedModel("lase",laserObj, laserTexture);
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
     texturedModelList.put("A003", texturedModelStone);

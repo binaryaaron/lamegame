@@ -139,8 +139,6 @@ public class MainLoopServer
         performPhysics(renderList);
       }
 
-      camera.position = player.position;
-
       // ///instead of rendering, build strings and send them to the client
       outputToClient = "";// clear the String
       for (Entity ent : renderList)
@@ -219,7 +217,10 @@ public class MainLoopServer
           rotSpeed, new Vector3(0, 0, 1)).mult(orientation);
       if (input.equals("KEY_Q")) orientation = Utils.angleAxisDeg(
           -rotSpeed, new Vector3(0, 0, 1)).mult(orientation);
-
+      if (input.equals("KEY_B"))
+      {
+        player.vel.mult(0.95f);
+      }
       orientation.normalize();
 
       Quaternion inverse = orientation.copy().inverse();
@@ -285,10 +286,6 @@ public class MainLoopServer
         other = renderList.get(j);
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
-          if (ent == player)
-          {
-            continue;
-          }
           PhysicsUtilities.elasticCollision(ent, other);
         }
       }
