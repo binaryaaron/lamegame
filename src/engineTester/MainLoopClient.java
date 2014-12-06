@@ -17,6 +17,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
 import gameObjects.Asteroid;
 import models.RawModel;
 import models.TexturedModel;
@@ -160,20 +162,21 @@ public class MainLoopClient
         w = Float.parseFloat(currentLine[7]);
         s = Float.parseFloat(currentLine[8]);
         // System.out.println(object.charAt(0));
-        if (object.startsWith("Cam"))
-        {
-          camera.setPosition(new Vector3f(x, y, z));
-          camera.orientation.set(xr, yr, zr, w);
-        }
-        else
-        {
-          id = currentLine[0];
+        id = currentLine[0];
 
-          Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
-              .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
-          tmp_Entity.orientation.w(w);
-          renderList.add(tmp_Entity);
+        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
+            .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
+        tmp_Entity.orientation.w(w);
+        if (object.startsWith("S002"))
+        {
+          Quaternion inverse = tmp_Entity.orientation.copy().inverse();
+          Vector3 deltaCam = new Vector3(0,-2 * tmp_Entity.getScale(),-9 * tmp_Entity.getScale());
+          deltaCam = inverse.mult(deltaCam);
+          camera.setPosition(new Vector3f(x, y, z));
+          camera.move(deltaCam);
+          camera.orientation = tmp_Entity.orientation.copy();
         }
+        renderList.add(tmp_Entity);
       }
     }
   }
@@ -219,6 +222,14 @@ public class MainLoopClient
     if (Keyboard.isKeyDown(Keyboard.KEY_S))
     {
       toSend += "KEY_S;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+    {
+      toSend += "KEY_Q;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_E))
+    {
+      toSend += "KEY_E;";
     }
     myClient.sendToServer(toSend);
   }
