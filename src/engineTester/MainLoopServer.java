@@ -63,6 +63,9 @@ public class MainLoopServer
 
     ModelMap modelMap = new ModelMap();
 
+    Camera camera = new Camera();
+    camera.followObj = player;
+
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
     ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
@@ -78,7 +81,6 @@ public class MainLoopServer
     // parsing routine
     Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
         1.0f, 1.0f));
-    Camera camera = new Camera();
     MasterRenderer renderer = new MasterRenderer(camera);
 
     PerformanceUtilities pu = new PerformanceUtilities();
@@ -120,37 +122,37 @@ public class MainLoopServer
     List<Entity> missileList = new ArrayList<>();
 
     String[] sceneInfo = startString.split(";");
-//    for (String object : sceneInfo)
-//    {
-//      String[] currentLine = object.split(",");
-//      String id;
-//      float x, y, z, xr, yr, zr, s;
-//      // translate all imput data into appropriate entities;
-//      x = Float.parseFloat(currentLine[1]);
-//      y = Float.parseFloat(currentLine[2]);
-//      z = Float.parseFloat(currentLine[3]);
-//      xr = Float.parseFloat(currentLine[4]);
-//      yr = Float.parseFloat(currentLine[5]);
-//      zr = Float.parseFloat(currentLine[6]);
-//      s = Float.parseFloat(currentLine[7]);
-//      // System.out.println(object.charAt(0));
-//      if (object.startsWith("Cam"))
-//      {
-//        camera.setPosition(new Vector3f(x, y, z));
-//        camera.setPitch(xr);
-//        camera.setYaw(yr);
-//        camera.setRoll(zr);
-//      }
-//
-//      else
-//      {
-//        id = currentLine[0];
-//
-//        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(
-//            id), new Vector3f(x, y, z), xr, yr, zr, s);
-//        renderList.add(tmp_Entity);
-//      }
-//    }
+    // for (String object : sceneInfo)
+    // {
+    // String[] currentLine = object.split(",");
+    // String id;
+    // float x, y, z, xr, yr, zr, s;
+    // // translate all imput data into appropriate entities;
+    // x = Float.parseFloat(currentLine[1]);
+    // y = Float.parseFloat(currentLine[2]);
+    // z = Float.parseFloat(currentLine[3]);
+    // xr = Float.parseFloat(currentLine[4]);
+    // yr = Float.parseFloat(currentLine[5]);
+    // zr = Float.parseFloat(currentLine[6]);
+    // s = Float.parseFloat(currentLine[7]);
+    // // System.out.println(object.charAt(0));
+    // if (object.startsWith("Cam"))
+    // {
+    // camera.setPosition(new Vector3f(x, y, z));
+    // camera.setPitch(xr);
+    // camera.setYaw(yr);
+    // camera.setRoll(zr);
+    // }
+    //
+    // else
+    // {
+    // id = currentLine[0];
+    //
+    // Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(
+    // id), new Vector3f(x, y, z), xr, yr, zr, s);
+    // renderList.add(tmp_Entity);
+    // }
+    // }
 
     if (PRINT_FPS)
     {
@@ -266,6 +268,44 @@ public class MainLoopServer
 
               renderList.add(missle);
             }
+
+            Vector3 deltaCam = delta.copy();
+            deltaCam.y(-2 * player.getScale());
+            deltaCam.z(-9 * player.getScale());
+
+            long time = System.currentTimeMillis();
+            if (time - lastTime > 25)
+            {
+              // renderList.addAll(objList);
+              // renderList.addAll(missileList);
+              for (Entity ent : renderList)
+              {
+                ent.move();
+                for (Entity other : renderList)
+                {
+                  if (ent == other)
+                  {
+                    continue;
+                  }
+                  if (BoxUtilities.collision(ent.getBox(), other.getBox()))
+                  {
+                    if (ent == player)
+                    {
+                      continue;
+                    }
+                    PhysicsUtilities.elasticCollision(ent, other);
+                  }
+                }
+              }
+              lastTime = time;
+              player.vel.add(inverse.mult(delta));
+              cameraPos.add(inverse.mult(deltaCam));
+              cameraPos.add(player.vel);
+              // player.move();
+              player.orientation = orientation.copy();
+              camera.quadTranslate(cameraPos);
+              camera.orientation = orientation.copy();
+            }
           }
         }
       }
@@ -276,6 +316,7 @@ public class MainLoopServer
       {
         outputToClient += ent.toString() + ";";
       }
+      outputToClient += "Cam," + camera.position.x + "," + camera.position.y + "," + camera.position.z + "," + camera.orientation.x() +","+ camera.orientation.y() +","+ camera.orientation.z() +";";
 
       // for (WalkerThread wt : myServer.threadList)
       for (int i = 0; i < myServer.threadList.size(); i++)
