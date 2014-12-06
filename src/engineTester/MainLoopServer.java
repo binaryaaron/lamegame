@@ -123,19 +123,18 @@ public class MainLoopServer
         break;
       }
 
-      for (int i = 0; i < myServer.threadList.size(); i++)
-      {
-        String inputFromClient = myServer.inputFromClient.get(i);
-        inputFromClient = getInput(i);
-        if (inputFromClient != null)
-        {
-          parseClientInput(inputFromClient, renderList, camera, player);
-        }
-      }
-
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
+        for (int i = 0; i < myServer.threadList.size(); i++)
+        {
+          String inputFromClient = myServer.inputFromClient.get(i);
+          inputFromClient = getInput(i);
+          if (inputFromClient != null)
+          {
+            parseClientInput(inputFromClient, renderList, camera, player);
+          }
+        }
         lastTime = time;
         performPhysics(renderList);
       }
@@ -275,15 +274,15 @@ public class MainLoopServer
 
   private void performPhysics(List<Entity> renderList)
   {
-    for (Entity ent : renderList)
+    Entity ent = null;
+    Entity other = null;
+    for (int i = 0; i < renderList.size(); i++)
     {
+      ent = renderList.get(i);
       ent.move();
-      for (Entity other : renderList)
+      for (int j = i+1; j < renderList.size(); j++)
       {
-        if (ent == other)
-        {
-          continue;
-        }
+        other = renderList.get(j);
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
           if (ent == player)
