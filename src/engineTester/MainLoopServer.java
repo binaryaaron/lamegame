@@ -171,7 +171,7 @@ public class MainLoopServer
     for (String input : clientInput)
     {
 
-      if (input.equals("KEY_LSHIFT") || input.equals("KEY_RSHIFT"))
+      if (input.equals("KEY_LSHIFT"))
       {
         scale = 0.01f;
       }
@@ -246,7 +246,7 @@ public class MainLoopServer
 
         missilePos.add(inverse.mult(deltaMis));
 
-        Entity missle = new Entity("laser", texturedLaser, new Vector3f(
+        Entity missle = new Entity("lase", texturedLaser, new Vector3f(
             0, 0, 0), 0, 0, 0, 0.3f);
         // missle.setPosition(player.position);
         missle.quadTranslate(missilePos);
@@ -281,6 +281,10 @@ public class MainLoopServer
     {
       ent = renderList.get(i);
       ent.move();
+    }
+    for (int i = 0; i < renderList.size(); i++)
+    {
+      ent = renderList.get(i);
       for (int j = i+1; j < renderList.size(); j++)
       {
         other = renderList.get(j);
@@ -356,7 +360,7 @@ public class MainLoopServer
       else
       {
 
-        Entity tmp_Entity = new Entity("A001", modelMap.getTexturedModelList()
+        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
             .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
       }

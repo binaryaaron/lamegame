@@ -235,6 +235,14 @@ public class MainLoopClient
     {
       toSend += "KEY_B;";
     }
+    if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+    {
+      toSend += "KEY_LCONTROL;";
+    }
+    if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+    {
+      toSend += "KEY_RSHIFT;";
+    }
     myClient.sendToServer(toSend);
   }
 

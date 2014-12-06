@@ -43,5 +43,12 @@ public class PhysicsUtilities
     vec2.set(q1);
     vec1.add(u2);
     vec2.add(q2);
+
+    Vector3 diff = vec1.copy();
+    diff.sub(vec2);
+    diff.normalize();
+
+    vec1.add(diff);
+    vec2.sub(diff);
   }
 }
