@@ -168,7 +168,7 @@ public class MainLoopClient
         s = Float.parseFloat(currentLine[8]);
         if (object.startsWith("S002"))
         {
-          playerID = Integer.parseInt(currentLine[10]);
+          playerID = Integer.parseInt(currentLine[9]);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
         }

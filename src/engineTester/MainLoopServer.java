@@ -148,6 +148,7 @@ public class MainLoopServer
           if (inputFromClient != null)
           {
             parseClientInput(inputFromClient, renderList, camera, currentPlayer);
+//            parseClientInput(inputFromClient, renderList, camera, player0);
           }
         }
         lastTime = time;
@@ -244,7 +245,10 @@ public class MainLoopServer
       Vector3 delta = new Vector3();
 
       if (input.equals("KEY_DOWN")) delta.z(-speed);
-      if (input.equals("KEY_UP")) delta.z(delta.z() + speed);
+      if (input.equals("KEY_UP"))
+      {
+        delta.z(delta.z() + speed);
+      }
 
       if (input.equals("KEY_RIGHT")) delta.x(-speed);
       if (input.equals("KEY_LEFT")) delta.x(delta.x() + speed);
@@ -317,7 +321,7 @@ public class MainLoopServer
     player0 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(0, 0, 0), 0, 0, 0, .03f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1, 1, 1), 0, 0, 0, .03f, 1);
+        new Vector3f(0, 1, 0), 0, 0, 0, .03f, 1);
     String startString = player0.toString();
     startString += player1.toString();
     for (int i = 0; i < nAsteroids; i++)
@@ -356,8 +360,11 @@ public class MainLoopServer
     String[] sceneInfo = testInput.split(";");
     for (String object : sceneInfo)
     {
+      Entity tmp_Entity;
+      Entity currentPlayer=null;
       String[] currentLine = object.split(",");
       String id;
+      int playerID;
       float x, y, z, xr, yr, zr, s;
       // translate all input data into appropriate entities;
       id = currentLine[0];
@@ -371,17 +378,23 @@ public class MainLoopServer
 
       if (object.startsWith("S002"))
       {
-
-        player0 = new Entity("S002", modelMap.getTexturedModelList()
-            .get("S002"), new Vector3f(x, y, z), xr, yr, zr, s);
-
-        renderList.add(player0);
-
+        playerID = Integer.parseInt(currentLine[9]);
+        switch (playerID)
+        {
+          case 0: currentPlayer=player0;
+          break;
+          case 1: currentPlayer=player1;
+          break;
+          case 2: currentPlayer=player2;
+          break;
+          case 3: currentPlayer=player3;       
+        }
+        renderList.add(currentPlayer);
       }
       else
       {
 
-        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(
+        tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(
             id), new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
       }
