@@ -170,6 +170,7 @@ public class MainLoopClient
         {
           float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
+          System.out.println("playerID="+playerID+" clientID="+myClient.ID);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
         }
@@ -182,6 +183,7 @@ public class MainLoopClient
         tmp_Entity.orientation.w(w);
         if (object.startsWith("S")&&playerID==myClient.ID)// &&playerID==myClient.ID
         {
+          System.out.print("here:");
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
               * tmp_Entity.getScale());

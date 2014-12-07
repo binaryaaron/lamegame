@@ -66,8 +66,8 @@ public class MainLoopServer
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
-    Camera camera = new Camera();
-    camera.followObj = player0;
+//    Camera camera = new Camera();
+//    camera.followObj = player0;
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
     ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
@@ -85,7 +85,7 @@ public class MainLoopServer
     // parsing routine
     Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
         1.0f, 1.0f));
-    MasterRenderer renderer = new MasterRenderer(camera);
+    MasterRenderer renderer = new MasterRenderer(new Camera());
 
     String outputToClient;
 
@@ -106,16 +106,6 @@ public class MainLoopServer
 
     long lastTime = System.currentTimeMillis();
 
-    Quaternion orientation = player0.orientation;
-    Vector3 position = new Vector3(player0.position.x, player0.position.y,
-        player0.position.z);
-    Vector3 cameraPos = position.copy();
-    Vector3 missilePos = position.copy();
-    camera.quadTranslate(cameraPos);
-    camera.orientation = orientation.copy();
-    /* Perform object movement as long as the window exists */
-    // TODO change server to no display output, loop while threadlist is not
-    // empty
     float scale;
     while (!Display.isCloseRequested())
     {
@@ -147,7 +137,7 @@ public class MainLoopServer
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, renderList, camera, currentPlayer);
+            parseClientInput(inputFromClient, renderList, new Camera(), currentPlayer);
 //            parseClientInput(inputFromClient, renderList, camera, player0);
           }
         }
@@ -318,12 +308,13 @@ public class MainLoopServer
   private String createInitialGameString(ModelMap modelMap)
   {
     String startString = "Plan,0,0,0,0,0,0,100;";
-    player0 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 0, 0), 0, 0, 0, .03f, 0);
+    player0 = new Entity("S001", modelMap.getTexturedModelList().get("S001"),
+        new Vector3f(1000, 1010, 0), 0, 0, 0, .3f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1, 1, 1), 0, 0, 0, .03f, 1);
-    startString += player0.toString();
-    startString += player1.toString();
+        new Vector3f(1000, 1000, 0), 0, 0, 0, .3f, 1);
+    startString += player0.toString() + ";";
+    startString += player1.toString() + ";";
+    System.out.println(player0+"\n"+player1);
     for (int i = 0; i < nAsteroids; i++)
     {
       int a = Globals.RAND.nextInt(2) + 1;
@@ -376,9 +367,10 @@ public class MainLoopServer
       zr = Float.parseFloat(currentLine[6]);
       s = Float.parseFloat(currentLine[7]);
 
-      if (object.startsWith("S002"))
+      if (object.startsWith("S"))
       {
         playerID = Integer.parseInt(currentLine[9]);
+        System.out.println("adding player "+playerID);
         switch (playerID)
         {
           case 0: currentPlayer=player0;
