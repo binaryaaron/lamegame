@@ -26,7 +26,7 @@ import renderEngine.MasterRenderer;
 public class WalkerClient extends Thread
 {
   public boolean printlocation=false;
-  public static String hostName="localhost";
+  public static String hostName="oberon";
   public static int socketVal=4444;
   public int ID;
   
@@ -106,7 +106,7 @@ public class WalkerClient extends Thread
     {
       e.printStackTrace();
     }
-    System.out.println("clientUpdate2:"+inputFromServer);
+//    System.out.println("clientUpdate2:"+inputFromServer);
   }
 
   public void sendToServer(String toSend)
