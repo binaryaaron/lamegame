@@ -45,11 +45,11 @@ public class PhysicsUtilities
     vec1.add(u2);
     vec2.add(q2);
 
-    Vector3 diff = vec1.copy();
+    Vector3 diff = new Vector3(first.position.x, first.position.y, first.position.z);
 
-    diff.sub(vec2);
+    diff.sub(new Vector3(second.position.x, second.position.y, second.position.z));
     normalize(diff);
-    diff.mult(0.1f);
+    diff.mult(0.01f);
 
     vec1.add(diff);
     vec2.sub(diff);
