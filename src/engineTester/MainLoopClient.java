@@ -6,20 +6,10 @@
  */
 package engineTester;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
-import gameObjects.Asteroid;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -27,7 +17,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
-import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -36,12 +25,13 @@ import server.WalkerClient;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
+
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import world.BoxUtilities;
-
-import javax.swing.*;
 
 public class MainLoopClient
 {
@@ -118,13 +108,22 @@ public class MainLoopClient
       System.exit(1);
     }
     /* Perform object movement as long as the window exists */
+    int currentResolution = 0;
     while (!Display.isCloseRequested())
     {
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         break;
       }
-
+      if(Keyboard.isKeyDown(Keyboard.KEY_ADD))
+      {
+        currentResolution++;
+        DisplayManager.changeResolution(currentResolution);
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_F))
+      {
+        DisplayManager.changeFullScreen();
+      }
       // Get render/objects from server
       getServerState(renderList, camera, modelMap);
 
