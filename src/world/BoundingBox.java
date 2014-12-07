@@ -1,5 +1,6 @@
 package world;
 
+import com.ra4king.opengl.util.math.Vector3;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -118,13 +119,25 @@ public class BoundingBox implements Box
   }
 
   /**
+   * Set the position with a Vector 3, not 3f
+   *
+   * @param position
+   */
+  public void setPosition(Vector3 position)
+  {
+    Vector3 diff = new Vector3();
+    setPosition(new Vector3f(position.x(), position.y(), position.z()));
+  }
+  /**
    * Set the position
    *
    * @param position
    */
   @Override public void setPosition(Vector3f position)
   {
-    throw new UnsupportedOperationException();
+    Vector3f diff = new Vector3f();
+    Vector3f.sub(position, center, diff);
+    translate(diff);
   }
 
   /**

@@ -53,8 +53,7 @@ public class Renderer {
 		
 		//create new matric from entity parameters
 		Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(
-				entity.getPosition(), entity.getRotX(), entity.getRotY(),
-				entity.getRotZ(), entity.getScale());
+				entity);
 		
 		//
 		shader.loadTransformationMatrix(transformationMatrix);

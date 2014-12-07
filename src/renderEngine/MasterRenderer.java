@@ -27,7 +27,7 @@ public class MasterRenderer
 {
   private static final float FOV = 70;
   private static final float NEAR_PLANE = 0.1f;
-  private static final float FAR_PLANE = 1000;
+  private static final float FAR_PLANE = 5001;
   private Matrix4f projectionMatrix;
 
   private StaticShader shader = new StaticShader();
@@ -37,7 +37,7 @@ public class MasterRenderer
   private SkyBoxShader skyBoxShader = new SkyBoxShader();
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-  private SkyBox skyBox;
+  private List <SkyBox> skyBox;
   private Camera camera;
   /**
    * When the master renderer is created, create a projection matrix and
@@ -50,6 +50,7 @@ public class MasterRenderer
     this.camera=camera;
     createProjectionMatrix();
     renderer = new EntityRenderer(shader, projectionMatrix);
+    skyBox=new ArrayList<>();
     skyBoxRenderer = new SkyBoxRenderer(skyBoxShader, projectionMatrix,camera);
   }
 
@@ -68,7 +69,9 @@ public class MasterRenderer
     skyBoxShader.start();
     skyBoxShader.loadLight(sun);
     skyBoxShader.loadViewMatrix(camera);
-    skyBoxRenderer.render(skyBox);
+    for(SkyBox skyElement:skyBox){
+    skyBoxRenderer.render(skyElement);
+    }
     skyBoxShader.stop();
     shader.start();
     
@@ -80,7 +83,7 @@ public class MasterRenderer
 
 
     entities.clear();
-    skyBox=null;
+    skyBox.clear();
   }
 
   /**
@@ -90,8 +93,8 @@ public class MasterRenderer
    */
   public void processSkyBox(SkyBox skyBox)
   {
-   this.skyBox=skyBox;
-
+   this.skyBox.add(skyBox);
+   skyBox.getSkyEntity().position=camera.position;
   }
 
   /**
@@ -121,6 +124,7 @@ public class MasterRenderer
    */
   public void prepare()
   {
+
     GL11.glEnable(GL11.GL_BLEND);
     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     GL11.glEnable(GL11.GL_DEPTH_TEST);

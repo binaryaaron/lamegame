@@ -1,7 +1,12 @@
 package entities;
 
+import gameObjects.Globals;
 import models.TexturedModel;
+
 import org.lwjgl.util.vector.Vector3f;
+
+import com.ra4king.opengl.util.math.Vector3;
+
 import world.BoundingBox;
 
 /**
@@ -23,7 +28,7 @@ public class Asteroid extends Entity
     // intializes asteroid with between 100 and 1000 HP
     this.hitPoints = Globals.randInt(1000,100);
     ASTEROID_COUNT++;
-    this.vel= new Vector3f(0,0,0);
+    this.vel= new Vector3(0,0,0);
     // position should be random within the game board
     this.position = new Vector3f(Globals.randInt(),Globals.randInt(),Globals.randInt());
     int tmpSize = Globals.randInt(15, 4);
@@ -39,9 +44,9 @@ public class Asteroid extends Entity
     // intializes asteroid with between 100 and 1000 HP
     this.hitPoints = Globals.randInt(1000,100);
     ASTEROID_COUNT++;
-    this.vel= new Vector3f(0,0,0);
+    this.vel= new Vector3(0,0,0);
     // position should be random within the game board
-    this.position = new Vector3f(Globals.randInt(),Globals.randInt(),Globals.randInt());
+    this.position = new Vector3f(Globals.randInt(), Globals.randInt(),Globals.randInt());
     int tmpSize = Globals.randInt(15, 4);
     this.box = new BoundingBox(position, tmpSize, tmpSize, tmpSize);
     this.model = model;
@@ -74,7 +79,6 @@ public class Asteroid extends Entity
     String delimiter = ":";
     result.append("A" + id + delimiter );
     result.append(position + delimiter);
-    result.append(vel + delimiter);
     result.append(hitPoints + delimiter );
     return result.toString();
   }
