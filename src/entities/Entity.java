@@ -354,6 +354,10 @@ public class Entity
     result.append(scale + delimiter);
     result.append(clientId + delimiter);
     result.append(hitPoints + delimiter);
+    if (id.startsWith("S"))
+    {
+      result.append(vel.length() + delimiter);
+    }
     return result.toString();
   }
 

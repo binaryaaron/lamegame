@@ -166,8 +166,9 @@ public class MainLoopClient
         zr = Float.parseFloat(currentLine[6]);
         w = Float.parseFloat(currentLine[7]);
         s = Float.parseFloat(currentLine[8]);
-        if (object.startsWith("S002"))
+        if (object.startsWith("S"))
         {
+          float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
@@ -179,7 +180,7 @@ public class MainLoopClient
               new Vector3f(x, y, z), xr, yr, zr, s);
         }
         tmp_Entity.orientation.w(w);
-        if (object.startsWith("S002")&&playerID==myClient.ID)// &&playerID==myClient.ID
+        if (object.startsWith("S")&&playerID==myClient.ID)// &&playerID==myClient.ID
         {
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
