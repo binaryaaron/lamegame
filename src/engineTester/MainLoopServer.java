@@ -55,6 +55,8 @@ public class MainLoopServer
   private volatile static int clientConnections;
   static Entity player0;
   static Entity player1;
+  static Entity player2;
+  static Entity player3;
   private static int nAsteroids = 200;
   TexturedModel texturedLaser;
 
@@ -127,11 +129,25 @@ public class MainLoopServer
       {
         for (int i = 0; i < myServer.threadList.size(); i++)
         {
+          int playerID=myServer.threadList.get(i).ID;
+          Entity currentPlayer=null;
+          switch (playerID)
+          {
+            case 0: currentPlayer=player0;
+            break;
+            case 1: currentPlayer=player1;
+            break;
+            case 2: currentPlayer=player2;
+            break;
+            case 3: currentPlayer=player3;
+            
+          }
+            
           String inputFromClient = myServer.inputFromClient.get(i);
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, renderList, camera, player0);
+            parseClientInput(inputFromClient, renderList, camera, currentPlayer);
           }
         }
         lastTime = time;
