@@ -352,10 +352,10 @@ public class Entity
     result.append(orientation.z() + delimiter);
     result.append(orientation.w() + delimiter);
     result.append(scale + delimiter);
-    result.append(clientId + delimiter);
-    result.append(hitPoints + delimiter);
     if (id.startsWith("S"))
     {
+      result.append(clientId + delimiter);
+      result.append(hitPoints + delimiter);
       result.append(vel.length() + delimiter);
     }
     return result.toString();

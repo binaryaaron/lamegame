@@ -137,7 +137,7 @@ public class MainLoopServer
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, renderList, new Camera(), currentPlayer);
+            parseClientInput(inputFromClient, renderList, missileList, new Camera(), currentPlayer);
 //            parseClientInput(inputFromClient, renderList, camera, player0);
           }
         }
@@ -166,7 +166,7 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
-  public void parseClientInput(String inputFromClient, List<Entity> renderList,
+  public void parseClientInput(String inputFromClient, List<Entity> renderList, List<Entity> missileList,
       Camera camera, Entity player)
   {
     float scale;
@@ -249,6 +249,11 @@ public class MainLoopServer
       {
 
         // fire a missile
+        if (missileList.size() > 200)
+        {
+          renderList.remove(missileList.get(0));
+          missileList.remove(0);
+        }
 
         Vector3 deltaMis = delta.copy();
         deltaMis.y(5 * player.getScale());
@@ -266,6 +271,7 @@ public class MainLoopServer
         missle.vel = player.vel.copy().add(inverse.mult(new Vector3(0, 0, pv)));
 
         renderList.add(missle);
+        missileList.add(missle);
       }
 
       Vector3 deltaCam = delta.copy();
