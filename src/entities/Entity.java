@@ -161,48 +161,7 @@ public class Entity
     move(vel);
   }
 
-  public Matrix4f setNewBasis(float rotX, float rotY, float rotZ)
-  {
-
-    float cx = (float) Math.cos(rotX);
-    float sx = (float) Math.sin(rotX);
-    float cy = (float) Math.cos(rotY);
-    float sy = (float) Math.sin(rotY);
-    float cz = (float) Math.cos(rotZ);
-    float sz = (float) Math.sin(rotZ);
-
-    Matrix4f rotMat = new Matrix4f();
-    rotMat.m00 = (float) (Math.cos(rotX) * Math.cos(rotZ) - Math.sin(rotX)
-        * Math.cos(rotY) * Math.sin(rotZ));
-    rotMat.m10 = (float) (Math.sin(rotX) * Math.cos(rotZ) + Math.cos(rotX)
-        * Math.cos(rotY) * Math.sin(rotZ));
-    rotMat.m20 = (float) (Math.sin(rotY) * Math.sin(rotZ));
-
-    rotMat.m01 = (float) (-Math.cos(rotX) * Math.sin(rotZ) - Math.sin(rotX)
-        * Math.cos(rotY) * Math.cos(rotZ));
-    rotMat.m11 = (float) (-Math.sin(rotX) * Math.sin(rotZ) + Math.cos(rotX)
-        * Math.cos(rotY) * Math.cos(rotZ));
-    rotMat.m21 = (float) (Math.sin(rotY) * Math.cos(rotZ));
-
-    rotMat.m02 = (float) (Math.sin(rotY) * Math.sin(rotX));
-    rotMat.m12 = (float) (-Math.sin(rotY) * Math.cos(rotX));
-    rotMat.m22 = (float) (Math.cos(rotY));
-
-    // rotMat.m00=(cx*cz)-(cy*sx*sz);
-    // rotMat.m10=(cz*sx)+(cx*cz*cy);
-    // rotMat.m20=sy*sz;
-    //
-    // rotMat.m01=-(cx*sz)-(cy*cz*sx);
-    // rotMat.m11=(cx*cz*cy)-(sx*sz);
-    // rotMat.m21=cz*sy;
-    //
-    // rotMat.m02=sx*sy;
-    // rotMat.m12=-cx*sy;
-    // rotMat.m22=cy;
-
-    return rotMat;
-
-  }
+  
 
   public BoundingBox getBox()
   {

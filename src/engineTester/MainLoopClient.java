@@ -56,6 +56,8 @@ public class MainLoopClient
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
+    Vector3f lastPos=new Vector3f();
+    float speed=0;
 
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyDome", loader, true);
@@ -92,11 +94,11 @@ public class MainLoopClient
     
 //Hud Objects
     Entity hud1 = new Entity("H001",modelMap.getTexturedModelList().get(
-        "H001"), new Vector3f(-0.13f,-0.08f,-1f),1f,0f,0f, 50f);
+        "H001"), new Vector3f(0.7f,0.37f,1f),0f,0f,0f, 0.05f);
     Entity hud2 = new Entity("H002",modelMap.getTexturedModelList().get(
-        "H002"), new Vector3f(-0.13f,0.07f,-1f),1f,0f,0f, 1f);
+        "H002"), new Vector3f(-0.0f,0.07f,1f),0f,0f,0f, 0.05f);
     Entity hud3 = new Entity("H003",modelMap.getTexturedModelList().get(
-        "H003"), new Vector3f(-0.0f,0.08f,-1f),1f,0f,0f, 1f);
+        "H003"), new Vector3f(0.05f,0.3f,0.8f),0f,0f,0f, 0.05f);
     System.out.println(hud1.getModel().getTexture());
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
@@ -126,8 +128,20 @@ public class MainLoopClient
       }
 
       // Get render/objects from server
+      
+      boolean speedRefresh=System.currentTimeMillis()%60==0;
+      if(speedRefresh){
+      
+      System.out.println("lastPos:"+lastPos);}
+      
+      
       getServerState(renderList, camera, modelMap);
-
+      
+      if(speedRefresh){
+      System.out.println("camPos:"+camera.position);
+      speed=(new Vector3f(camera.position.x-lastPos.x,camera.position.y-lastPos.y,camera.position.z-lastPos.z)).length();
+      System.out.println("speed:"+speed);
+      lastPos=new Vector3f(camera.position.x,camera.position.y,camera.position.z);}
       // Limit keyboard sends
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
@@ -148,13 +162,14 @@ public class MainLoopClient
        
        hudStart = System.currentTimeMillis();
        hudRenderList.get(2).setModel(modelMap.setScoreText((""+System.currentTimeMillis()+"  ")));
-       //hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"% "));
-      //hudRenderList.get(0).setModel(modelMap.setSpeedText("I am a string"));
+       hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"% "));
+      
+     hudRenderList.get(0).setModel(modelMap.setSpeedText(""+speed));
       }
       for (Entity ent : hudRenderList)
       {
         renderer.processHudEntity(ent);
-        System.out.println(ent.getModel().getRawModel().getVertexCount());
+       // System.out.println(ent.getModel().getRawModel().getVertexCount());
       }
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
@@ -202,10 +217,12 @@ public class MainLoopClient
         {
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0,-2 * tmp_Entity.getScale(),-9 * tmp_Entity.getScale());
+         
           deltaCam = inverse.mult(deltaCam);
           camera.setPosition(new Vector3f(x, y, z));
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
+         
         }
         renderList.add(tmp_Entity);
       }

@@ -49,7 +49,7 @@ public class MainLoopServer
 {
 
   public final static boolean PRINT_FPS = false;
-  private final static boolean IGNORE_COLLISION = true;
+  private final static boolean IGNORE_COLLISION = false;
   public static WalkerServer myServer;
   private static int loop = 0;
   private volatile static int clientConnections;

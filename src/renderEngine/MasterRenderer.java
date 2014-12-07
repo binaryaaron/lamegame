@@ -86,9 +86,10 @@ public class MasterRenderer
     shader.start();
     shader.loadLight(sun);
     shader.loadViewMatrix(new Camera());
-    renderer.render(entities);
+    renderer.render(hudEntities);
     shader.stop();
 
+    hudEntities.clear();
     entities.clear();
     skyBox.clear();
   }

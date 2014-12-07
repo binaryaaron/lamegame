@@ -47,7 +47,7 @@ public class BoxUtilities
       max.z = vec.z > max.z ? vec.z : max.z;
     }
 
-    System.out.println("min " + min + " max " + max);
+    
 
     return new BoundingBox(min, max);
   }
