@@ -295,7 +295,7 @@ public class MainLoopServer
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
-      ent.move();
+      if (!ent.getId().equals("Plan")) ent.move();
     }
     for (int i = 0; i < renderList.size(); i++)
     {
@@ -313,12 +313,12 @@ public class MainLoopServer
 
   private String createInitialGameString(ModelMap modelMap)
   {
-    // String startString = "S002,1000,0,4,0,0.66,0,0.03;Plan,0,0,0,0,0,0,100;";
+    String startString = "Plan,0,0,0,0,0,0,100;";
     player0 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(0, 0, 0), 0, 0, 0, .03f, 0);
+        new Vector3f(1000, 0, 0), 0, 0, 0, .03f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1, 1, 1), 0, 0, 0, .03f, 1);
-    String startString = player0.toString();
+    startString += player0.toString();
     startString += player1.toString();
     for (int i = 0; i < nAsteroids; i++)
     {

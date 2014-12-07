@@ -57,7 +57,7 @@ public class Entity
     this.rotY = rotY;
     this.rotZ = rotZ;
     this.scale = scale;
-
+    vel.reset();
     orientation = new Quaternion();
     orientation.x(rotX);
     orientation.y(rotY);
@@ -91,7 +91,7 @@ public class Entity
     this.rotY = rotY;
     this.rotZ = rotZ;
     this.scale = scale;
-
+    vel.reset();
     orientation = new Quaternion();
     orientation.x(rotX);
     orientation.y(rotY);

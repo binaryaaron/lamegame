@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 public class PhysicsUtilities
 {
 
+  private static final float EPSILON = (float) 1e-7;
   /**
    * Elastic collision of 2 objects
    * http://en.wikipedia.org/wiki/Momentum
@@ -45,10 +46,25 @@ public class PhysicsUtilities
     vec2.add(q2);
 
     Vector3 diff = vec1.copy();
+
     diff.sub(vec2);
-    diff.normalize();
+    normalize(diff);
+    diff.mult(0.1f);
 
     vec1.add(diff);
     vec2.sub(diff);
+
+//    System.out.println(vec1);
+//    System.out.println(vec2);
   }
+
+  private static void normalize(Vector3 vec)
+  {
+    float length = vec.length();
+    if (vec.length() > EPSILON)
+    {
+      vec.divide(length);
+    }
+  }
+
 }

@@ -32,7 +32,7 @@ public class ModelMap {
 	    RawModel ship = OBJLoader.loadObjModel("SpaceShip2", loader, true);
 	    RawModel ship2 = OBJLoader.loadObjModel("SpaceShip2", loader, true);
 	    RawModel modelAsteroid = OBJLoader.loadObjModel("SquareRock3", loader,  true);
-	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  false);
+	    RawModel stoneAsteroid = OBJLoader.loadObjModel("SquareRock4", loader,  true);
 	    RawModel planetObj = OBJLoader.loadObjModel("planet", loader,  true);
 	    RawModel laserObj = OBJLoader.loadObjModel("laser", loader,  true);
 	    
