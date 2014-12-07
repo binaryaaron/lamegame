@@ -28,6 +28,7 @@ public class WalkerClient extends Thread
   public boolean printlocation=false;
   public static String hostName="localhost";
   public static int socketVal=4444;
+  public int ID;
   
   Socket mySocket=null;
   PrintWriter out=null;
@@ -36,10 +37,10 @@ public class WalkerClient extends Thread
   private volatile String inputFromServer="";
   private String outputToServer;
 
-  public static void main(String[] args) throws IOException
-  {
-    new WalkerClient(args);
-  }
+//  public static void main(String[] args) throws IOException
+//  {
+//    new WalkerClient(args);
+//  }
 
   public WalkerClient(String[] args) throws IOException
   {
@@ -70,6 +71,20 @@ public class WalkerClient extends Thread
   
   public void run()
   {
+    try
+    {
+      System.out.println("catching ID");
+      ID=Integer.parseInt(in.readLine());
+      System.out.println("ID="+ID);
+    }
+    catch (NumberFormatException e2)
+    {
+      e2.printStackTrace();
+    }
+    catch (IOException e2)
+    {
+      e2.printStackTrace();
+    }
    
     try
     {

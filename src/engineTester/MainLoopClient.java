@@ -59,7 +59,8 @@ public class MainLoopClient
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyDome", loader, true);
     ModelTexture skyTexture = new ModelTexture(loader.loadTexture("RedSky"));
-    TexturedModel texturedSkyBox = new TexturedModel("SkyBox2",skyBox, skyTexture);
+    TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox,
+        skyTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 
     // create lights and camera for the player. camera position should be set in
@@ -141,7 +142,8 @@ public class MainLoopClient
     DisplayManager.closeDisplay();
   }
 
-  public void getServerState(List<Entity> renderList, Camera camera, ModelMap modelMap)
+  public void getServerState(List<Entity> renderList, Camera camera,
+      ModelMap modelMap)
   {
     String[] sceneInfo = myClient.getInputFromServer().split(";");
     renderList.clear();
@@ -149,10 +151,13 @@ public class MainLoopClient
     {
       if (!object.equals(""))
       {
+        Entity tmp_Entity;
         String[] currentLine = object.split(",");
         String id;
         float x, y, z, xr, yr, zr, s, w;
+        int playerID = -1;
         // translate all input data into appropriate entities;
+        id = currentLine[0];
         x = Float.parseFloat(currentLine[1]);
         y = Float.parseFloat(currentLine[2]);
         z = Float.parseFloat(currentLine[3]);
@@ -161,16 +166,24 @@ public class MainLoopClient
         zr = Float.parseFloat(currentLine[6]);
         w = Float.parseFloat(currentLine[7]);
         s = Float.parseFloat(currentLine[8]);
-        // System.out.println(object.charAt(0));
-        id = currentLine[0];
-
-        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
-            .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
-        tmp_Entity.orientation.w(w);
         if (object.startsWith("S002"))
         {
+          playerID = Integer.parseInt(currentLine[10]);
+          tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
+              new Vector3f(x, y, z), xr, yr, zr, s, playerID);
+        }
+
+        else
+        {
+          tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
+              new Vector3f(x, y, z), xr, yr, zr, s);
+        }
+        tmp_Entity.orientation.w(w);
+        if (object.startsWith("S002"))// &&playerID==myClient.ID
+        {
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
-          Vector3 deltaCam = new Vector3(0,-2 * tmp_Entity.getScale(),-9 * tmp_Entity.getScale());
+          Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
+              * tmp_Entity.getScale());
           deltaCam = inverse.mult(deltaCam);
           camera.setPosition(new Vector3f(x, y, z));
           camera.move(deltaCam);

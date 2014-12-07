@@ -36,11 +36,15 @@ public class WalkerThread extends Thread
 
   public void run()
   {
+    //first, send ID to WalkerClient
     try
     {
       out=new PrintWriter(myClientSocket.getOutputStream(),true);
       in=new BufferedReader(new InputStreamReader(myClientSocket.getInputStream()));
       int loop = 0;
+      out.println(ID);
+      //walkerthread is not closing when a client disconnects? so walkr thread is not resending an ID on a reconnection client
+      //may just be a localhost issue
       
       //input from client will be an action (like move left), output will be a list of objects to render
       while ((inputFromClient = in.readLine()) != null)

@@ -53,7 +53,8 @@ public class MainLoopServer
   public static WalkerServer myServer;
   private static int loop = 0;
   private volatile static int clientConnections;
-  static Entity player;
+  static Entity player0;
+  static Entity player1;
   private static int nAsteroids = 200;
   TexturedModel texturedLaser;
 
@@ -64,7 +65,7 @@ public class MainLoopServer
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
     Camera camera = new Camera();
-    camera.followObj = player;
+    camera.followObj = player0;
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
     ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
@@ -72,19 +73,17 @@ public class MainLoopServer
         skyTexture);
     RawModel laser = OBJLoader.loadObjModel("missle", loader, true);
     ModelTexture laserTexture = new ModelTexture(loader.loadTexture("Missle"));
-    texturedLaser = new TexturedModel("laser", laser,
-        laserTexture);
+    texturedLaser = new TexturedModel("laser", laser, laserTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 
-    modelMap.getTexturedModelList()
-        .put("Play", modelMap.getTexturedModelList().get("S002"));
+    modelMap.getTexturedModelList().put("Play",
+        modelMap.getTexturedModelList().get("S002"));
 
     // create lights and camera for the player. camera position should be set in
     // parsing routine
     Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
         1.0f, 1.0f));
     MasterRenderer renderer = new MasterRenderer(camera);
-
 
     String outputToClient;
 
@@ -98,16 +97,16 @@ public class MainLoopServer
     }
     String startString;
 
-    startString = createInitialGameString();
+    startString = createInitialGameString(modelMap);
 
     List<Entity> renderList = parseGameStateString(startString, modelMap);
     List<Entity> missileList = new ArrayList<>();
 
     long lastTime = System.currentTimeMillis();
 
-    Quaternion orientation = player.orientation;
-    Vector3 position = new Vector3(player.position.x,
-        player.position.y, player.position.z);
+    Quaternion orientation = player0.orientation;
+    Vector3 position = new Vector3(player0.position.x, player0.position.y,
+        player0.position.z);
     Vector3 cameraPos = position.copy();
     Vector3 missilePos = position.copy();
     camera.quadTranslate(cameraPos);
@@ -132,7 +131,7 @@ public class MainLoopServer
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, renderList, camera, player);
+            parseClientInput(inputFromClient, renderList, camera, player0);
           }
         }
         lastTime = time;
@@ -145,7 +144,7 @@ public class MainLoopServer
       {
         outputToClient += ent.toString() + ";";
       }
-      //outputToClient += camera.toString();
+      // outputToClient += camera.toString();
 
       // for (WalkerThread wt : myServer.threadList)
       for (int i = 0; i < myServer.threadList.size(); i++)
@@ -160,7 +159,8 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
-  public void parseClientInput(String inputFromClient, List<Entity> renderList, Camera camera, Entity player)
+  public void parseClientInput(String inputFromClient, List<Entity> renderList,
+      Camera camera, Entity player)
   {
     float scale;
     Quaternion orientation;
@@ -177,8 +177,8 @@ public class MainLoopServer
       }
 
       orientation = player.orientation;
-      position = new Vector3(player.position.x,
-          player.position.y, player.position.z);
+      position = new Vector3(player.position.x, player.position.y,
+          player.position.z);
       cameraPos = position.copy();
       missilePos = position.copy();
 
@@ -192,31 +192,31 @@ public class MainLoopServer
       int dy = Mouse.getDY();
       if (input.equals("KEY_W"))
       {
-        orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(1, 0, 0))
-            .mult(orientation);
+        orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(1, 0, 0)).mult(
+            orientation);
       }
       if (input.equals("KEY_S"))
       {
-        orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(1, 0, 0))
-            .mult(orientation);
+        orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(1, 0, 0)).mult(
+            orientation);
       }
       // yaw
       int dx = Mouse.getDX();
       if (input.equals("KEY_A"))
       {
-        orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(0, 1, 0))
-            .mult(orientation);
+        orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(0, 1, 0)).mult(
+            orientation);
       }
       if (input.equals("KEY_D"))
       {
-        orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(0, 1, 0))
-            .mult(orientation);
+        orientation = Utils.angleAxisDeg(rotSpeed, new Vector3(0, 1, 0)).mult(
+            orientation);
       }
       // roll
-      if (input.equals("KEY_E")) orientation = Utils.angleAxisDeg(
-          rotSpeed, new Vector3(0, 0, 1)).mult(orientation);
-      if (input.equals("KEY_Q")) orientation = Utils.angleAxisDeg(
-          -rotSpeed, new Vector3(0, 0, 1)).mult(orientation);
+      if (input.equals("KEY_E")) orientation = Utils.angleAxisDeg(rotSpeed,
+          new Vector3(0, 0, 1)).mult(orientation);
+      if (input.equals("KEY_Q")) orientation = Utils.angleAxisDeg(-rotSpeed,
+          new Vector3(0, 0, 1)).mult(orientation);
       if (input.equals("KEY_B"))
       {
         player.vel.mult(0.95f);
@@ -246,15 +246,14 @@ public class MainLoopServer
 
         missilePos.add(inverse.mult(deltaMis));
 
-        Entity missle = new Entity("lase", texturedLaser, new Vector3f(
-            0, 0, 0), 0, 0, 0, 0.3f);
+        Entity missle = new Entity("lase", texturedLaser,
+            new Vector3f(0, 0, 0), 0, 0, 0, 0.3f);
         // missle.setPosition(player.position);
         missle.quadTranslate(missilePos);
 
         missle.orientation = player.orientation.copy();
         float pv = 5f;
-        missle.vel = player.vel.copy().add(
-            inverse.mult(new Vector3(0, 0, pv)));
+        missle.vel = player.vel.copy().add(inverse.mult(new Vector3(0, 0, pv)));
 
         renderList.add(missle);
       }
@@ -285,7 +284,7 @@ public class MainLoopServer
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
-      for (int j = i+1; j < renderList.size(); j++)
+      for (int j = i + 1; j < renderList.size(); j++)
       {
         other = renderList.get(j);
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
@@ -296,9 +295,15 @@ public class MainLoopServer
     }
   }
 
-  private String createInitialGameString()
+  private String createInitialGameString(ModelMap modelMap)
   {
-    String startString = "S002,1000,0,4,0,0.66,0,0.03;Plan,0,0,0,0,0,0,100;";
+    // String startString = "S002,1000,0,4,0,0.66,0,0.03;Plan,0,0,0,0,0,0,100;";
+    player0 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(0, 0, 0), 0, 0, 0, .03f, 0);
+    player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(0, 0, 0), 0, 0, 0, .03f, 1);
+    String startString = player0.toString();
+    startString += player1.toString();
     for (int i = 0; i < nAsteroids; i++)
     {
       int a = Globals.RAND.nextInt(2) + 1;
@@ -351,17 +356,17 @@ public class MainLoopServer
       if (object.startsWith("S002"))
       {
 
-        player = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-            new Vector3f(x, y, z), xr, yr, zr, s);
+        player0 = new Entity("S002", modelMap.getTexturedModelList()
+            .get("S002"), new Vector3f(x, y, z), xr, yr, zr, s);
 
-        renderList.add(player);
+        renderList.add(player0);
 
       }
       else
       {
 
-        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList()
-            .get(id), new Vector3f(x, y, z), xr, yr, zr, s);
+        Entity tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(
+            id), new Vector3f(x, y, z), xr, yr, zr, s);
         renderList.add(tmp_Entity);
       }
     }
