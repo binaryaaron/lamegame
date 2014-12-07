@@ -26,7 +26,7 @@ import renderEngine.MasterRenderer;
 public class WalkerClient extends Thread
 {
   public boolean printlocation=false;
-  public static String hostName="oberon";
+  public static String hostName="localhost";
   public static int socketVal=4444;
   public int ID;
   
