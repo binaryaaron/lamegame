@@ -22,10 +22,17 @@ public class DisplayManager
 
     try
     {
+      DisplayMode[] modes = Display.getAvailableDisplayModes();
+     /* for (int i=0;i<modes.length;i++) 
+      {
+          DisplayMode current = modes[i];
+      }*/
+      //Display.setDisplayMode(modes[modes.length-2]);
+      
       Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
       Display.create(new PixelFormat(),attribs);
       //Display.create();
-      Display.setTitle("ThinMatrixTutorialWindow");
+      Display.setTitle("LameGame");
 
     }
     catch (LWJGLException e)

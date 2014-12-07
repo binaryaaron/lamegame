@@ -45,10 +45,10 @@ import javax.swing.*;
 
 public class MainLoopClient
 {
-
+  public final boolean HUD_DEBUG =true;
   public final boolean PRINT_FPS = false;
   public WalkerClient myClient = null;
-
+  private float speed;
   public MainLoopClient(String[] args)
   {
     Entity player = null;
@@ -78,13 +78,29 @@ public class MainLoopClient
     String inputFromServer = null;
 
     List<Entity> renderList = new ArrayList<>();
+    List<Entity> hudRenderList = new ArrayList<>();
+
     if (PRINT_FPS)
     {
       pu.startFrameCounter();
     }
 
+    //Timer variables
     long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
+    long hudDelay = 100;
+    long hudStart = 0;
+
+    //Hud Objects
+    Entity hud1 = new Entity("H001",modelMap.getTexturedModelList().get(
+        "H001"), new Vector3f(0.7f,0.37f,1f),0f,0f,0f, 0.05f);
+    Entity hud2 = new Entity("H002",modelMap.getTexturedModelList().get(
+        "H002"), new Vector3f(-0.0f,0.07f,1f),0f,0f,0f, 0.05f);
+    Entity hud3 = new Entity("H003",modelMap.getTexturedModelList().get(
+        "H003"), new Vector3f(0.05f,0.3f,0.8f),0f,0f,0f, 0.05f);
+    hudRenderList.add(hud1);
+    hudRenderList.add(hud2);
+    hudRenderList.add(hud3);
 
     // controls for physics testing with two asteroids
     // wasd control leftest asteroid, arrows control rightmost.
@@ -124,6 +140,22 @@ public class MainLoopClient
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
+      }
+
+      //render HUD
+      if(HUD_DEBUG&&hudDelay+hudStart <System.currentTimeMillis())
+      {
+
+        hudStart = System.currentTimeMillis();
+        hudRenderList.get(2).setModel(modelMap.setScoreText((""+System.currentTimeMillis()+"  ")));
+        hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"% "));
+
+        hudRenderList.get(0).setModel(modelMap.setSpeedText(""+speed));
+      }
+      for (Entity ent : hudRenderList)
+      {
+        renderer.processHudEntity(ent);
+        // System.out.println(ent.getModel().getRawModel().getVertexCount());
       }
 
       // Process rendering
@@ -168,9 +200,7 @@ public class MainLoopClient
         s = Float.parseFloat(currentLine[8]);
         if (object.startsWith("S"))
         {
-          float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
-          System.out.println("playerID="+playerID+" clientID="+myClient.ID);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
         }
@@ -183,7 +213,7 @@ public class MainLoopClient
         tmp_Entity.orientation.w(w);
         if (object.startsWith("S")&&playerID==myClient.ID)// &&playerID==myClient.ID
         {
-          System.out.print("here:");
+          speed = Float.parseFloat(currentLine[11]);
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
               * tmp_Entity.getScale());
