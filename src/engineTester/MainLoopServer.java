@@ -301,7 +301,7 @@ public class MainLoopServer
     player0 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(0, 0, 0), 0, 0, 0, .03f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(0, 0, 0), 0, 0, 0, .03f, 1);
+        new Vector3f(1, 1, 1), 0, 0, 0, .03f, 1);
     String startString = player0.toString();
     startString += player1.toString();
     for (int i = 0; i < nAsteroids; i++)
