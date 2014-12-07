@@ -95,6 +95,7 @@ public class SkyBoxRenderer
    */
   private void loadModelMatrix(SkyBox sky)
   {
+   
     Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(
         camera.getPosition(), 0f, 0f, 0f, sky.getSkyEntity().getScale());
     shader.loadTransformationMatrix(transformationMatrix);

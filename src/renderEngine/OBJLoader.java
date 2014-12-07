@@ -78,6 +78,7 @@ public class OBJLoader
         {
           Vector2f texture = new Vector2f(Float.parseFloat(currentLine[1]),
               Float.parseFloat(currentLine[2]));
+
           textures.add(texture);
         }
         else if (line.startsWith("vn "))
