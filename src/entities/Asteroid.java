@@ -1,6 +1,5 @@
 package entities;
 
-import gameObjects.Globals;
 import models.TexturedModel;
 
 import org.lwjgl.util.vector.Vector3f;

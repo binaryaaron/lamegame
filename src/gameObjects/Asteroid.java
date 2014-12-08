@@ -1,9 +1,8 @@
 package gameObjects;
 
+import entities.Globals;
 import org.lwjgl.util.vector.Vector3f;
 import world.BoundingBox;
-
-import java.util.Random;
 
 // bounding box sizes
 // create from bigger asteroid
@@ -24,7 +23,7 @@ public class Asteroid extends GameObject
   public Asteroid()
   {
     // intializes asteroid with between 100 and 1000 HP
-    this.hitPoints = Globals.randInt(1000,100);
+    this.hitPoints = Globals.randInt(1000, 100);
     ASTEROID_COUNT++;
     this.velocity = new Vector3f(0,0,0);
     // position should be random within the game board

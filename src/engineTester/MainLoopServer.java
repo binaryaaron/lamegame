@@ -12,7 +12,7 @@ import com.ra4king.opengl.util.math.Vector3;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import gameObjects.Globals;
+import entities.Globals;
 import models.RawModel;
 import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
