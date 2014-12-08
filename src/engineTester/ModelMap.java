@@ -32,7 +32,7 @@ public class ModelMap
   RawModel healthLabel;
   RawModel scoreLabel;
   RawModel connectLabel;
-  RawModel optionsLabel;
+  RawModel helpLabel;
   RawModel creditsLabel;
   RawModel quitLabel;
   
@@ -56,7 +56,7 @@ public class ModelMap
     healthLabel = FontLoader.loadFontModel("0%", loader, true, 1);
     scoreLabel = FontLoader.loadFontModel("3 frags", loader, true, 1);
     connectLabel = FontLoader.loadFontModel("Connect", loader, true, 1);
-    optionsLabel = FontLoader.loadFontModel("Options", loader, true, 1);
+    helpLabel = FontLoader.loadFontModel("Help", loader, true, 1);
     creditsLabel = FontLoader.loadFontModel("Credits", loader, true, 1);
     quitLabel = FontLoader.loadFontModel("Exit", loader, true, 1);
 
@@ -81,7 +81,7 @@ public class ModelMap
         textTx);
     TexturedModel texturedScore = new TexturedModel("H003", scoreLabel, textTx);
     TexturedModel texturedConnect = new TexturedModel("H004", connectLabel, textTx);
-    TexturedModel texturedOptions = new TexturedModel("H005", optionsLabel, textTx);
+    TexturedModel texturedhelp = new TexturedModel("H005", helpLabel, textTx);
     TexturedModel texturedCredits = new TexturedModel("H006", creditsLabel, textTx);
     TexturedModel texturedQuit = new TexturedModel("H007", quitLabel, textTx);
 
@@ -107,7 +107,7 @@ public class ModelMap
     texturedModelList.put("H002", texturedHealth);
     texturedModelList.put("H003", texturedScore);
     texturedModelList.put("H004", texturedConnect);
-    texturedModelList.put("H005", texturedOptions);
+    texturedModelList.put("H005", texturedhelp);
     texturedModelList.put("H006", texturedCredits);
     texturedModelList.put("H007", texturedQuit);
     
