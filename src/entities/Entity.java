@@ -10,6 +10,9 @@ import com.ra4king.opengl.util.math.Vector3;
 import toolbox.MathUtil;
 import world.BoundingBox;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Entity
 {
   private static final float initialMass = 100f;
@@ -35,10 +38,27 @@ public class Entity
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
   // public Vector3f vel = new Vector3f(0f,0f,0f);
   private static Boolean DEBUG = true;
-  protected int hitPoints = 100;
-  protected int damage = 50;
+  protected int hitPoints = 1000;
+  protected int damage = 1;
   private String id;
   private int clientId = -1;
+
+  private static Map<String, Integer> damageMap;
+  private static Map<String, Integer> healthMap;
+
+
+  static {
+    damageMap = new HashMap<>();
+    healthMap = new HashMap<>();
+    damageMap.put("A", 20);
+    damageMap.put("P", 20);
+    damageMap.put("l", 100);
+    damageMap.put("S", 100);
+    healthMap.put("A", 20000);
+    healthMap.put("P", 2000000);
+    healthMap.put("l", 1);
+    healthMap.put("S", 1000);
+  }
 
   public Entity()
   {
@@ -65,6 +85,13 @@ public class Entity
     orientation.z(rotZ);
     // basis will be a matrix that holds the directional vectors
     basis.setIdentity();
+    String firstChar = id.substring(0,1);
+
+    if (damageMap.containsKey(firstChar))
+    {
+      damage = damageMap.get(firstChar);
+    }
+
     if (model != null)
     {
       box = model.getRawModel().getBoundingBox().deepCopy();
@@ -99,6 +126,19 @@ public class Entity
     orientation.z(rotZ);
     // basis will be a matrix that holds the directional vectors
     basis.setIdentity();
+    if (!id.isEmpty())
+    {
+      String firstChar = id.substring(0, 1);
+      if (damageMap.containsKey(firstChar))
+      {
+        damage = damageMap.get(firstChar);
+      }
+
+      if (healthMap.containsKey(firstChar))
+      {
+        hitPoints = healthMap.get(firstChar);
+      }
+    }
     if (model != null)
     {
       box = model.getRawModel().getBoundingBox().deepCopy();

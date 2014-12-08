@@ -9,10 +9,7 @@ package engineTester;
 import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
-import entities.Globals;
+import entities.*;
 import models.RawModel;
 import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
@@ -34,16 +31,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainLoopServer
 {
 
   public final static boolean PRINT_FPS = false;
   private final static boolean PHYSICS_DEBUG = true;
+  private static final boolean DEBUG = true;
   public static WalkerServer myServer;
   private static int loop = 0;
   private volatile static int clientConnections;
-  static Entity player0;
+  static Player player0;
   static Entity player1;
   static Entity player2;
   static Entity player3;
@@ -249,18 +248,18 @@ public class MainLoopServer
         }
 
         Vector3 deltaMis = delta.copy();
-        deltaMis.y(5 * player.getScale());
-        deltaMis.z(-5 * player.getScale());
+        deltaMis.y(20 * player.getScale());
+        deltaMis.z(-40 * player.getScale());
 
         missilePos.add(inverse.mult(deltaMis));
 
         Entity missle = new Entity("lase", texturedLaser,
-            new Vector3f(0, 0, 0), 0, 0, 0, 0.3f);
+            new Vector3f(0, 0, 0), 0, 0, 0, 5f);
         // missle.setPosition(player.position);
         missle.quadTranslate(missilePos);
 
         missle.orientation = player.orientation.copy();
-        float pv = 5f;
+        float pv = 20f;
         missle.vel = player.vel.copy().add(inverse.mult(new Vector3(0, 0, pv)));
 
         renderList.add(missle);
@@ -290,7 +289,7 @@ public class MainLoopServer
   {
     Entity ent = null;
     Entity other = null;
-    if (nextStep == killStep)
+    if (nextStep >= killStep)
     {
       renderList.removeAll(killList);
       killList.clear();
@@ -327,14 +326,15 @@ public class MainLoopServer
   private String createInitialGameString(ModelMap modelMap)
   {
     String startString = "Plan,0,0,0,0,0,0,100;";
-    player0 = new Entity("S001", modelMap.getTexturedModelList().get("S001"),
-        new Vector3f(1000, 1010, 0), 0, 0, 0, .3f, 0);
+
+    player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
+        new Vector3f(1000, 1010, 0), 0, 0, 0, 1f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 1000, 0), 0, 0, 0, .3f, 1);
+        new Vector3f(1000, 1000, 0), 0, 0, 0, 1f, 1);
     player2 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 990, 0), 0, 0, 0, .3f, 2);
+        new Vector3f(1000, 990, 0), 0, 0, 0, 1f, 2);
     player3 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 980, 0), 0, 0, 0, .3f, 3);
+        new Vector3f(1000, 980, 0), 0, 0, 0, 1f, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
     startString += player2.toString() + ";";
