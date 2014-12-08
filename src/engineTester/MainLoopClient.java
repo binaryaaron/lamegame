@@ -80,7 +80,7 @@ public class MainLoopClient
     String inputFromServer = null;
 
     List<Entity> renderList = new ArrayList<>();
-    List<Laser> lasers = new ArrayList<>();
+    //List<Laser> lasers = new ArrayList<>();
     
     List<Entity> hudRenderList = new ArrayList<>();
 
@@ -130,7 +130,7 @@ public class MainLoopClient
       }
 
       // Get render/objects from server
-      getServerState(renderList,lasers, camera, modelMap);
+      getServerState(renderList, camera, modelMap);
 
       // Limit keyboard sends
       long time = System.currentTimeMillis();
@@ -162,11 +162,7 @@ public class MainLoopClient
         // System.out.println(ent.getModel().getRawModel().getVertexCount());
       }
 
-      for (Laser ent : lasers)
-      {
-        renderer.processLaser(ent);
-        // System.out.println(ent.getModel().getRawModel().getVertexCount());
-      }
+    
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
@@ -183,12 +179,11 @@ public class MainLoopClient
     DisplayManager.closeDisplay();
   }
 
-  public void getServerState(List<Entity> renderList,List<Laser> lasers, Camera camera,
+  public void getServerState(List<Entity> renderList, Camera camera,
       ModelMap modelMap)
   {
     String[] sceneInfo = myClient.getInputFromServer().split(";");
     renderList.clear();
-    lasers.clear();
     for (String object : sceneInfo)
     {
       if (!object.equals(""))
@@ -206,10 +201,12 @@ public class MainLoopClient
     	        zr = Float.parseFloat(currentLine[6]);
     	        w = Float.parseFloat(currentLine[7]);
     	        s = Float.parseFloat(currentLine[8]);
-          	Laser tmp_laser=new Laser(id, modelMap.getTexturedModelList().get(id),
+          	Entity tmp_laser=new Entity(id, modelMap.getTexturedModelList().get(id),
                     new Vector3f(x, y, z), xr, yr, zr, s);
           	 tmp_laser.orientation.w(w);
-          	lasers.add(tmp_laser);
+          	 tmp_laser.drawShadow=false;
+          	renderList.add(tmp_laser);
+          	
           }
     	  else{
         Entity tmp_Entity;
@@ -251,6 +248,13 @@ public class MainLoopClient
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
+        else if(object.startsWith("S")&&playerID!=myClient.ID){
+          Entity playerTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
+              new Vector3f(x, y-2, z), xr, yr, zr, 1);
+          renderList.add(playerTag);
+          playerTag.drawShadow=false;
+          }
+        
         renderList.add(tmp_Entity);
       }
       }}

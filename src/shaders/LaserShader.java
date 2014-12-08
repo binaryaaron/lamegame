@@ -1,87 +1,43 @@
-package shaders;
+#version 400
 
-import org.lwjgl.util.vector.Matrix4f;
+in vec2 pass_textureCoords;
+in vec3 surfaceNormal;
+in vec3 toLightVector;
+in vec3 toCamera;
 
-import entities.Camera;
-import entities.Light;
-import toolbox.MathUtil;
+out vec4 out_Color;
 
-public class LaserShader extends ShaderProgram
-{
+uniform sampler2D textureSampler;
+uniform vec3 lightColor;
+uniform float shineDamper;
+uniform float reflectivity;
+uniform float drawShadow;
 
-  private static final String VERTEX_FILE = "src/shaders/skyVertexShader.txt";
-  private static final String FRAGMENT_FILE = "src/shaders/skyFragmentShader.txt";
+void main(void){
 
-  private int location_TransformationMatrix;
-  private int location_ProjectionMatrix;
-  private int location_ViewMatrix;
-  private int location_lightPosition;
-  private int location_lightColor;
-  private int location_shineDamper;
-  private int location_reflectivity;
+vec3 unitNormal = normalize(surfaceNormal);
+vec3 unitLightVector = normalize(toLightVector);
 
-  public LaserShader()
-  {
-    super(VERTEX_FILE, FRAGMENT_FILE);
+float nDotl= dot(unitNormal,unitLightVector);
+float brightness = max(nDotl,0.08);
+vec3 diffuse =brightness*lightColor;
 
-  }
 
-  @Override
-  protected void bindAttributes()
-  {
-    super.bindAttribute(0, "position");
-    super.bindAttribute(1, "textureCoords");
-    super.bindAttribute(2, "normal");
+vec3 unitVectorToCamera= normalize(toCamera);
+vec3 lightDirection =-unitLightVector;
+vec3 reflectedLightDirection =reflect(lightDirection,unitNormal);
 
-  }
+float specularFactor= dot(reflectedLightDirection,unitVectorToCamera);
+specularFactor = max(specularFactor,0.0);
+float dampedFactor = pow(specularFactor,shineDamper);
+vec3 finalSpecular= dampedFactor*reflectivity*lightColor;
 
-  @Override
-  protected void getAllUniformLocations()
-  {
-    location_TransformationMatrix = super
-        .getUniformLocation("transformationMatrix");
-    location_ProjectionMatrix = super.getUniformLocation("projectionMatrix");
-    location_ViewMatrix = super.getUniformLocation("viewMatrix");
-    location_lightPosition = super.getUniformLocation("lightPosition");
-    location_lightColor = super.getUniformLocation("lightColor");
-    location_shineDamper = super.getUniformLocation("shineDamper");
-    location_reflectivity = super.getUniformLocation("reflectivity");
-  }
 
-  public void loadShineVariables(float shineDamper, float reflectivity)
-  {
-    super.loadFloat(location_shineDamper, shineDamper);
-    super.loadFloat(location_reflectivity, reflectivity);
 
-  }
 
-  public void loadTransformationMatrix(Matrix4f matrix)
-  {
+//out_Color=vec4(diffuse,1.0) * texture(textureSampler,pass_textureCoords)+vec4(finalSpecular,1.0);
+if(drawShadow>0.5){out_Color=vec4(diffuse,1.0) *texture(textureSampler,pass_textureCoords);}
+else{out_Color=texture(textureSampler,pass_textureCoords);}
 
-    super.loadMatrix(location_TransformationMatrix, matrix);
-
-  }
-
-  public void loadLight(Light light)
-  {
-    super.loadVector(location_lightPosition, light.getPosition());
-    super.loadVector(location_lightColor, light.getColor());
-
-  }
-
-  public void loadViewMatrix(Camera camera)
-  {
-
-    Matrix4f viewMatrix = MathUtil.createViewMatrix(camera);
-    super.loadMatrix(location_ViewMatrix, viewMatrix);
-
-  }
-
-  public void loadProjectionMatrix(Matrix4f matrix)
-  {
-
-    super.loadMatrix(location_ProjectionMatrix, matrix);
-
-  }
 
 }

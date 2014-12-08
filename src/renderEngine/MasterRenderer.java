@@ -93,13 +93,13 @@ public class MasterRenderer
 
     
     
-    laserShader.start();
-    laserShader.loadLight(sun);
-    laserShader.loadViewMatrix(camera);
-    
-    laserRenderer.render(lasers);
-    
-    laserShader.stop();
+//    laserShader.start();
+//    laserShader.loadLight(sun);
+//    laserShader.loadViewMatrix(camera);
+//    
+//    laserRenderer.render(lasers);
+//    
+//    laserShader.stop();
     
     
     

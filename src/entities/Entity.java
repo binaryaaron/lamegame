@@ -27,7 +27,8 @@ public class Entity
   public Matrix4f matrix = new Matrix4f();
   private float scale;
   public float mass;
-
+  public boolean drawShadow=true;
+  
   private float size;
   private float halfSize;
   public BoundingBox box;

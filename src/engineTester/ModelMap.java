@@ -44,7 +44,8 @@ public class ModelMap
     RawModel stoneAsteroid = OBJLoader
         .loadObjModel("SquareRock4", loader, true);
     RawModel planetObj = OBJLoader.loadObjModel("planet", loader, true);
-    RawModel laserObj = OBJLoader.loadObjModel("laser", loader, true);
+    RawModel laserObj = OBJLoader.loadObjModel("laser", loader, false);
+    RawModel cone = OBJLoader.loadObjModel("cone", loader, false);
 
     //HUD TEXT
     speedLabel = FontLoader.loadFontModel("78", loader, true, 1);
@@ -62,7 +63,8 @@ public class ModelMap
     ModelTexture stoneTexture = new ModelTexture(
         loader.loadTexture("RockRed2"));
     ModelTexture planetTexture = new ModelTexture(loader.loadTexture("planet"));
-    ModelTexture laserTexture = new ModelTexture(loader.loadTexture("laser"));
+    ModelTexture laserTexture = new ModelTexture(loader.loadTexture("green"));
+    ModelTexture greenTexture = new ModelTexture(loader.loadTexture("green"));
 
     textTx = new ModelTexture(loader.loadTexture("font"));
 
@@ -92,6 +94,8 @@ public class ModelMap
         planetTexture);
     TexturedModel texturedLaser = new TexturedModel("lase", laserObj,
         laserTexture);
+    TexturedModel greenCone = new TexturedModel("gCone", cone,
+        greenTexture);
 
     texturedModelList.put("H001", texturedSpeed);
     texturedModelList.put("H002", texturedHealth);
@@ -104,6 +108,7 @@ public class ModelMap
     texturedModelList.put("S001", texturedShip2);
     texturedModelList.put("lase", texturedLaser);
     texturedModelList.put("Plan", texturedPlanet);
+    texturedModelList.put("gCone", greenCone);
 
   }
 
