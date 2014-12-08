@@ -6,19 +6,9 @@
  */
 package engineTester;
 
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
-
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
 
 import models.RawModel;
 import models.TexturedModel;
@@ -37,10 +27,6 @@ import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
 import world.BoxUtilities;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
@@ -106,12 +92,16 @@ public class MainLoopClient
     float xDiff = -0.2f;
     Entity hud1 = new Entity("H004",modelMap.getTexturedModelList().get(
         "H004"), new Vector3f(xDiff,-0.25f,1f),0f,0f,0f, 0.05f);
+    hud1.drawShadow = false;
     Entity hud2 = new Entity("H005",modelMap.getTexturedModelList().get(
         "H005"), new Vector3f(xDiff,-0.07f,1f),0f,0f,0f, 0.05f);
+    hud2.drawShadow = false;
     Entity hud3 = new Entity("H006",modelMap.getTexturedModelList().get(
         "H006"), new Vector3f(xDiff,0.11f,1f),0f,0f,0f, 0.05f);
+    hud3.drawShadow = false;
     Entity hud4 = new Entity("H007",modelMap.getTexturedModelList().get(
         "H007"), new Vector3f(xDiff,0.28f,1f),0f,0f,0f, 0.05f);
+    hud4.drawShadow = false;
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
     hudRenderList.add(hud3);
@@ -206,16 +196,6 @@ public class MainLoopClient
       {
         inMenu = false;
       }
-
-      if(Keyboard.isKeyDown(Keyboard.KEY_F2))
-      {
-        currentResolution++;
-        DisplayManager.changeResolution(currentResolution);
-      }
-      if(Keyboard.isKeyDown(Keyboard.KEY_F1))
-      {
-        DisplayManager.changeFullScreen();
-      }
       if(!keyPressed)
       {
         keyReleased = true;
@@ -266,7 +246,7 @@ public class MainLoopClient
 
     light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
         1.0f, 1.0f));
-
+    hudRenderList = new ArrayList<>();
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
     hudRenderList.add(hud3);
