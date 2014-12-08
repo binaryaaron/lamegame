@@ -323,9 +323,14 @@ public class MainLoopServer
         new Vector3f(1000, 1010, 0), 0, 0, 0, .3f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 1000, 0), 0, 0, 0, .3f, 1);
+    player2 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(1000, 990, 0), 0, 0, 0, .3f, 2);
+    player3 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(1000, 980, 0), 0, 0, 0, .3f, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
-    System.out.println(player0+"\n"+player1);
+    startString += player2.toString() + ";";
+    startString += player3.toString() + ";";
     for (int i = 0; i < nAsteroids; i++)
     {
       int a = Globals.RAND.nextInt(2) + 1;
