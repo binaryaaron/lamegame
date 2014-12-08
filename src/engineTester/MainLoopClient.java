@@ -11,6 +11,7 @@ import com.ra4king.opengl.util.math.Vector3;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ import toolbox.PerformanceUtilities;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
 
@@ -43,14 +45,14 @@ import entities.Entity;
 import entities.Laser;
 import entities.Light;
 
-
 public class MainLoopClient
 {
-  public final boolean HUD_DEBUG =true;
+  public final boolean HUD_DEBUG = true;
   public final boolean PRINT_FPS = false;
   public WalkerClient myClient = null;
   private float speed;
   private int health;
+
   public MainLoopClient(String[] args)
   {
     Entity player = null;
@@ -81,7 +83,7 @@ public class MainLoopClient
 
     List<Entity> renderList = new ArrayList<>();
     List<Laser> lasers = new ArrayList<>();
-    
+
     List<Entity> hudRenderList = new ArrayList<>();
 
     if (PRINT_FPS)
@@ -96,12 +98,12 @@ public class MainLoopClient
     long hudStart = 0;
 
     //Hud Objects
-    Entity hud1 = new Entity("H001",modelMap.getTexturedModelList().get(
-        "H001"), new Vector3f(0.7f,0.37f,1f),0f,0f,0f, 0.05f);
-    Entity hud2 = new Entity("H002",modelMap.getTexturedModelList().get(
-        "H002"), new Vector3f(-0.0f,0.07f,1f),0f,0f,0f, 0.05f);
-    Entity hud3 = new Entity("H003",modelMap.getTexturedModelList().get(
-        "H003"), new Vector3f(0.05f,0.3f,0.8f),0f,0f,0f, 0.05f);
+    Entity hud1 = new Entity("H001", modelMap.getTexturedModelList().get(
+        "H001"), new Vector3f(0.7f, 0.37f, 1f), 0f, 0f, 0f, 0.05f);
+    Entity hud2 = new Entity("H002", modelMap.getTexturedModelList().get(
+        "H002"), new Vector3f(0.7f, 0.07f, 1f), 0f, 0f, 0f, 0.05f);
+    Entity hud3 = new Entity("H003", modelMap.getTexturedModelList().get(
+        "H003"), new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 0.05f);
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
     hudRenderList.add(hud3);
@@ -129,17 +131,17 @@ public class MainLoopClient
       {
         break;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_ADD))
+      if (Keyboard.isKeyDown(Keyboard.KEY_ADD))
       {
         currentResolution++;
         DisplayManager.changeResolution(currentResolution);
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_F))
+      if (Keyboard.isKeyDown(Keyboard.KEY_F))
       {
         DisplayManager.changeFullScreen();
       }
       // Get render/objects from server
-      getServerState(renderList,lasers, camera, modelMap);
+      getServerState(renderList, lasers, camera, modelMap);
 
       // Limit keyboard sends
       long time = System.currentTimeMillis();
@@ -156,14 +158,15 @@ public class MainLoopClient
       }
 
       //render HUD
-      if(HUD_DEBUG&&hudDelay+hudStart <System.currentTimeMillis())
+      if (HUD_DEBUG && hudDelay + hudStart < System.currentTimeMillis())
       {
 
         hudStart = System.currentTimeMillis();
-        hudRenderList.get(2).setModel(modelMap.setScoreText((""+System.currentTimeMillis()+"  ")));
-        hudRenderList.get(1).setModel(modelMap.setHealthText(""+health));
+        hudRenderList.get(2).setModel(
+            modelMap.setScoreText(("" + System.currentTimeMillis() + "  ")));
+        hudRenderList.get(1).setModel(modelMap.setHealthText("" + health));
 
-        hudRenderList.get(0).setModel(modelMap.setSpeedText(""+speed));
+        hudRenderList.get(0).setModel(modelMap.setSpeedText("" + speed));
       }
       for (Entity ent : hudRenderList)
       {
@@ -192,7 +195,8 @@ public class MainLoopClient
     DisplayManager.closeDisplay();
   }
 
-  public void getServerState(List<Entity> renderList,List<Laser> lasers, Camera camera,
+  public void getServerState(List<Entity> renderList, List<Laser> lasers,
+      Camera camera,
       ModelMap modelMap)
   {
     String[] sceneInfo = myClient.getInputFromServer().split(";");
@@ -202,26 +206,7 @@ public class MainLoopClient
     {
       if (!object.equals(""))
       {
-    	  if(object.startsWith("l")){
-    		  String[] currentLine = object.split(",");
-    	        String id;
-    	        float x, y, z, xr, yr, zr, s, w;
-    	        id = currentLine[0];
-    	        x = Float.parseFloat(currentLine[1]);
-    	        y = Float.parseFloat(currentLine[2]);
-    	        z = Float.parseFloat(currentLine[3]);
-    	        xr = Float.parseFloat(currentLine[4]);
-    	        yr = Float.parseFloat(currentLine[5]);
-    	        zr = Float.parseFloat(currentLine[6]);
-    	        w = Float.parseFloat(currentLine[7]);
-    	        s = Float.parseFloat(currentLine[8]);
-          	Laser tmp_laser=new Laser(id, modelMap.getTexturedModelList().get(id),
-                    new Vector3f(x, y, z), xr, yr, zr, s);
-          	 tmp_laser.orientation.w(w);
-          	lasers.add(tmp_laser);
-          }
-    	  else{
-        Entity tmp_Entity;
+        Entity tmp_Entity = null;
         String[] currentLine = object.split(",");
         String id;
         float x, y, z, xr, yr, zr, s, w;
@@ -236,20 +221,30 @@ public class MainLoopClient
         zr = Float.parseFloat(currentLine[6]);
         w = Float.parseFloat(currentLine[7]);
         s = Float.parseFloat(currentLine[8]);
-        if (object.startsWith("S"))
+        if (object.startsWith("l"))
+        {
+          Entity tmp_laser = new Entity(id,
+              modelMap.getTexturedModelList().get(id),
+              new Vector3f(x, y, z), xr, yr, zr, s);
+          tmp_laser.orientation.w(w);
+          renderList.add(tmp_laser);
+        }
+        else if (object.startsWith("S"))
         {
           playerID = Integer.parseInt(currentLine[9]);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
+          tmp_Entity.orientation.w(w);
         }
-       
         else
         {
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s);
+          tmp_Entity.orientation.w(w);
         }
-        tmp_Entity.orientation.w(w);
-        if (object.startsWith("S")&&playerID==myClient.ID)// &&playerID==myClient.ID
+
+        if (object.startsWith("S")
+            && playerID == myClient.ID)// &&playerID==myClient.ID
         {
           health = Integer.parseInt(currentLine[10]);
           speed = Float.parseFloat(currentLine[11]);
@@ -261,10 +256,15 @@ public class MainLoopClient
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
-        renderList.add(tmp_Entity);
+
+        if (tmp_Entity != null)
+        {
+          renderList.add(tmp_Entity);
+        }
       }
-      }}
+    }
   }
+
 
   public void sendKeyBoard()
   {
