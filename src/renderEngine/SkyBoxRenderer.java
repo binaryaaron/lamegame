@@ -60,7 +60,7 @@ public class SkyBoxRenderer
 
   /**
    * Prepares terrains to be rendered
-   * @param terrain
+   * @param sky
    */
   private void prepareTerrain(SkyBox sky)
   {
@@ -91,7 +91,7 @@ public class SkyBoxRenderer
 
   /**
    * Load a model matrix based on the terrain into the shader
-   * @param terrain
+   * @param sky
    */
   private void loadModelMatrix(SkyBox sky)
   {

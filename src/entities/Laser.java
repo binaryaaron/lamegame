@@ -10,7 +10,8 @@ import com.ra4king.opengl.util.math.Vector3;
 import toolbox.MathUtil;
 import world.BoundingBox;
 
-public class Entity
+public class Laser
+
 {
   private static final float initialMass = 100f;
   protected TexturedModel model;
@@ -20,7 +21,7 @@ public class Entity
   public Vector3f position;
 
   private Vector3f rotation;
-  private float rotX, rotY, rotZ;
+  private float rotX, rotY, rotZ;;
   public Quaternion orientation;
   private Matrix4f basis = new Matrix4f();
   public Matrix4f rotationMatrix = new Matrix4f();
@@ -30,22 +31,21 @@ public class Entity
 
   private float size;
   private float halfSize;
-  protected BoundingBox box;
+  public BoundingBox box;
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
   // public Vector3f vel = new Vector3f(0f,0f,0f);
   private static Boolean DEBUG = true;
-  protected int hitPoints = 100;
-  protected int damage = 50;
+  protected int hitPoints;
   private String id;
   private int clientId = -1;
 
-  public Entity()
+  public Laser()
   {
     
   }
 
-  public Entity(String id, TexturedModel model, Vector3f position, float rotX,
+  public Laser(String id, TexturedModel model, Vector3f position, float rotX,
       float rotY, float rotZ, float scale, int clientId)
   {
     super();
@@ -80,7 +80,7 @@ public class Entity
    * Constructor that takes an additional string for the id. used to pass the id
    * from the textured model's id.
    */
-  public Entity(String id, TexturedModel model, Vector3f position, float rotX,
+  public Laser(String id, TexturedModel model, Vector3f position, float rotX,
       float rotY, float rotZ, float scale)
   {
     super();
@@ -344,20 +344,20 @@ public class Entity
   {
     StringBuilder result = new StringBuilder();
     String delimiter = ",";
-    result.append(id).append(delimiter);
-    result.append(position.x).append(delimiter);
-    result.append(position.y).append(delimiter);
-    result.append(position.z).append(delimiter);
-    result.append(orientation.x()).append(delimiter);
-    result.append(orientation.y()).append(delimiter);
-    result.append(orientation.z()).append(delimiter);
-    result.append(orientation.w()).append(delimiter);
-    result.append(scale).append(delimiter);
+    result.append(id + delimiter);
+    result.append(position.x + delimiter);
+    result.append(position.y + delimiter);
+    result.append(position.z + delimiter);
+    result.append(orientation.x() + delimiter);
+    result.append(orientation.y() + delimiter);
+    result.append(orientation.z() + delimiter);
+    result.append(orientation.w() + delimiter);
+    result.append(scale + delimiter);
+    result.append(clientId + delimiter);
+    result.append(hitPoints + delimiter);
     if (id.startsWith("S"))
     {
-      result.append(clientId).append(delimiter);
-      result.append(hitPoints).append(delimiter);
-      result.append(vel.length()).append(delimiter);
+      result.append(vel.length() + delimiter);
     }
     return result.toString();
   }
@@ -372,7 +372,7 @@ public class Entity
     this.hitPoints -= dmg;
     if (hitPoints <= 0)
     {
-      uponDeath(this);
+      //uponDeath(this);
     }
   }
 
@@ -413,11 +413,5 @@ public class Entity
   public String getId()
   {
     return id;
-  }
-
-  public static void inflictDamage(Entity first, Entity second)
-  {
-    first.damageObject(second.damage);
-    second.damageObject(first.damage);
   }
 }

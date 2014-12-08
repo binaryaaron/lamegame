@@ -6,28 +6,19 @@
  */
 package engineTester;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
-import gameObjects.Asteroid;
-import gameObjects.Globals;
+import com.ra4king.opengl.util.Utils;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
+import entities.Globals;
 import models.RawModel;
 import models.TexturedModel;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
-
 import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
@@ -37,13 +28,11 @@ import server.WalkerServer;
 import server.WalkerThread;
 import skyBox.SkyBox;
 import textures.ModelTexture;
-import toolbox.PerformanceUtilities;
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
 import world.BoxUtilities;
 
-import javax.swing.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainLoopServer
 {
@@ -57,7 +46,7 @@ public class MainLoopServer
   static Entity player1;
   static Entity player2;
   static Entity player3;
-  private static int nAsteroids = 200;
+  private static final int nAsteroids = 200;
   TexturedModel texturedLaser;
   List<Entity> killList = new LinkedList<>();
   long nextStep = 4;
@@ -120,9 +109,9 @@ public class MainLoopServer
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
-        for (int i = 0; i < myServer.threadList.size(); i++)
+        for (int i = 0; i < WalkerServer.threadList.size(); i++)
         {
-          int playerID=myServer.threadList.get(i).ID;
+          int playerID= WalkerServer.threadList.get(i).ID;
           Entity currentPlayer=null;
           switch (playerID)
           {
@@ -136,7 +125,7 @@ public class MainLoopServer
             
           }
             
-          String inputFromClient = myServer.inputFromClient.get(i);
+          String inputFromClient = WalkerServer.inputFromClient.get(i);
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
@@ -157,9 +146,9 @@ public class MainLoopServer
       // outputToClient += camera.toString();
 
       // for (WalkerThread wt : myServer.threadList)
-      for (int i = 0; i < myServer.threadList.size(); i++)
+      for (int i = 0; i < WalkerServer.threadList.size(); i++)
       {
-        WalkerThread wt = myServer.threadList.get(i);
+        WalkerThread wt = WalkerServer.threadList.get(i);
         wt.updateServerGameState(outputToClient);
       }
     }// end of while(!display...)
@@ -431,7 +420,7 @@ public class MainLoopServer
   public static String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer
-    String input = myServer.threadList.get(i).getClientInput();
+    String input = WalkerServer.threadList.get(i).getClientInput();
     loop++;
     return input;
   }
