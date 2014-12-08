@@ -323,25 +323,30 @@ public class MainLoopServer
         new Vector3f(1000, 1010, 0), 0, 0, 0, .3f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 1000, 0), 0, 0, 0, .3f, 1);
+    player2 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(1000, 990, 0), 0, 0, 0, .3f, 2);
+    player3 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(1000, 980, 0), 0, 0, 0, .3f, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
-    System.out.println(player0+"\n"+player1);
+    startString += player2.toString() + ";";
+    startString += player3.toString() + ";";
     for (int i = 0; i < nAsteroids; i++)
     {
       int a = Globals.RAND.nextInt(2) + 1;
 
       int y = Globals.RAND.nextInt(20) - 10;
       int r = 0;
-      int x = Globals.RAND.nextInt(3000) - 1500;
-      int z = Globals.RAND.nextInt(3000) - 1500;
-      while (r < 562500 || r > 1822500)
+      int x = Globals.RAND.nextInt(8000) - 1500;
+      int z = Globals.RAND.nextInt(8000) - 1500;
+      while (r < 1000000 || r > 4000000)
       {
-        x = Globals.RAND.nextInt(3000) - 1500;
-        z = Globals.RAND.nextInt(3000) - 1500;
+        x = Globals.RAND.nextInt(8000) - 1500;
+        z = Globals.RAND.nextInt(8000) - 1500;
         r = x * x + z * z;
       }
 
-      float s = Globals.RAND.nextFloat() * 50;
+      float s = Globals.RAND.nextFloat() * 100;
       startString = startString.concat("A00" + a + "," + x + "," + y + "," + z
           + ",0,0,0," + s + ";");
     }
