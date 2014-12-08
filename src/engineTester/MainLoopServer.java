@@ -24,8 +24,8 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import server.WalkerServer;
-import server.WalkerThread;
+import server.ServerMaster;
+import server.ServerThread;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import world.BoxUtilities;
@@ -38,7 +38,7 @@ import java.util.Objects;
 
 public class MainLoopServer
 {
-  public WalkerServer myServer;
+  public ServerMaster myServer;
   private int loop = 0;
   Player player0;
   Player player1;
@@ -83,7 +83,7 @@ public class MainLoopServer
 
     try
     {
-      myServer = new WalkerServer();
+      myServer = new ServerMaster();
     }
     catch (IOException e)
     {
@@ -109,9 +109,9 @@ public class MainLoopServer
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
-        for (int i = 0; i < WalkerServer.threadList.size(); i++)
+        for (int i = 0; i < ServerMaster.threadList.size(); i++)
         {
-          int playerID= WalkerServer.threadList.get(i).ID;
+          int playerID= ServerMaster.threadList.get(i).ID;
           Player currentPlayer=null;
           switch (playerID)
           {
@@ -125,7 +125,7 @@ public class MainLoopServer
             
           }
             
-          String inputFromClient = WalkerServer.inputFromClient.get(i);
+          String inputFromClient = ServerMaster.inputFromClient.get(i);
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
@@ -145,9 +145,9 @@ public class MainLoopServer
       // outputToClient += camera.toString();
 
       // for (WalkerThread wt : myServer.threadList)
-      for (int i = 0; i < WalkerServer.threadList.size(); i++)
+      for (int i = 0; i < ServerMaster.threadList.size(); i++)
       {
-        WalkerThread wt = WalkerServer.threadList.get(i);
+        ServerThread wt = ServerMaster.threadList.get(i);
         wt.updateServerGameState(outputToClient);
       }
     }// end of while(!display...)
@@ -444,7 +444,7 @@ public class MainLoopServer
   public String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer
-    String input = WalkerServer.threadList.get(i).getClientInput();
+    String input = ServerMaster.threadList.get(i).getClientInput();
     loop++;
     return input;
   }

@@ -31,7 +31,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import server.WalkerClient;
+import server.ClientThread;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
@@ -52,7 +52,7 @@ public class MainLoopClient
 {
   public final boolean HUD_DEBUG = true;
   public final boolean PRINT_FPS = false;
-  public WalkerClient myClient = null;
+  public ClientThread myClient = null;
   private float speed;
   private int health;
   private long previousTime=0,currentTime=0;
@@ -123,7 +123,7 @@ public class MainLoopClient
 
     try
     {
-      myClient = new WalkerClient(args);
+      myClient = new ClientThread(args);
     }
     catch (IOException e)
     {
