@@ -35,7 +35,8 @@ public class Entity
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
   // public Vector3f vel = new Vector3f(0f,0f,0f);
   private static Boolean DEBUG = true;
-  protected int hitPoints;
+  protected int hitPoints = 100;
+  protected int damage = 50;
   private String id;
   private int clientId = -1;
 
@@ -412,5 +413,11 @@ public class Entity
   public String getId()
   {
     return id;
+  }
+
+  public static void inflictDamage(Entity first, Entity second)
+  {
+    first.damageObject(second.damage);
+    second.damageObject(first.damage);
   }
 }

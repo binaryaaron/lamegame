@@ -59,6 +59,9 @@ public class MainLoopServer
   static Entity player3;
   private static int nAsteroids = 200;
   TexturedModel texturedLaser;
+  List<Entity> killList = new LinkedList<>();
+  long nextStep = 4;
+  long killStep = 4;
 
   public MainLoopServer(String[] args)
   {
@@ -297,6 +300,13 @@ public class MainLoopServer
   {
     Entity ent = null;
     Entity other = null;
+    if (nextStep == killStep)
+    {
+      renderList.removeAll(killList);
+      killList.clear();
+      killStep+=4;
+    }
+    nextStep++;
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
@@ -311,6 +321,14 @@ public class MainLoopServer
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
           PhysicsUtilities.elasticCollision(ent, other);
+          if (ent.getHitPoints() <= 0)
+          {
+            killList.add(ent);
+          }
+          if (other.getHitPoints() <= 0)
+          {
+            killList.add(other);
+          }
         }
       }
     }

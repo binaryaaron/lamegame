@@ -22,6 +22,7 @@ public class PhysicsUtilities
   {
     Vector3 vec1 = first.vel;
     Vector3 vec2 = second.vel;
+    Entity.inflictDamage(first,second);
 
     Vector3 u1 = new Vector3(vec1);
     Vector3 u2 = new Vector3(vec2);
@@ -53,9 +54,6 @@ public class PhysicsUtilities
 
     vec1.add(diff);
     vec2.sub(diff);
-
-//    System.out.println(vec1);
-//    System.out.println(vec2);
   }
 
   private static void normalize(Vector3 vec)

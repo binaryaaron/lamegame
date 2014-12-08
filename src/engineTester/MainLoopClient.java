@@ -39,6 +39,7 @@ public class MainLoopClient
   public final boolean PRINT_FPS = false;
   public WalkerClient myClient = null;
   private float speed;
+  private int health;
   public MainLoopClient(String[] args)
   {
     Entity player = null;
@@ -147,7 +148,7 @@ public class MainLoopClient
 
         hudStart = System.currentTimeMillis();
         hudRenderList.get(2).setModel(modelMap.setScoreText((""+System.currentTimeMillis()+"  ")));
-        hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"% "));
+        hudRenderList.get(1).setModel(modelMap.setHealthText(""+health));
 
         hudRenderList.get(0).setModel(modelMap.setSpeedText(""+speed));
       }
@@ -212,6 +213,7 @@ public class MainLoopClient
         tmp_Entity.orientation.w(w);
         if (object.startsWith("S")&&playerID==myClient.ID)// &&playerID==myClient.ID
         {
+          health = Integer.parseInt(currentLine[10]);
           speed = Float.parseFloat(currentLine[11]);
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
