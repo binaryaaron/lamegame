@@ -332,16 +332,16 @@ public class MainLoopServer
 
       int y = Globals.RAND.nextInt(20) - 10;
       int r = 0;
-      int x = Globals.RAND.nextInt(3000) - 1500;
-      int z = Globals.RAND.nextInt(3000) - 1500;
-      while (r < 562500 || r > 1822500)
+      int x = Globals.RAND.nextInt(8000) - 1500;
+      int z = Globals.RAND.nextInt(8000) - 1500;
+      while (r < 1000000 || r > 4000000)
       {
-        x = Globals.RAND.nextInt(3000) - 1500;
-        z = Globals.RAND.nextInt(3000) - 1500;
+        x = Globals.RAND.nextInt(8000) - 1500;
+        z = Globals.RAND.nextInt(8000) - 1500;
         r = x * x + z * z;
       }
 
-      float s = Globals.RAND.nextFloat() * 50;
+      float s = Globals.RAND.nextFloat() * 100;
       startString = startString.concat("A00" + a + "," + x + "," + y + "," + z
           + ",0,0,0," + s + ";");
     }
