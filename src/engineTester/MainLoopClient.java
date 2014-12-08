@@ -64,7 +64,7 @@ public class MainLoopClient
 
     // create lights and camera for the player. camera position should be set in
     // parsing routine
-    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
+    Light light = new Light(new Vector3f(1000f, 5f, 500f), new Vector3f(1.0f,
         1.0f, 1.0f));
     Camera camera = new Camera();
     MasterRenderer renderer = new MasterRenderer(camera);
@@ -100,7 +100,32 @@ public class MainLoopClient
     hudStart = System.currentTimeMillis();
     String menuData = "S001,0,0,0,0,0,0,0,0,0,0,0;" +
         "A001,0,0,2,0,0,0,0,0.1;" + 
-        "Plan,20,0,50,0,0,0,0,1;";
+        "Plan,20,0,70,0,0,0,0,1.1;";
+    //random asteroids for the start menu;
+    for(int i = 0; i<30; i++)
+    {
+      int asteroidChoose = (int)(Math.random()*4);
+      if(asteroidChoose == 0)
+      {
+       menuData+="A001,"; 
+      }
+      else if(asteroidChoose <3)
+      {
+        menuData+="A002,";
+      }
+      else
+      {
+        menuData+="A003,";
+      }
+      menuData+=(Math.random()*20+10)+","; //x
+      menuData+=(Math.random()*30-15)+","; //y
+      menuData+=(Math.random()*60+50)+",";//z
+      menuData+="0,";//(Math.random()*4)+",";//rx
+      menuData+="0,";//(Math.random()*4)+",";//ry
+      menuData+="0,";//(Math.random()*4)+",";//rz
+      menuData+="0,";//w
+      menuData+=(Math.random()*.2+0.6)+";";
+    }
 
     if (PRINT_FPS)
     {
@@ -152,8 +177,8 @@ public class MainLoopClient
         if(keyReleased)
         {
           int result = Menu.choose();
-          if(result < 0) exitRequest = true;
-          if(result == 1) inMenu = false;
+          if(result == 3) exitRequest = true;
+          if(result == 0) inMenu = false;
         }
         keyPressed = true;
         keyReleased = false;
@@ -163,12 +188,12 @@ public class MainLoopClient
         inMenu = false;
       }
 
-      if(Keyboard.isKeyDown(Keyboard.KEY_ADD))
+      if(Keyboard.isKeyDown(Keyboard.KEY_F2))
       {
         currentResolution++;
         DisplayManager.changeResolution(currentResolution);
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_F))
+      if(Keyboard.isKeyDown(Keyboard.KEY_F1))
       {
         DisplayManager.changeFullScreen();
       }
@@ -191,7 +216,6 @@ public class MainLoopClient
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
       DisplayManager.updateDisplay();
-      performPhysics(renderList);
       if (PRINT_FPS)
       {
         pu.updateFPS();
@@ -209,7 +233,8 @@ public class MainLoopClient
     // controls for physics testing with two asteroids
     // wasd control leftest asteroid, arrows control rightmost.
     // holding shift will slow down the shifting speed.
-    
+    light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
+        1.0f, 1.0f));
     
     hudRenderList = new ArrayList<>();
     hud1 = new Entity("H001",modelMap.getTexturedModelList().get(
@@ -252,12 +277,12 @@ public class MainLoopClient
       {
         break;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_ADD))
+      if(Keyboard.isKeyDown(Keyboard.KEY_F2))
       {
         currentResolution++;
         DisplayManager.changeResolution(currentResolution);
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_F))
+      if(Keyboard.isKeyDown(Keyboard.KEY_F1))
       {
         DisplayManager.changeFullScreen();
       }

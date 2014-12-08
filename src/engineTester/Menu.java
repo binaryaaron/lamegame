@@ -29,30 +29,48 @@ public class Menu
       {
         socket = Integer.valueOf(socketString);
         MainLoopClient.setConnection(serverIP, socket);
-        return 1;
+        return 0;
       }
       catch(Exception e)
       {
-        e.printStackTrace();
+        System.out.println("Incorrect server input");
+        return -1;
       }
-      MainLoopClient.setConnection(serverIP, socket);
     }
     //options
     else if(buttonID == 1)
     {
-      
+      String controlsString = "CONTROLS:\n"+
+          "WASD:: Turn\n"+
+          "B:: Brake\n"+
+          "Arrow Keys:: Move\n"+
+          "QE:: Tilt\n"+
+          "L-Control:: Sink\n"+
+          "Space:: Rise\n"+
+          "R-Shift:: Shoot\n"+
+          "F1:: Fullscreen\n"+
+          "F2:: Resolution\n"+
+          "Escape:: Exit Game";
+      JOptionPane.showMessageDialog(null,controlsString);
+      return 1;
     }
     //credits
     else if(buttonID == 2)
     {
-      //
+      String creditsString = "\nAaron Gonzalez: Git Manager, Misc. Help\n\n"+
+          "Robert Nicholson: Graphics Co-Lead\n\n"+
+          "Weston Ortiz: Physics Expert\n\n"+
+          "Paige Stephen Romero: Graphics Lead\n\n"+
+          "Hans Week: Server Master";
+      JOptionPane.showMessageDialog(null,creditsString);
+      
+      return 2;
     }
     //exit
     else
     {
-      return -1;
+      return 3;
     }
-    return 0;
   }
   
   public static int choose()
