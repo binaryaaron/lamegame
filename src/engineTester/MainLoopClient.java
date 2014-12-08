@@ -35,10 +35,10 @@ import entities.Light;
 
 public class MainLoopClient
 {
-  public final boolean HUD_DEBUG =true;
+
   public final boolean PRINT_FPS = false;
   public WalkerClient myClient = null;
-  private float speed;
+
   public MainLoopClient(String[] args)
   {
     Entity player = null;
@@ -68,30 +68,109 @@ public class MainLoopClient
     String inputFromServer = null;
 
     List<Entity> renderList = new ArrayList<>();
-    List<Entity> hudRenderList = new ArrayList<>();
+    String menuData = "S001,0,0,0,0,0,0,0,0,0,0,0;"
+        +"A001,0,0,2,0,0,0,0,0.1;"+"T001,0,0,2,0,0,0,0,0.1";
 
+    long startTime = System.currentTimeMillis();
+    long lastTime = System.currentTimeMillis();
     if (PRINT_FPS)
     {
       pu.startFrameCounter();
     }
+    Menu.startMainMenu();
+    int currentResolution = 0;
+    boolean exitRequest = false;
+    boolean keyReleased = true;
+    boolean inMenu = true;
 
-    //Timer variables
-    long startTime = System.currentTimeMillis();
-    long lastTime = System.currentTimeMillis();
-    long hudDelay = 100;
-    long hudStart = 0;
+    getOfflineState(renderList, camera, modelMap, menuData);
+    renderList.get(1).setPosition(new Vector3f(0.4f,Menu.getYPos(),1));
 
-    //Hud Objects
-    Entity hud1 = new Entity("H001",modelMap.getTexturedModelList().get(
-        "H001"), new Vector3f(0.7f,0.37f,1f),0f,0f,0f, 0.05f);
-    Entity hud2 = new Entity("H002",modelMap.getTexturedModelList().get(
-        "H002"), new Vector3f(-0.0f,0.07f,1f),0f,0f,0f, 0.05f);
-    Entity hud3 = new Entity("H003",modelMap.getTexturedModelList().get(
-        "H003"), new Vector3f(0.05f,0.3f,0.8f),0f,0f,0f, 0.05f);
-    hudRenderList.add(hud1);
-    hudRenderList.add(hud2);
-    hudRenderList.add(hud3);
+    while (!exitRequest&&inMenu)
+    {
+      if(Display.isCloseRequested())
+      {
+        exitRequest = true;
+        break;
+      }
+      boolean keyPressed = false;
+      if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+      {
+        exitRequest = true;
+        break;
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP))
+      {
+        if(keyReleased)
+        {
+          Menu.up();
+          renderList.get(1).setPosition(new Vector3f(0.4f,Menu.getYPos(),1));
+        }
+        keyPressed = true;
+        keyReleased = false;
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+      {
+        if(keyReleased)
+        {
+          Menu.down();
+          renderList.get(1).setPosition(new Vector3f(0.4f,Menu.getYPos(),1));
+        }
+        keyPressed = true;
+        keyReleased = false;
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_RETURN))
+      {
+        if(keyReleased)
+        {
+          Menu.choose();
+        }
+        keyPressed = true;
+        keyReleased = false;
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_Q))
+      {
+        inMenu = false;
+      }
 
+      if(Keyboard.isKeyDown(Keyboard.KEY_ADD))
+      {
+        currentResolution++;
+        DisplayManager.changeResolution(currentResolution);
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_F))
+      {
+        DisplayManager.changeFullScreen();
+      }
+      if(!keyPressed)
+      {
+        keyReleased = true;
+      }
+
+      // Render entities from offline renderlist
+      for (Entity ent : renderList)
+      {
+        renderer.processEntity(ent);
+      }
+
+      // Process rendering
+      renderer.processSkyBox(skyBoxEntity);
+      renderer.render(light, new Camera());
+      DisplayManager.updateDisplay();
+      if (PRINT_FPS)
+      {
+        pu.updateFPS();
+        System.out.println(pu.getFPS());
+      }
+    }
+
+    if(Display.isCloseRequested() || exitRequest)
+    {
+      renderer.cleanUp();
+      loader.cleanUp();
+      DisplayManager.closeDisplay();
+      return;
+    }
     // controls for physics testing with two asteroids
     // wasd control leftest asteroid, arrows control rightmost.
     // holding shift will slow down the shifting speed.
@@ -108,7 +187,6 @@ public class MainLoopClient
       System.exit(1);
     }
     /* Perform object movement as long as the window exists */
-    int currentResolution = 0;
     while (!Display.isCloseRequested())
     {
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
@@ -139,22 +217,6 @@ public class MainLoopClient
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
-      }
-
-      //render HUD
-      if(HUD_DEBUG&&hudDelay+hudStart <System.currentTimeMillis())
-      {
-
-        hudStart = System.currentTimeMillis();
-        hudRenderList.get(2).setModel(modelMap.setScoreText((""+System.currentTimeMillis()+"  ")));
-        hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"% "));
-
-        hudRenderList.get(0).setModel(modelMap.setSpeedText(""+speed));
-      }
-      for (Entity ent : hudRenderList)
-      {
-        renderer.processHudEntity(ent);
-        // System.out.println(ent.getModel().getRawModel().getVertexCount());
       }
 
       // Process rendering
@@ -199,7 +261,9 @@ public class MainLoopClient
         s = Float.parseFloat(currentLine[8]);
         if (object.startsWith("S"))
         {
+          float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
+          System.out.println("playerID="+playerID+" clientID="+myClient.ID);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
         }
@@ -212,7 +276,7 @@ public class MainLoopClient
         tmp_Entity.orientation.w(w);
         if (object.startsWith("S")&&playerID==myClient.ID)// &&playerID==myClient.ID
         {
-          speed = Float.parseFloat(currentLine[11]);
+          System.out.print("here:");
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
               * tmp_Entity.getScale());
@@ -226,6 +290,60 @@ public class MainLoopClient
     }
   }
 
+  public void getOfflineState(List<Entity> renderList, Camera camera,
+      ModelMap modelMap,String data)
+  {
+    String[] sceneInfo = data.split(";");
+    renderList.clear();
+    for (String object : sceneInfo)
+    {
+      if (!object.equals(""))
+      {
+        Entity tmp_Entity;
+        String[] currentLine = object.split(",");
+        String id;
+        float x, y, z, xr, yr, zr, s, w;
+        int playerID = -1;
+        // translate all input data into appropriate entities;
+        id = currentLine[0];
+        x = Float.parseFloat(currentLine[1]);
+        y = Float.parseFloat(currentLine[2]);
+        z = Float.parseFloat(currentLine[3]);
+        xr = Float.parseFloat(currentLine[4]);
+        yr = Float.parseFloat(currentLine[5]);
+        zr = Float.parseFloat(currentLine[6]);
+        w = Float.parseFloat(currentLine[7]);
+        s = Float.parseFloat(currentLine[8]);
+        if (object.startsWith("S"))
+        {
+          float speed = Float.parseFloat(currentLine[11]);
+          playerID = Integer.parseInt(currentLine[9]);
+          System.out.println("playerID="+playerID);
+          tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
+              new Vector3f(x, y, z), xr, yr, zr, s, playerID);
+        }
+
+        else
+        {
+          tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
+              new Vector3f(x, y, z), xr, yr, zr, s);
+        }
+        tmp_Entity.orientation.w(w);
+        /*if (object.startsWith("S"))
+        {
+          System.out.print("here:");
+          Quaternion inverse = tmp_Entity.orientation.copy().inverse();
+          Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
+              * tmp_Entity.getScale());
+          deltaCam = inverse.mult(deltaCam);
+          camera.setPosition(new Vector3f(x, y, z));
+          camera.move(deltaCam);
+          camera.orientation = tmp_Entity.orientation.copy();
+        }*/
+        renderList.add(tmp_Entity);
+      }
+    }
+  }
   public void sendKeyBoard()
   {
     String toSend = ";";
