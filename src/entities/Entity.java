@@ -41,7 +41,7 @@ public class Entity
   protected int hitPoints = 1000;
   protected int damage = 1;
   private String id;
-  private int clientId = -1;
+  protected int clientId = -1;
 
   private static Map<String, Integer> damageMap;
   private static Map<String, Integer> healthMap;
@@ -148,6 +148,13 @@ public class Entity
       box.translate(position);
       mass = initialMass * scale;
     }
+  }
+  
+  public void respawn(Vector3f position)
+  {
+    hitPoints = healthMap.get(id.substring(0, 1));
+    setPosition(position);
+    vel.reset();
   }
 
   public void quadTranslate(Vector3 vec3)

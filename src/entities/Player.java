@@ -129,6 +129,11 @@ public class Player extends Entity
   {
     System.out.println("I'm dead!");
   }
+  
+  public int getClientID()
+  {
+    return clientId;
+  }
 
 
 }

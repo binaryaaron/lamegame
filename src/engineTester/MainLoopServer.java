@@ -9,13 +9,16 @@ package engineTester;
 import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
+
 import entities.*;
 import models.RawModel;
 import models.TexturedModel;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+
 import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
@@ -109,7 +112,7 @@ public class MainLoopServer
         for (int i = 0; i < WalkerServer.threadList.size(); i++)
         {
           int playerID= WalkerServer.threadList.get(i).ID;
-          Entity currentPlayer=null;
+          Player currentPlayer=null;
           switch (playerID)
           {
             case 0: currentPlayer=player0;
@@ -126,8 +129,7 @@ public class MainLoopServer
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, renderList, missileList, new Camera(), currentPlayer);
-//            parseClientInput(inputFromClient, renderList, camera, player0);
+            parseClientInput(inputFromClient, modelMap, renderList, missileList, new Camera(), currentPlayer);
           }
         }
         lastTime = time;
@@ -155,8 +157,8 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
-  public void parseClientInput(String inputFromClient, List<Entity> renderList, List<Entity> missileList,
-      Camera camera, Entity player)
+  public void parseClientInput(String inputFromClient, ModelMap modelMap, List<Entity> renderList, List<Entity> missileList,
+      Camera camera, Player player)
   {
     float scale;
     Quaternion orientation;
@@ -234,6 +236,21 @@ public class MainLoopServer
 
       if (input.equals("KEY_SPACE")) delta.y(-speed);
       if (input.equals("KEY_LCONTROL")) delta.y(delta.y() + speed);
+      if (player.getHitPoints() <= 0)
+      {
+      if(input.equals("KEY_P"))
+      {
+        if(deadPlayers.contains(player))
+        {
+          player.respawn(new Vector3f(1100,1100,0));
+          deadPlayers.remove(player);
+          if(!renderList.contains(player))
+          {
+            renderList.add(player);
+          }
+        }
+      }
+      }
       if (input.equals("KEY_RSHIFT"))
       {
 
@@ -310,21 +327,19 @@ public class MainLoopServer
           if (ent.getHitPoints() <= 0)
           {
             killList.add(ent);
+            if (ent.getId().startsWith("S") && !deadPlayers.contains(ent))
+            {
+              deadPlayers.add((Player) ent);
+            }
           }
           if (other.getHitPoints() <= 0)
           {
             killList.add(other);
+            if (other.getId().startsWith("S") && !deadPlayers.contains(ent))
+            {
+              deadPlayers.add((Player) other);
+            }
           }
-          if (ent.getClass().equals(Player.class))
-          {
-            deadPlayers.add((Player) ent);
-          }
-
-          if (other.getClass().equals(Player.class))
-          {
-            deadPlayers.add((Player) other);
-          }
-
         }
       }
     }
