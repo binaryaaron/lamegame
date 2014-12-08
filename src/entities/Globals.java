@@ -1,5 +1,8 @@
 package entities;
 
+import org.lwjgl.util.vector.Vector3f;
+import world.BoundingBox;
+
 import java.util.Random;
 
 /**
@@ -10,6 +13,12 @@ public class Globals
 
   public static final Random RAND = new Random();
   public static final int WORLD_SIZE = 100;
+
+  public static final BoundingBox projectileBoundingBox;
+
+  static {
+    projectileBoundingBox = new BoundingBox(new Vector3f(-0.5f,-0.5f,-0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
+  }
   /**
    * Returns a pseudo-random number between min and max, inclusive.
    * The difference between min and max can be at most
