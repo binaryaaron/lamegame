@@ -422,7 +422,6 @@ public class MainLoopClient
         	float tagScale=scaleVec.length();
           Entity playerTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
               new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
-          System.out.println(tagScale);
           renderList.add(playerTag);
           playerTag.drawShadow=false;
         }
