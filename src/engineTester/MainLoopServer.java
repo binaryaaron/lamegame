@@ -35,17 +35,14 @@ import java.util.Objects;
 
 public class MainLoopServer
 {
+  public WalkerServer myServer;
+  private int loop = 0;
+  Player player0;
+  Player player1;
+  Player player2;
+  Player player3;
+  List<Player> deadPlayers;
 
-  public final static boolean PRINT_FPS = false;
-  private final static boolean PHYSICS_DEBUG = true;
-  private static final boolean DEBUG = true;
-  public static WalkerServer myServer;
-  private static int loop = 0;
-  private volatile static int clientConnections;
-  static Player player0;
-  static Entity player1;
-  static Entity player2;
-  static Entity player3;
   private static final int nAsteroids = 200;
   TexturedModel texturedLaser;
   List<Entity> killList = new LinkedList<>();
@@ -95,7 +92,7 @@ public class MainLoopServer
 
     List<Entity> renderList = parseGameStateString(startString, modelMap);
     List<Entity> missileList = new ArrayList<>();
-
+    deadPlayers = new LinkedList<>();
     long lastTime = System.currentTimeMillis();
 
     float scale;
@@ -318,6 +315,16 @@ public class MainLoopServer
           {
             killList.add(other);
           }
+          if (ent.getClass().equals(Player.class))
+          {
+            deadPlayers.add((Player) ent);
+          }
+
+          if (other.getClass().equals(Player.class))
+          {
+            deadPlayers.add((Player) other);
+          }
+
         }
       }
     }
@@ -329,11 +336,11 @@ public class MainLoopServer
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
         new Vector3f(1000, 1010, 0), 0, 0, 0, 1f, 0);
-    player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+    player1 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 1000, 0), 0, 0, 0, 1f, 1);
-    player2 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+    player2 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 990, 0), 0, 0, 0, 1f, 2);
-    player3 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
+    player3 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 980, 0), 0, 0, 0, 1f, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
@@ -367,7 +374,7 @@ public class MainLoopServer
 
   }
 
-  private static List<Entity> parseGameStateString(String testInput,
+  private List<Entity> parseGameStateString(String testInput,
       ModelMap modelMap)
   {
 
@@ -418,7 +425,7 @@ public class MainLoopServer
     return renderList;
   }
 
-  public static String getInput(int i)
+  public String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer
     String input = WalkerServer.threadList.get(i).getClientInput();
