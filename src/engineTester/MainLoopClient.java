@@ -8,6 +8,7 @@ package engineTester;
 
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
+
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -21,9 +22,11 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import models.RawModel;
 import models.TexturedModel;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -343,6 +346,15 @@ public class MainLoopClient
         currentTime=System.currentTimeMillis();
         if(currentTime-previousTime>1000)
         {
+          try
+          {
+            Thread.sleep(1000);
+          }
+          catch (InterruptedException e)
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
           currentTime=previousTime;
           System.out.println("respawn me!");
           toSend += "KEY_P;";
