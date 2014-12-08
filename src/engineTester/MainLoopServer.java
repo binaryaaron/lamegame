@@ -332,10 +332,10 @@ public class MainLoopServer
 
   private String createInitialGameString(ModelMap modelMap)
   {
-    String startString = "Plan,0,0,0,0,0,0,100;";
+    String startString = "Plan,0,0,0,0,0,0,100;gCry,1000,1000,1000,0,0,0,100;";
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
-        new Vector3f(1000, 1010, 0), 0, 0, 0, 1f, 0);
+        new Vector3f(1000, 1010, 1500), 0, 0, 0, 1f, 0);
     player1 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 1000, 0), 0, 0, 0, 1f, 1);
     player2 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
