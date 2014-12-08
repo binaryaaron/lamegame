@@ -42,7 +42,7 @@ public class Entity
   protected int damage = 1;
   private String id;
   private int clientId = -1;
-
+  public boolean drawShadow = true;
   private static Map<String, Integer> damageMap;
   private static Map<String, Integer> healthMap;
 

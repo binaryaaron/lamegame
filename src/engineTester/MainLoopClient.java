@@ -100,10 +100,13 @@ public class MainLoopClient
     //Hud Objects
     Entity hud1 = new Entity("H001", modelMap.getTexturedModelList().get(
         "H001"), new Vector3f(0.7f, 0.37f, 1f), 0f, 0f, 0f, 0.05f);
+    hud1.drawShadow = false;
     Entity hud2 = new Entity("H002", modelMap.getTexturedModelList().get(
         "H002"), new Vector3f(0.7f, 0.07f, 1f), 0f, 0f, 0f, 0.05f);
+    hud2.drawShadow = false;
     Entity hud3 = new Entity("H003", modelMap.getTexturedModelList().get(
         "H003"), new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 0.05f);
+    hud3.drawShadow = false;
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
     hudRenderList.add(hud3);
@@ -227,6 +230,7 @@ public class MainLoopClient
               modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s);
           tmp_laser.orientation.w(w);
+          tmp_laser.drawShadow = false;
           renderList.add(tmp_laser);
         }
         else if (object.startsWith("S"))
@@ -255,6 +259,12 @@ public class MainLoopClient
           camera.setPosition(new Vector3f(x, y, z));
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
+        }
+        else if(object.startsWith("S")&&playerID!=myClient.ID){
+          Entity playerTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
+              new Vector3f(x, y-2, z), xr, yr, zr, 1);
+          renderList.add(playerTag);
+          playerTag.drawShadow=false;
         }
 
         if (tmp_Entity != null)
