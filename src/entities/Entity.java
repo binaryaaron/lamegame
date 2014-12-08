@@ -28,7 +28,7 @@ public class Entity
   private Matrix4f basis = new Matrix4f();
   public Matrix4f rotationMatrix = new Matrix4f();
   public Matrix4f matrix = new Matrix4f();
-  private float scale;
+  protected float scale;
   public float mass;
 
   private float size;
@@ -40,7 +40,7 @@ public class Entity
   private static Boolean DEBUG = true;
   protected int hitPoints = 1000;
   protected int damage = 1;
-  private String id;
+  protected String id;
 
   public boolean drawShadow = true;
   protected int clientId = -1;
