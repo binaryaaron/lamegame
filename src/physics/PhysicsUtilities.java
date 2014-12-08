@@ -2,6 +2,8 @@ package physics;
 
 import com.ra4king.opengl.util.math.Vector3;
 import entities.Entity;
+import entities.Globals;
+import jdk.nashorn.internal.objects.Global;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -22,6 +24,7 @@ public class PhysicsUtilities
   {
     Vector3 vec1 = first.vel;
     Vector3 vec2 = second.vel;
+    Entity.inflictDamage(first,second);
 
     Vector3 u1 = new Vector3(vec1);
     Vector3 u2 = new Vector3(vec2);
@@ -54,8 +57,58 @@ public class PhysicsUtilities
     vec1.add(diff);
     vec2.sub(diff);
 
-//    System.out.println(vec1);
-//    System.out.println(vec2);
+    if (Globals.HARD_MODE)
+    {
+      vec1.mult(1.01f);
+      vec2.mult(1.01f);
+    }
+    else
+    {
+      vec1.mult(0.97f);
+      vec2.mult(0.97f);
+    }
+  }
+
+  public static void gameWorldCollision(Entity ent)
+  {
+    Vector3f position = ent.position;
+    boolean hit = false;
+
+    if (position.x > Globals.WORLD_SIZE)
+    {
+      ent.vel.x(-Math.abs(ent.vel.x()));
+      hit = true;
+    }
+    if (position.y > Globals.WORLD_SIZE)
+    {
+      ent.vel.y(-Math.abs(ent.vel.x()));
+      hit = true;
+    }
+    if (position.z > Globals.WORLD_SIZE)
+    {
+      ent.vel.z(-Math.abs(ent.vel.x()));
+      hit = true;
+    }
+    if (position.x < -Globals.WORLD_SIZE)
+    {
+      ent.vel.x(Math.abs(ent.vel.x()));
+      hit = true;
+    }
+    if (position.y < -Globals.WORLD_SIZE)
+    {
+      ent.vel.y(Math.abs(ent.vel.x()));
+      hit = true;
+    }
+    if (position.z < -Globals.WORLD_SIZE)
+    {
+      ent.vel.z(Math.abs(ent.vel.x()));
+      hit = true;
+    }
+
+    if (hit && ent.getId().startsWith("l"))
+    {
+      ent.damageObject(1);
+    }
   }
 
   private static void normalize(Vector3 vec)

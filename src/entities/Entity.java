@@ -10,6 +10,9 @@ import com.ra4king.opengl.util.math.Vector3;
 import toolbox.MathUtil;
 import world.BoundingBox;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Entity
 {
   private static final float initialMass = 100f;
@@ -20,24 +23,43 @@ public class Entity
   public Vector3f position;
 
   private Vector3f rotation;
-  private float rotX, rotY, rotZ;;
+  private float rotX, rotY, rotZ;
   public Quaternion orientation;
   private Matrix4f basis = new Matrix4f();
   public Matrix4f rotationMatrix = new Matrix4f();
   public Matrix4f matrix = new Matrix4f();
-  private float scale;
+  protected float scale;
   public float mass;
 
   private float size;
   private float halfSize;
-  public BoundingBox box;
+  protected BoundingBox box;
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
   // public Vector3f vel = new Vector3f(0f,0f,0f);
   private static Boolean DEBUG = true;
-  protected int hitPoints;
-  private String id;
-  private int clientId = -1;
+  protected int hitPoints = 1000;
+  protected int damage = 1;
+  protected String id;
+
+  public boolean drawShadow = true;
+  protected int clientId = -1;
+
+  private static Map<String, Integer> damageMap;
+  private static Map<String, Integer> healthMap;
+
+  static {
+    damageMap = new HashMap<>();
+    healthMap = new HashMap<>();
+    damageMap.put("A", 20);
+    damageMap.put("P", 20);
+    damageMap.put("l", 100);
+    damageMap.put("S", 100);
+    healthMap.put("A", 20000);
+    healthMap.put("P", 2000000);
+    healthMap.put("l", 1);
+    healthMap.put("S", 1000);
+  }
 
   public Entity()
   {
@@ -64,6 +86,13 @@ public class Entity
     orientation.z(rotZ);
     // basis will be a matrix that holds the directional vectors
     basis.setIdentity();
+    String firstChar = id.substring(0,1);
+
+    if (damageMap.containsKey(firstChar))
+    {
+      damage = damageMap.get(firstChar);
+    }
+
     if (model != null)
     {
       box = model.getRawModel().getBoundingBox().deepCopy();
@@ -107,6 +136,33 @@ public class Entity
       box.translate(position);
       mass = initialMass * scale;
     }
+
+    if (!id.isEmpty())
+    {
+      String firstChar = id.substring(0, 1);
+      if (damageMap.containsKey(firstChar))
+      {
+        damage = damageMap.get(firstChar);
+      }
+
+      if (healthMap.containsKey(firstChar))
+      {
+        hitPoints = healthMap.get(firstChar);
+      }
+
+      if (firstChar.equals("l"))
+      {
+        box = Globals.projectileBoundingBox.deepCopy();
+        box.scale(scale);
+      }
+    }
+  }
+  
+  public void respawn(Vector3f position)
+  {
+    hitPoints = healthMap.get(id.substring(0, 1));
+    setPosition(position);
+    vel.reset();
   }
 
   public void quadTranslate(Vector3 vec3)
@@ -343,20 +399,20 @@ public class Entity
   {
     StringBuilder result = new StringBuilder();
     String delimiter = ",";
-    result.append(id + delimiter);
-    result.append(position.x + delimiter);
-    result.append(position.y + delimiter);
-    result.append(position.z + delimiter);
-    result.append(orientation.x() + delimiter);
-    result.append(orientation.y() + delimiter);
-    result.append(orientation.z() + delimiter);
-    result.append(orientation.w() + delimiter);
-    result.append(scale + delimiter);
+    result.append(id).append(delimiter);
+    result.append(position.x).append(delimiter);
+    result.append(position.y).append(delimiter);
+    result.append(position.z).append(delimiter);
+    result.append(orientation.x()).append(delimiter);
+    result.append(orientation.y()).append(delimiter);
+    result.append(orientation.z()).append(delimiter);
+    result.append(orientation.w()).append(delimiter);
+    result.append(scale).append(delimiter);
     if (id.startsWith("S"))
     {
-      result.append(clientId + delimiter);
-      result.append(hitPoints + delimiter);
-      result.append(vel.length() + delimiter);
+      result.append(clientId).append(delimiter);
+      result.append(hitPoints).append(delimiter);
+      result.append(vel.length()).append(delimiter);
     }
     return result.toString();
   }
@@ -412,5 +468,11 @@ public class Entity
   public String getId()
   {
     return id;
+  }
+
+  public static void inflictDamage(Entity first, Entity second)
+  {
+    first.damageObject(second.damage);
+    second.damageObject(first.damage);
   }
 }

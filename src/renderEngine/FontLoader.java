@@ -68,7 +68,7 @@ public class FontLoader
       {
         //create the texture coordinates based on the input text
         char character = text.charAt(i);
-        int letterVal = (int)character;;
+        int letterVal = (int)character;
         //calculate the position of the letter on the png
         float uv_x = (letterVal%16)/16.0f;
         //0.9375 is an offset that flips the y 180 and down a row

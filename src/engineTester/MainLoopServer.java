@@ -6,16 +6,11 @@
  */
 package engineTester;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import com.ra4king.opengl.util.Utils;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
 
-import gameObjects.Asteroid;
-import gameObjects.Globals;
+import entities.*;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -23,10 +18,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
 
 import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
@@ -37,28 +28,29 @@ import server.WalkerServer;
 import server.WalkerThread;
 import skyBox.SkyBox;
 import textures.ModelTexture;
-import toolbox.PerformanceUtilities;
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
 import world.BoxUtilities;
 
-import javax.swing.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 public class MainLoopServer
 {
+  public WalkerServer myServer;
+  private int loop = 0;
+  Player player0;
+  Player player1;
+  Player player2;
+  Player player3;
+  List<Player> deadPlayers;
 
-  public final static boolean PRINT_FPS = false;
-  private final static boolean PHYSICS_DEBUG = true;
-  public static WalkerServer myServer;
-  private static int loop = 0;
-  private volatile static int clientConnections;
-  static Entity player0;
-  static Entity player1;
-  static Entity player2;
-  static Entity player3;
-  private static int nAsteroids = 200;
+  private static final int nAsteroids = 200;
   TexturedModel texturedLaser;
+  List<Entity> killList = new LinkedList<>();
+  long nextStep = 4;
+  long killStep = 4;
 
   public MainLoopServer(String[] args)
   {
@@ -103,7 +95,7 @@ public class MainLoopServer
 
     List<Entity> renderList = parseGameStateString(startString, modelMap);
     List<Entity> missileList = new ArrayList<>();
-
+    deadPlayers = new LinkedList<>();
     long lastTime = System.currentTimeMillis();
 
     float scale;
@@ -117,10 +109,10 @@ public class MainLoopServer
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
-        for (int i = 0; i < myServer.threadList.size(); i++)
+        for (int i = 0; i < WalkerServer.threadList.size(); i++)
         {
-          int playerID=myServer.threadList.get(i).ID;
-          Entity currentPlayer=null;
+          int playerID= WalkerServer.threadList.get(i).ID;
+          Player currentPlayer=null;
           switch (playerID)
           {
             case 0: currentPlayer=player0;
@@ -133,12 +125,11 @@ public class MainLoopServer
             
           }
             
-          String inputFromClient = myServer.inputFromClient.get(i);
+          String inputFromClient = WalkerServer.inputFromClient.get(i);
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, renderList, missileList, new Camera(), currentPlayer);
-//            parseClientInput(inputFromClient, renderList, camera, player0);
+            parseClientInput(inputFromClient, modelMap, renderList, missileList, new Camera(), currentPlayer);
           }
         }
         lastTime = time;
@@ -154,9 +145,9 @@ public class MainLoopServer
       // outputToClient += camera.toString();
 
       // for (WalkerThread wt : myServer.threadList)
-      for (int i = 0; i < myServer.threadList.size(); i++)
+      for (int i = 0; i < WalkerServer.threadList.size(); i++)
       {
-        WalkerThread wt = myServer.threadList.get(i);
+        WalkerThread wt = WalkerServer.threadList.get(i);
         wt.updateServerGameState(outputToClient);
       }
     }// end of while(!display...)
@@ -166,8 +157,8 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
-  public void parseClientInput(String inputFromClient, List<Entity> renderList, List<Entity> missileList,
-      Camera camera, Entity player)
+  public void parseClientInput(String inputFromClient, ModelMap modelMap, List<Entity> renderList, List<Entity> missileList,
+      Camera camera, Player player)
   {
     float scale;
     Quaternion orientation;
@@ -190,10 +181,10 @@ public class MainLoopServer
       missilePos = position.copy();
 
       // in your update cod
-      float speed = 0.02f;// (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) |
+      float speed = 0.08f;// (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) |
       // Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) ? 20
       // : 50) * deltaTime / (float)1e9;
-      float rotSpeed = 0.5f;
+      float rotSpeed = 1f;
 
       // pitch
       int dy = Mouse.getDY();
@@ -245,6 +236,21 @@ public class MainLoopServer
 
       if (input.equals("KEY_SPACE")) delta.y(-speed);
       if (input.equals("KEY_LCONTROL")) delta.y(delta.y() + speed);
+      if (player.getHitPoints() <= 0)
+      {
+      if(input.equals("KEY_P"))
+      {
+        if(deadPlayers.contains(player))
+        {
+          player.respawn(new Vector3f(1100,1100,0));
+          deadPlayers.remove(player);
+          if(!renderList.contains(player))
+          {
+            renderList.add(player);
+          }
+        }
+      }
+      }
       if (input.equals("KEY_RSHIFT"))
       {
 
@@ -256,18 +262,18 @@ public class MainLoopServer
         }
 
         Vector3 deltaMis = delta.copy();
-        deltaMis.y(5 * player.getScale());
-        deltaMis.z(-5 * player.getScale());
+        deltaMis.y(20 * player.getScale());
+        deltaMis.z(-40 * player.getScale());
 
         missilePos.add(inverse.mult(deltaMis));
 
         Entity missle = new Entity("lase", texturedLaser,
-            new Vector3f(0, 0, 0), 0, 0, 0, 0.3f);
+            new Vector3f(0, 0, 0), 0, 0, 0, 5f);
         // missle.setPosition(player.position);
         missle.quadTranslate(missilePos);
 
         missle.orientation = player.orientation.copy();
-        float pv = 5f;
+        float pv = 20f;
         missle.vel = player.vel.copy().add(inverse.mult(new Vector3(0, 0, pv)));
 
         renderList.add(missle);
@@ -279,6 +285,11 @@ public class MainLoopServer
       deltaCam.z(-9 * player.getScale());
 
       player.vel.add(inverse.mult(delta));
+      // limit velocity of player
+      if (player.vel.lengthSquared() > 400) {
+        player.vel.normalize();
+        player.vel.mult(20f);
+      }
       cameraPos.add(inverse.mult(deltaCam));
       cameraPos.add(player.vel);
       // player.move();
@@ -292,6 +303,13 @@ public class MainLoopServer
   {
     Entity ent = null;
     Entity other = null;
+    if (nextStep >= killStep)
+    {
+      renderList.removeAll(killList);
+      killList.clear();
+      killStep+=4;
+    }
+    nextStep++;
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
@@ -300,6 +318,7 @@ public class MainLoopServer
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
+      PhysicsUtilities.gameWorldCollision(ent);
       for (int j = i + 1; j < renderList.size(); j++)
       {
         other = renderList.get(j);
@@ -308,20 +327,29 @@ public class MainLoopServer
           PhysicsUtilities.elasticCollision(ent, other);
         }
       }
+      if (ent.getHitPoints() <= 0)
+      {
+        killList.add(ent);
+        if (ent.getId().startsWith("S") && !deadPlayers.contains(ent))
+        {
+          deadPlayers.add((Player) ent);
+        }
+      }
     }
   }
 
   private String createInitialGameString(ModelMap modelMap)
   {
-    String startString = "Plan,0,0,0,0,0,0,100;";
-    player0 = new Entity("S001", modelMap.getTexturedModelList().get("S001"),
-        new Vector3f(1000, 1010, 0), 0, 0, 0, .3f, 0);
-    player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 1000, 0), 0, 0, 0, .3f, 1);
-    player2 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 990, 0), 0, 0, 0, .3f, 2);
-    player3 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 980, 0), 0, 0, 0, .3f, 3);
+    String startString = "Plan,0,0,0,0,0,0,100;gCry,1000,1000,1000,0,0,0,100;";
+
+    player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
+        new Vector3f(1000, 1050, 0), 0, 0, 0, 0);
+    player1 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(1000, 1000, 0), 0, 0, 0, 1);
+    player2 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(1000, 950, 0), 0, 0, 0, 2);
+    player3 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
+        new Vector3f(1000, 900, 0), 0, 0, 0, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
     startString += player2.toString() + ";";
@@ -332,16 +360,16 @@ public class MainLoopServer
 
       int y = Globals.RAND.nextInt(20) - 10;
       int r = 0;
-      int x = Globals.RAND.nextInt(3000) - 1500;
-      int z = Globals.RAND.nextInt(3000) - 1500;
-      while (r < 562500 || r > 1822500)
+      int x = Globals.RAND.nextInt(8000) - 1500;
+      int z = Globals.RAND.nextInt(8000) - 1500;
+      while (r < 1000000 || r > 4000000)
       {
-        x = Globals.RAND.nextInt(3000) - 1500;
-        z = Globals.RAND.nextInt(3000) - 1500;
+        x = Globals.RAND.nextInt(8000) - 1500;
+        z = Globals.RAND.nextInt(8000) - 1500;
         r = x * x + z * z;
       }
 
-      float s = Globals.RAND.nextFloat() * 50;
+      float s = Globals.RAND.nextFloat() * 100;
       startString = startString.concat("A00" + a + "," + x + "," + y + "," + z
           + ",0,0,0," + s + ";");
     }
@@ -354,7 +382,7 @@ public class MainLoopServer
 
   }
 
-  private static List<Entity> parseGameStateString(String testInput,
+  private List<Entity> parseGameStateString(String testInput,
       ModelMap modelMap)
   {
 
@@ -405,10 +433,10 @@ public class MainLoopServer
     return renderList;
   }
 
-  public static String getInput(int i)
+  public String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer
-    String input = myServer.threadList.get(i).getClientInput();
+    String input = WalkerServer.threadList.get(i).getClientInput();
     loop++;
     return input;
   }

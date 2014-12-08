@@ -8,7 +8,9 @@ import org.lwjgl.util.vector.Vector3f;
 public class EntityGroup{
 	private Vector3f position,rotation;
 	
-	public Vector3f xAxis,yAxis,zAxis;
+	private Vector3f xAxis;
+	public Vector3f yAxis;
+	public Vector3f zAxis;
 	private float scale;
 
 	public List<Entity> entities=new ArrayList<>();
