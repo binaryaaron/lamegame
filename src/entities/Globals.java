@@ -12,7 +12,7 @@ public class Globals
 {
 
   public static final Random RAND = new Random();
-  public static final int WORLD_SIZE = 100;
+  public static final int WORLD_SIZE = 3000;
 
   public static final BoundingBox projectileBoundingBox;
 
