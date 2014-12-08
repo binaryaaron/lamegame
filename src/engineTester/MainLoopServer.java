@@ -325,22 +325,14 @@ public class MainLoopServer
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
           PhysicsUtilities.elasticCollision(ent, other);
-          if (ent.getHitPoints() <= 0)
-          {
-            killList.add(ent);
-            if (ent.getId().startsWith("S") && !deadPlayers.contains(ent))
-            {
-              deadPlayers.add((Player) ent);
-            }
-          }
-          if (other.getHitPoints() <= 0)
-          {
-            killList.add(other);
-            if (other.getId().startsWith("S") && !deadPlayers.contains(ent))
-            {
-              deadPlayers.add((Player) other);
-            }
-          }
+        }
+      }
+      if (ent.getHitPoints() <= 0)
+      {
+        killList.add(ent);
+        if (ent.getId().startsWith("S") && !deadPlayers.contains(ent))
+        {
+          deadPlayers.add((Player) ent);
         }
       }
     }
@@ -351,13 +343,13 @@ public class MainLoopServer
     String startString = "Plan,0,0,0,0,0,0,100;gCry,1000,1000,1000,0,0,0,100;";
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
-        new Vector3f(1000, 1010, 0), 0, 0, 0, 0);
+        new Vector3f(1000, 1050, 0), 0, 0, 0, 0);
     player1 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 1000, 0), 0, 0, 0, 1);
     player2 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 990, 0), 0, 0, 0, 2);
+        new Vector3f(1000, 950, 0), 0, 0, 0, 2);
     player3 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 980, 0), 0, 0, 0, 3);
+        new Vector3f(1000, 900, 0), 0, 0, 0, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
     startString += player2.toString() + ";";

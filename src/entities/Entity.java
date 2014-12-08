@@ -48,7 +48,6 @@ public class Entity
   private static Map<String, Integer> damageMap;
   private static Map<String, Integer> healthMap;
 
-
   static {
     damageMap = new HashMap<>();
     healthMap = new HashMap<>();

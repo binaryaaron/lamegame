@@ -3,6 +3,7 @@ package physics;
 import com.ra4king.opengl.util.math.Vector3;
 import entities.Entity;
 import entities.Globals;
+import jdk.nashorn.internal.objects.Global;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -55,35 +56,58 @@ public class PhysicsUtilities
 
     vec1.add(diff);
     vec2.sub(diff);
+
+    if (Globals.HARD_MODE)
+    {
+      vec1.mult(1.01f);
+      vec2.mult(1.01f);
+    }
+    else
+    {
+      vec1.mult(0.97f);
+      vec2.mult(0.97f);
+    }
   }
 
   public static void gameWorldCollision(Entity ent)
   {
     Vector3f position = ent.position;
+    boolean hit = false;
 
     if (position.x > Globals.WORLD_SIZE)
     {
       ent.vel.x(-Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.y > Globals.WORLD_SIZE)
     {
       ent.vel.y(-Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.z > Globals.WORLD_SIZE)
     {
       ent.vel.z(-Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.x < -Globals.WORLD_SIZE)
     {
       ent.vel.x(Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.y < -Globals.WORLD_SIZE)
     {
       ent.vel.y(Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.z < -Globals.WORLD_SIZE)
     {
       ent.vel.z(Math.abs(ent.vel.x()));
+      hit = true;
+    }
+
+    if (hit && ent.getId().startsWith("l"))
+    {
+      ent.damageObject(1);
     }
   }
 
