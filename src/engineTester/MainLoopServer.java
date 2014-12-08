@@ -9,10 +9,7 @@ package engineTester;
 import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
-import entities.Globals;
+import entities.*;
 import models.RawModel;
 import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
@@ -33,16 +30,18 @@ import world.BoxUtilities;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainLoopServer
 {
 
   public final static boolean PRINT_FPS = false;
   private final static boolean PHYSICS_DEBUG = true;
+  private static final boolean DEBUG = true;
   public static WalkerServer myServer;
   private static int loop = 0;
   private volatile static int clientConnections;
-  static Entity player0;
+  static Player player0;
   static Entity player1;
   static Entity player2;
   static Entity player3;
@@ -295,15 +294,45 @@ public class MainLoopServer
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
           PhysicsUtilities.elasticCollision(ent, other);
+          inflictDamage(ent,other);
         }
       }
     }
   }
 
+  /**
+   * A stab at making objects take damage.
+   * @param ent the 'attacking' object
+   * @param other the object taking damage
+   */
+  private void inflictDamage(Entity ent, Entity other)
+  {
+    System.out.println(ent.toString());
+    System.out.println(ent.getId());
+    // player hitting something
+    if (Objects.equals(ent.getId(), "P001"))
+    {
+      ent.damageObject(5);
+      if (DEBUG) System.out.println("Damaging obejct" + ent.getHitPoints());
+    }
+    // asteroid
+    if (Objects.equals(ent.getId(), "A001"))
+    {
+      // hits a player
+      if (Objects.equals(other.getId(), "A002"))
+      {
+        other.damageObject(100);
+        if (DEBUG) System.out.println("Damaging obejct" + ent.getHitPoints());
+      }
+    }
+
+  }
+
   private String createInitialGameString(ModelMap modelMap)
   {
     String startString = "Plan,0,0,0,0,0,0,100;";
-    player0 = new Entity("S001", modelMap.getTexturedModelList().get("S001"),
+
+    player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
         new Vector3f(1000, 1010, 0), 0, 0, 0, .3f, 0);
     player1 = new Entity("S002", modelMap.getTexturedModelList().get("S002"),
         new Vector3f(1000, 1000, 0), 0, 0, 0, .3f, 1);

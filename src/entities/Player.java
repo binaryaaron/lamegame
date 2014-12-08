@@ -1,5 +1,7 @@
 package entities;
 
+import models.TexturedModel;
+import org.lwjgl.util.vector.Vector3f;
 import world.BoundingBox;
 
 /**
@@ -17,9 +19,10 @@ public class Player extends Entity
    * Default constructor for a Player. Initializes position to
    * 0,0,0
    */
-  public Player()
+  public Player(String id, TexturedModel model, Vector3f position, float rotX,
+      float rotY, float rotZ, float scale, int clientId)
   {
-    this.hitPoints = 1000;
+    super(id, model, position, rotX, rotY, rotZ, scale, clientId);
   }
 
 //  /**
