@@ -11,6 +11,13 @@ import com.ra4king.opengl.util.math.Vector3;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+
 import models.RawModel;
 import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
@@ -28,6 +35,14 @@ import toolbox.PerformanceUtilities;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+
+import entities.Camera;
+import entities.Entity;
+import entities.Laser;
+import entities.Light;
+
 
 public class MainLoopClient
 {
@@ -64,6 +79,8 @@ public class MainLoopClient
     String inputFromServer = null;
 
     List<Entity> renderList = new ArrayList<>();
+    List<Laser> lasers = new ArrayList<>();
+    
     List<Entity> hudRenderList = new ArrayList<>();
 
     if (PRINT_FPS)
@@ -121,7 +138,7 @@ public class MainLoopClient
         DisplayManager.changeFullScreen();
       }
       // Get render/objects from server
-      getServerState(renderList, camera, modelMap);
+      getServerState(renderList,lasers, camera, modelMap);
 
       // Limit keyboard sends
       long time = System.currentTimeMillis();
@@ -153,6 +170,11 @@ public class MainLoopClient
         // System.out.println(ent.getModel().getRawModel().getVertexCount());
       }
 
+      for (Laser ent : lasers)
+      {
+        renderer.processLaser(ent);
+        // System.out.println(ent.getModel().getRawModel().getVertexCount());
+      }
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
@@ -169,15 +191,35 @@ public class MainLoopClient
     DisplayManager.closeDisplay();
   }
 
-  public void getServerState(List<Entity> renderList, Camera camera,
+  public void getServerState(List<Entity> renderList,List<Laser> lasers, Camera camera,
       ModelMap modelMap)
   {
     String[] sceneInfo = myClient.getInputFromServer().split(";");
     renderList.clear();
+    lasers.clear();
     for (String object : sceneInfo)
     {
       if (!object.equals(""))
       {
+    	  if(object.startsWith("l")){
+    		  String[] currentLine = object.split(",");
+    	        String id;
+    	        float x, y, z, xr, yr, zr, s, w;
+    	        id = currentLine[0];
+    	        x = Float.parseFloat(currentLine[1]);
+    	        y = Float.parseFloat(currentLine[2]);
+    	        z = Float.parseFloat(currentLine[3]);
+    	        xr = Float.parseFloat(currentLine[4]);
+    	        yr = Float.parseFloat(currentLine[5]);
+    	        zr = Float.parseFloat(currentLine[6]);
+    	        w = Float.parseFloat(currentLine[7]);
+    	        s = Float.parseFloat(currentLine[8]);
+          	Laser tmp_laser=new Laser(id, modelMap.getTexturedModelList().get(id),
+                    new Vector3f(x, y, z), xr, yr, zr, s);
+          	 tmp_laser.orientation.w(w);
+          	lasers.add(tmp_laser);
+          }
+    	  else{
         Entity tmp_Entity;
         String[] currentLine = object.split(",");
         String id;
@@ -199,7 +241,7 @@ public class MainLoopClient
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
         }
-
+       
         else
         {
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
@@ -219,7 +261,7 @@ public class MainLoopClient
         }
         renderList.add(tmp_Entity);
       }
-    }
+      }}
   }
 
   public void sendKeyBoard()

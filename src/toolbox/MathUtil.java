@@ -8,6 +8,7 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import entities.Camera;
 import entities.Entity;
+import entities.Laser;
 
 public class MathUtil
 {
@@ -29,11 +30,26 @@ public class MathUtil
         matrix);
     //Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
 
-    return createTransformationMatrix(new Entity("", null,translation,0,0,0,scale));
+    return createTransformationMatrix(new Entity("", null,translation,rx,ry,rz,scale));
     //return matrix;
   }
 
   public static Matrix4f createTransformationMatrix(Entity entity)
+  {
+    
+    float scale = entity.getScale();
+    Matrix4f matrix = new Matrix4f();
+    Matrix4 viewMatrix = entity.orientation.toMatrix().translate(
+        new Vector3(entity.position.x, entity.position.y, entity.position.z));
+
+    matrix = mat4fToMat4(viewMatrix.inverse());
+   
+    Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
+
+    return matrix;
+  }
+  
+  public static Matrix4f createTransformationMatrix(Laser entity)
   {
     
     float scale = entity.getScale();

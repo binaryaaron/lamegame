@@ -179,10 +179,10 @@ public class MainLoopServer
       missilePos = position.copy();
 
       // in your update cod
-      float speed = 0.02f;// (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) |
+      float speed = 0.08f;// (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) |
       // Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) ? 20
       // : 50) * deltaTime / (float)1e9;
-      float rotSpeed = 0.5f;
+      float rotSpeed = 1f;
 
       // pitch
       int dy = Mouse.getDY();
@@ -268,6 +268,11 @@ public class MainLoopServer
       deltaCam.z(-9 * player.getScale());
 
       player.vel.add(inverse.mult(delta));
+      // limit velocity of player
+      if (player.vel.lengthSquared() > 400) {
+        player.vel.normalize();
+        player.vel.mult(20f);
+      }
       cameraPos.add(inverse.mult(deltaCam));
       cameraPos.add(player.vel);
       // player.move();
