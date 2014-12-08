@@ -318,6 +318,7 @@ public class MainLoopServer
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
+      PhysicsUtilities.gameWorldCollision(ent);
       for (int j = i + 1; j < renderList.size(); j++)
       {
         other = renderList.get(j);

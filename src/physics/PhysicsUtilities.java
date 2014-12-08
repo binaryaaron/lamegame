@@ -2,6 +2,7 @@ package physics;
 
 import com.ra4king.opengl.util.math.Vector3;
 import entities.Entity;
+import entities.Globals;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -54,6 +55,36 @@ public class PhysicsUtilities
 
     vec1.add(diff);
     vec2.sub(diff);
+  }
+
+  public static void gameWorldCollision(Entity ent)
+  {
+    Vector3f position = ent.position;
+
+    if (position.x > Globals.WORLD_SIZE)
+    {
+      ent.vel.x(-Math.abs(ent.vel.x()));
+    }
+    if (position.y > Globals.WORLD_SIZE)
+    {
+      ent.vel.y(-Math.abs(ent.vel.x()));
+    }
+    if (position.z > Globals.WORLD_SIZE)
+    {
+      ent.vel.z(-Math.abs(ent.vel.x()));
+    }
+    if (position.x < -Globals.WORLD_SIZE)
+    {
+      ent.vel.x(Math.abs(ent.vel.x()));
+    }
+    if (position.y < -Globals.WORLD_SIZE)
+    {
+      ent.vel.y(Math.abs(ent.vel.x()));
+    }
+    if (position.z < -Globals.WORLD_SIZE)
+    {
+      ent.vel.z(Math.abs(ent.vel.x()));
+    }
   }
 
   private static void normalize(Vector3 vec)

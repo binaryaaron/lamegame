@@ -41,6 +41,8 @@ public class Entity
   protected int hitPoints = 1000;
   protected int damage = 1;
   private String id;
+
+  public boolean drawShadow = true;
   protected int clientId = -1;
 
   private static Map<String, Integer> damageMap;
@@ -126,6 +128,16 @@ public class Entity
     orientation.z(rotZ);
     // basis will be a matrix that holds the directional vectors
     basis.setIdentity();
+    if (model != null)
+    {
+      box = model.getRawModel().getBoundingBox().deepCopy();
+      box.scale(0.9f * scale);
+      size = MathUtil.vectorDist(box.getMax(), box.getMin());
+      halfSize = size * 0.5f;
+      box.translate(position);
+      mass = initialMass * scale;
+    }
+
     if (!id.isEmpty())
     {
       String firstChar = id.substring(0, 1);
@@ -138,15 +150,12 @@ public class Entity
       {
         hitPoints = healthMap.get(firstChar);
       }
-    }
-    if (model != null)
-    {
-      box = model.getRawModel().getBoundingBox().deepCopy();
-      box.scale(0.9f * scale);
-      size = MathUtil.vectorDist(box.getMax(), box.getMin());
-      halfSize = size * 0.5f;
-      box.translate(position);
-      mass = initialMass * scale;
+
+      if (firstChar.equals("l"))
+      {
+        box = Globals.projectileBoundingBox.deepCopy();
+        box.scale(scale);
+      }
     }
   }
   

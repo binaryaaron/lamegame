@@ -77,6 +77,7 @@ public class EntityRenderer
 
   private void prepareInstance(Entity entity)
   {
+    shader.loadDrawShadow(entity.drawShadow);
     Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(entity);
     shader.loadTransformationMatrix(transformationMatrix);
 
