@@ -52,6 +52,7 @@ public class MainLoopClient
   public WalkerClient myClient = null;
   private float speed;
   private int health;
+  private long previousTime=0,currentTime=0;
 
   public MainLoopClient(String[] args)
   {
@@ -279,68 +280,84 @@ public class MainLoopClient
   public void sendKeyBoard()
   {
     String toSend = ";";
-    if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
-        || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+    if (health > 0)
     {
-      toSend += "KEY_LSHIFT;";
-    }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
+          || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+      {
+        toSend += "KEY_LSHIFT;";
+      }
 
-    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-    {
-      toSend += "KEY_RIGHT;";
+      if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+      {
+        toSend += "KEY_RIGHT;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+      {
+        toSend += "KEY_LEFT;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+      {
+        toSend += "KEY_UP;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+      {
+        toSend += "KEY_DOWN;";
+      }
+      // /
+      if (Keyboard.isKeyDown(Keyboard.KEY_D))
+      {
+        toSend += "KEY_D;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_A))
+      {
+        toSend += "KEY_A;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_W))
+      {
+        toSend += "KEY_W;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_S))
+      {
+        toSend += "KEY_S;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+      {
+        toSend += "KEY_Q;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_E))
+      {
+        toSend += "KEY_E;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_B))
+      {
+        toSend += "KEY_B;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+      {
+        toSend += "KEY_LCONTROL;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+      {
+        toSend += "KEY_RSHIFT;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+      {
+        toSend += "KEY_SPACE;";
+      }
     }
-    if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+    else
     {
-      toSend += "KEY_LEFT;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-    {
-      toSend += "KEY_UP;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-    {
-      toSend += "KEY_DOWN;";
-    }
-    // /
-    if (Keyboard.isKeyDown(Keyboard.KEY_D))
-    {
-      toSend += "KEY_D;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_A))
-    {
-      toSend += "KEY_A;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_W))
-    {
-      toSend += "KEY_W;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_S))
-    {
-      toSend += "KEY_S;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_Q))
-    {
-      toSend += "KEY_Q;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_E))
-    {
-      toSend += "KEY_E;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_B))
-    {
-      toSend += "KEY_B;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
-    {
-      toSend += "KEY_LCONTROL;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-    {
-      toSend += "KEY_RSHIFT;";
-    }
-    if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
-    {
-      toSend += "KEY_SPACE;";
+      if (Keyboard.isKeyDown(Keyboard.KEY_P))
+      {
+        currentTime=System.currentTimeMillis();
+        if(currentTime-previousTime>1000)
+        {
+          currentTime=previousTime;
+          System.out.println("respawn me!");
+          toSend += "KEY_P;";
+        }
+      }
     }
     myClient.sendToServer(toSend);
   }
