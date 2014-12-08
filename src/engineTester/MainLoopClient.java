@@ -6,8 +6,11 @@
  */
 package engineTester;
 
+import audio.AudioManager;
+
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
+
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -21,9 +24,11 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import models.RawModel;
 import models.TexturedModel;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -55,6 +60,8 @@ public class MainLoopClient
 
   public MainLoopClient(String[] args)
   {
+	AudioManager.createAudio();
+	AudioManager.playMusic();
     Entity player = null;
     DisplayManager.createDisplay();
     Loader loader = new Loader();
@@ -66,7 +73,12 @@ public class MainLoopClient
     TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox,
         skyTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
-
+    
+    RawModel barrier = OBJLoader.loadObjModel("SkyBox", loader, true);
+    ModelTexture barrierTexture = new ModelTexture(loader.loadTexture("font"));
+    TexturedModel texturedBarrier = new TexturedModel("Barrier", barrier,
+    		barrierTexture);
+    Entity barrierEntity = new Entity("Barrier", texturedBarrier, new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 3000);
     // create lights and camera for the player. camera position should be set in
     // parsing routine
     Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
@@ -176,14 +188,10 @@ public class MainLoopClient
         renderer.processHudEntity(ent);
         // System.out.println(ent.getModel().getRawModel().getVertexCount());
       }
-
-      for (Laser ent : lasers)
-      {
-        renderer.processLaser(ent);
-        // System.out.println(ent.getModel().getRawModel().getVertexCount());
-      }
+      AudioManager.updateAudio();
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
+      renderer.processEntity(barrierEntity);
       renderer.render(light, camera);
       DisplayManager.updateDisplay();
 
@@ -196,6 +204,7 @@ public class MainLoopClient
     renderer.cleanUp();
     loader.cleanUp();
     DisplayManager.closeDisplay();
+    AudioManager.closeAudio();
   }
 
   public void getServerState(List<Entity> renderList, List<Laser> lasers,
@@ -261,10 +270,30 @@ public class MainLoopClient
           camera.orientation = tmp_Entity.orientation.copy();
         }
         else if(object.startsWith("S")&&playerID!=myClient.ID){
+        	Vector3f scaleVec=new Vector3f();
+        	Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
+        	float tagScale=scaleVec.length();
           Entity playerTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-              new Vector3f(x, y-2, z), xr, yr, zr, 1);
+              new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
+          System.out.println(tagScale);
           renderList.add(playerTag);
           playerTag.drawShadow=false;
+        }
+        else if(object.startsWith("gCry")){
+        	
+        	
+        	Entity crystal=  new Entity("gCry", modelMap.getTexturedModelList().get("gCry"),
+                    new Vector3f(x, y, z), xr, yr, zr, s);
+                renderList.add(crystal);
+              //  crystal.drawShadow=false;
+                
+                
+                Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
+                        new Vector3f(x, y-s, z), xr, yr, zr, 10);
+                    renderList.add(crystalTag);
+                    crystalTag.drawShadow=false;
+        
+        	
         }
 
         if (tmp_Entity != null)
@@ -337,10 +366,12 @@ public class MainLoopClient
     if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
     {
       toSend += "KEY_RSHIFT;";
+      AudioManager.playRandomLaser();
     }
     if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
     {
       toSend += "KEY_SPACE;";
+      
     }
     myClient.sendToServer(toSend);
   }
