@@ -18,7 +18,7 @@ public class Asteroid extends Entity
 {
   private static short ASTEROID_COUNT = 0;
   private static Boolean DEBUG = true;
-  private String id;
+  private final String id;
   private final int intId;
 
 
@@ -77,9 +77,9 @@ public class Asteroid extends Entity
   public String toString() {
     StringBuilder result = new StringBuilder();
     String delimiter = ":";
-    result.append("A" + id + delimiter );
-    result.append(position + delimiter);
-    result.append(hitPoints + delimiter );
+    result.append("A").append(id).append(delimiter);
+    result.append(position).append(delimiter);
+    result.append(hitPoints).append(delimiter);
     return result.toString();
   }
 
@@ -93,11 +93,12 @@ public class Asteroid extends Entity
     StringBuilder result = new StringBuilder();
     String NEW_LINE = System.getProperty("line.separator");
 
-    result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-    result.append(" ID: " + id + NEW_LINE);
-    result.append(" Health: " + hitPoints + NEW_LINE);
-    result.append(" Position: " + position + NEW_LINE);
-    result.append(" Velocity: " + vel + NEW_LINE );
+    result.append(this.getClass().getName()).append(" Object {")
+        .append(NEW_LINE);
+    result.append(" ID: ").append(id).append(NEW_LINE);
+    result.append(" Health: ").append(hitPoints).append(NEW_LINE);
+    result.append(" Position: ").append(position).append(NEW_LINE);
+    result.append(" Velocity: ").append(vel).append(NEW_LINE);
     result.append("}");
 
     return result.toString();

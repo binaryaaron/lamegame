@@ -95,9 +95,7 @@ public class MasterRenderer
   }
 
   /**
-   * Add a terrain to terrain list
-   * 
-   * @param terrain
+   * UPDATE THIS
    */
   public void processSkyBox(SkyBox skyBox)
   {

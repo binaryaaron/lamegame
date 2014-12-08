@@ -6,17 +6,16 @@
  */
 package engineTester;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -26,12 +25,9 @@ import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
 
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
-
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainLoopClient
 {

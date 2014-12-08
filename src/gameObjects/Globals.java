@@ -8,7 +8,7 @@ import java.util.Random;
 public class Globals
 {
 
-  public static Random RAND = new Random();
+  public static final Random RAND = new Random();
   public static final int WORLD_SIZE = 100;
   /**
    * Returns a pseudo-random number between min and max, inclusive.
@@ -27,8 +27,7 @@ public class Globals
 
     // nextInt is normally exclusive of the top value,
     // so add 1 to make it inclusive
-    int randomNum = RAND.nextInt((max - min) + 1) + min;
-    return randomNum;
+    return RAND.nextInt((max - min) + 1) + min;
   }
 
   /**
@@ -46,7 +45,6 @@ public class Globals
 
     // nextInt is normally exclusive of the top value,
     // so add 1 to make it inclusive
-    int randomNum = rand.nextInt((WORLD_SIZE - WORLD_SIZE*-1) + 1) + WORLD_SIZE*-1;
-    return randomNum;
+    return rand.nextInt((WORLD_SIZE - WORLD_SIZE*-1) + 1) + WORLD_SIZE*-1;
   }
 }

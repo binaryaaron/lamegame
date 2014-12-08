@@ -65,7 +65,6 @@ public class WalkerServer extends Thread
   
   public synchronized int getNumConnections()
   {
-    int n=threadList.size();    
-    return n;
+    return threadList.size();
   }
 }

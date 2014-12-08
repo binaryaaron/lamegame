@@ -20,7 +20,7 @@ public class Entity
   public Vector3f position;
 
   private Vector3f rotation;
-  private float rotX, rotY, rotZ;;
+  private float rotX, rotY, rotZ;
   public Quaternion orientation;
   private Matrix4f basis = new Matrix4f();
   public Matrix4f rotationMatrix = new Matrix4f();
@@ -30,7 +30,7 @@ public class Entity
 
   private float size;
   private float halfSize;
-  public BoundingBox box;
+  protected BoundingBox box;
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
   // public Vector3f vel = new Vector3f(0f,0f,0f);
@@ -343,20 +343,20 @@ public class Entity
   {
     StringBuilder result = new StringBuilder();
     String delimiter = ",";
-    result.append(id + delimiter);
-    result.append(position.x + delimiter);
-    result.append(position.y + delimiter);
-    result.append(position.z + delimiter);
-    result.append(orientation.x() + delimiter);
-    result.append(orientation.y() + delimiter);
-    result.append(orientation.z() + delimiter);
-    result.append(orientation.w() + delimiter);
-    result.append(scale + delimiter);
+    result.append(id).append(delimiter);
+    result.append(position.x).append(delimiter);
+    result.append(position.y).append(delimiter);
+    result.append(position.z).append(delimiter);
+    result.append(orientation.x()).append(delimiter);
+    result.append(orientation.y()).append(delimiter);
+    result.append(orientation.z()).append(delimiter);
+    result.append(orientation.w()).append(delimiter);
+    result.append(scale).append(delimiter);
     if (id.startsWith("S"))
     {
-      result.append(clientId + delimiter);
-      result.append(hitPoints + delimiter);
-      result.append(vel.length() + delimiter);
+      result.append(clientId).append(delimiter);
+      result.append(hitPoints).append(delimiter);
+      result.append(vel.length()).append(delimiter);
     }
     return result.toString();
   }

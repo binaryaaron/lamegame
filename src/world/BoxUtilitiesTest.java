@@ -6,12 +6,12 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class BoxUtilitiesTest extends TestCase
 {
-  Box b1;
-  Box b2;
-  Box b3;
-  Box b4;
-  Box b5;
-  Box b6;
+  private Box b1;
+  private Box b2;
+  private Box b3;
+  private Box b4;
+  private Box b5;
+  private Box b6;
 
   @Before public void setUp() throws Exception
   {

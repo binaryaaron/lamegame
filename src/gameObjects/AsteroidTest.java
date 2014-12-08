@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class AsteroidTest
 {
-  Asteroid ass;
+  private Asteroid ass;
 
   @Before public void setUp() throws Exception
   {

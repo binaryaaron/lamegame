@@ -1,8 +1,5 @@
 package engineTester;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import models.RawModel;
 import models.TexturedModel;
 import renderEngine.FontLoader;
@@ -10,6 +7,9 @@ import renderEngine.Loader;
 import renderEngine.OBJLoader;
 import shaders.StaticShader;
 import textures.ModelTexture;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModelMap
 {

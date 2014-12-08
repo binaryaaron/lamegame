@@ -9,7 +9,7 @@ import world.BoundingBox;
  * or alive.
  * Created by aarongonzales on 11/14/14.
  */
-public class PlayerObject extends GameObject implements Comparable<PlayerObject>
+@SuppressWarnings("StringConcatenationInsideStringBufferAppend") public class PlayerObject extends GameObject implements Comparable<PlayerObject>
 {
   public static short PLAYER_COUNT = 0;
   private final short playerId;
