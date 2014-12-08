@@ -99,7 +99,7 @@ public class ModelMap
         laserTexture);
     TexturedModel greenCone = new TexturedModel("gCone", cone,
         greenTexture);
-    TexturedModel greenCystal = new TexturedModel("gCry", crystal,
+    TexturedModel purpCrystal = new TexturedModel("CryP", crystal,
     		purpTexture);
 
     texturedModelList.put("H001", texturedSpeed);
@@ -114,7 +114,7 @@ public class ModelMap
     texturedModelList.put("lase", texturedLaser);
     texturedModelList.put("Plan", texturedPlanet);
     texturedModelList.put("gCone", greenCone);
-    texturedModelList.put("gCry", greenCystal);
+    texturedModelList.put("CryP", purpCrystal);
 
   }
 

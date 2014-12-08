@@ -62,7 +62,7 @@ public class PhysicsUtilities
       vec1.mult(1.01f);
       vec2.mult(1.01f);
     }
-    else
+    else if (Globals.EASY_MODE)
     {
       vec1.mult(0.97f);
       vec2.mult(0.97f);
