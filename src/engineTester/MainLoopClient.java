@@ -6,6 +6,14 @@
  */
 package engineTester;
 
+import audio.AudioManager;
+
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +61,8 @@ public class MainLoopClient
 
   public MainLoopClient(String[] args)
   {
+	AudioManager.createAudio();
+	AudioManager.playMusic();
     Entity player = null;
     DisplayManager.createDisplay();
     Loader loader = new Loader();
@@ -64,7 +74,12 @@ public class MainLoopClient
     TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox,
         skyTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
-
+    
+    RawModel barrier = OBJLoader.loadObjModel("SkyBox", loader, true);
+    ModelTexture barrierTexture = new ModelTexture(loader.loadTexture("font"));
+    TexturedModel texturedBarrier = new TexturedModel("Barrier", barrier,
+    		barrierTexture);
+    Entity barrierEntity = new Entity("Barrier", texturedBarrier, new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 3000);
     // create lights and camera for the player. camera position should be set in
     // parsing routine
     Light light = new Light(new Vector3f(1000f, 5f, 500f), new Vector3f(1.0f,
@@ -321,8 +336,10 @@ public class MainLoopClient
         renderer.processHudEntity(ent);
         // System.out.println(ent.getModel().getRawModel().getVertexCount());
       }
+      AudioManager.updateAudio();
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
+      renderer.processEntity(barrierEntity);
       renderer.render(light, camera);
       DisplayManager.updateDisplay();
       if (PRINT_FPS)
@@ -334,6 +351,7 @@ public class MainLoopClient
     renderer.cleanUp();
     loader.cleanUp();
     DisplayManager.closeDisplay();
+    AudioManager.closeAudio();
   }
 
   public void getServerState(List<Entity> renderList,
@@ -399,10 +417,30 @@ public class MainLoopClient
           camera.orientation = tmp_Entity.orientation.copy();
         }
         else if(object.startsWith("S")&&playerID!=myClient.ID){
+        	Vector3f scaleVec=new Vector3f();
+        	Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
+        	float tagScale=scaleVec.length();
           Entity playerTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-              new Vector3f(x, y-2, z), xr, yr, zr, 1);
+              new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
+          System.out.println(tagScale);
           renderList.add(playerTag);
           playerTag.drawShadow=false;
+        }
+        else if(object.startsWith("gCry")){
+        	
+        	
+        	Entity crystal=  new Entity("gCry", modelMap.getTexturedModelList().get("gCry"),
+                    new Vector3f(x, y, z), xr, yr, zr, s);
+                renderList.add(crystal);
+              //  crystal.drawShadow=false;
+                
+                
+                Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
+                        new Vector3f(x, y-s, z), xr, yr, zr, 10);
+                    renderList.add(crystalTag);
+                    crystalTag.drawShadow=false;
+        
+        	
         }
 
         if (tmp_Entity != null)
@@ -472,12 +510,6 @@ public class MainLoopClient
     String toSend = ";";
     if (health > 0)
     {
-      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
-          || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-      {
-        toSend += "KEY_LSHIFT;";
-      }
-
       if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
       {
         toSend += "KEY_RIGHT;";
@@ -530,6 +562,8 @@ public class MainLoopClient
       if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
       {
         toSend += "KEY_RSHIFT;";
+
+        AudioManager.playRandomLaser();
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
       {
@@ -571,34 +605,7 @@ public class MainLoopClient
     hostName = host;
     socketVal = socket;
   }  
-  
-  /**
-   * Only use is to make the main menu look nice
-   * @param renderList
-   */
-  private void performPhysics(List<Entity> renderList)
-  {
-    Entity ent = null;
-    Entity other = null;
-    for (int i = 0; i < renderList.size(); i++)
-    {
-      ent = renderList.get(i);
-      if (!ent.getId().equals("Plan")) ent.move();
-    }
-    for (int i = 0; i < renderList.size(); i++)
-    {
-      ent = renderList.get(i);
-      for (int j = i + 1; j < renderList.size(); j++)
-      {
-        other = renderList.get(j);
-        if (BoxUtilities.collision(ent.getBox(), other.getBox()))
-        {
-          PhysicsUtilities.elasticCollision(ent, other);
-        }
-      }
-    }
-  }
-  
+
   public static void main(String[] args)
   {
     new MainLoopClient(args);
