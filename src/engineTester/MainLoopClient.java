@@ -17,6 +17,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -25,6 +26,7 @@ import server.WalkerClient;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
+import world.BoxUtilities;
 
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
@@ -37,8 +39,15 @@ public class MainLoopClient
 {
 
   public final boolean PRINT_FPS = false;
+  public final boolean HUD_DEBUG = true;
+  private boolean exitRequest = false;
   public WalkerClient myClient = null;
 
+  private static String hostName = "";
+  private static int socketVal = -1;
+  
+  private float speed;
+  
   public MainLoopClient(String[] args)
   {
     Entity player = null;
@@ -67,25 +76,44 @@ public class MainLoopClient
     String outputToServer = null;
     String inputFromServer = null;
 
-    List<Entity> renderList = new ArrayList<>();
-    String menuData = "S001,0,0,0,0,0,0,0,0,0,0,0;"
-        +"A001,0,0,2,0,0,0,0,0.1;"+"T001,0,0,2,0,0,0,0,0.1";
-
     long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
+    long hudDelay = 100;
+    long hudStart = 0;
+    //Hud Objects
+    List<Entity> renderList = new ArrayList<>();
+    List<Entity> hudRenderList = new ArrayList<>();
+    
+    float xDiff = -0.2f;
+    Entity hud1 = new Entity("H004",modelMap.getTexturedModelList().get(
+        "H004"), new Vector3f(xDiff,-0.25f,1f),0f,0f,0f, 0.05f);
+    Entity hud2 = new Entity("H005",modelMap.getTexturedModelList().get(
+        "H005"), new Vector3f(xDiff,-0.07f,1f),0f,0f,0f, 0.05f);
+    Entity hud3 = new Entity("H006",modelMap.getTexturedModelList().get(
+        "H006"), new Vector3f(xDiff,0.11f,1f),0f,0f,0f, 0.05f);
+    Entity hud4 = new Entity("H007",modelMap.getTexturedModelList().get(
+        "H007"), new Vector3f(xDiff,0.28f,1f),0f,0f,0f, 0.05f);
+    hudRenderList.add(hud1);
+    hudRenderList.add(hud2);
+    hudRenderList.add(hud3);
+    hudRenderList.add(hud4);
+    hudStart = System.currentTimeMillis();
+    String menuData = "S001,0,0,0,0,0,0,0,0,0,0,0;" +
+        "A001,0,0,2,0,0,0,0,0.1;" + 
+        "Plan,20,0,50,0,0,0,0,1;";
+
     if (PRINT_FPS)
     {
       pu.startFrameCounter();
     }
     Menu.startMainMenu();
     int currentResolution = 0;
-    boolean exitRequest = false;
     boolean keyReleased = true;
     boolean inMenu = true;
 
     getOfflineState(renderList, camera, modelMap, menuData);
-    renderList.get(1).setPosition(new Vector3f(0.4f,Menu.getYPos(),1));
-
+    renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+    renderList.get(0).setRotX(0.5f);
     while (!exitRequest&&inMenu)
     {
       if(Display.isCloseRequested())
@@ -104,7 +132,7 @@ public class MainLoopClient
         if(keyReleased)
         {
           Menu.up();
-          renderList.get(1).setPosition(new Vector3f(0.4f,Menu.getYPos(),1));
+          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
         }
         keyPressed = true;
         keyReleased = false;
@@ -114,7 +142,7 @@ public class MainLoopClient
         if(keyReleased)
         {
           Menu.down();
-          renderList.get(1).setPosition(new Vector3f(0.4f,Menu.getYPos(),1));
+          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
         }
         keyPressed = true;
         keyReleased = false;
@@ -123,7 +151,9 @@ public class MainLoopClient
       {
         if(keyReleased)
         {
-          Menu.choose();
+          int result = Menu.choose();
+          if(result < 0) exitRequest = true;
+          if(result == 1) inMenu = false;
         }
         keyPressed = true;
         keyReleased = false;
@@ -152,11 +182,16 @@ public class MainLoopClient
       {
         renderer.processEntity(ent);
       }
+      for (Entity ent : hudRenderList)
+      {
+        renderer.processHudEntity(ent);
+      }
 
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
-      renderer.render(light, new Camera());
+      renderer.render(light, camera);
       DisplayManager.updateDisplay();
+      performPhysics(renderList);
       if (PRINT_FPS)
       {
         pu.updateFPS();
@@ -174,20 +209,44 @@ public class MainLoopClient
     // controls for physics testing with two asteroids
     // wasd control leftest asteroid, arrows control rightmost.
     // holding shift will slow down the shifting speed.
-    String hostName = "Manticore";
-    int socketVal = 4444;
-
+    
+    
+    hudRenderList = new ArrayList<>();
+    hud1 = new Entity("H001",modelMap.getTexturedModelList().get(
+        "H001"), new Vector3f(0.7f,0.37f,1f),0f,0f,0f, 0.05f);
+    hud2 = new Entity("H002",modelMap.getTexturedModelList().get(
+        "H002"), new Vector3f(-0.0f,0.07f,1f),0f,0f,0f, 0.05f);
+    hud3 = new Entity("H003",modelMap.getTexturedModelList().get(
+        "H003"), new Vector3f(0.05f,0.3f,0.8f),0f,0f,0f, 0.05f);
+    hudRenderList.add(hud1);
+    hudRenderList.add(hud2);
+    hudRenderList.add(hud3);
     try
     {
-      myClient = new WalkerClient(args);
+      if(args.length > 0)
+      {
+
+        myClient = new WalkerClient(args);
+        hostName = args[0];
+      }
+      else if(hostName.length()<1 || socketVal < 0)
+      {
+        hostName = "localhost";
+        socketVal = 4444;
+        myClient = new WalkerClient(args);
+      }
+      else
+      {
+        String [] clientArgs = new String[]{hostName, ""+socketVal};
+        myClient = new WalkerClient(clientArgs);
+      }
     }
     catch (IOException e)
     {
       System.err.println("Couldn't get I/O for the connection to: " + hostName);
       System.exit(1);
     }
-    /* Perform object movement as long as the window exists */
-    while (!Display.isCloseRequested())
+    /* Perform object movement as long as the window exists */while (!Display.isCloseRequested())
     {
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
@@ -204,7 +263,6 @@ public class MainLoopClient
       }
       // Get render/objects from server
       getServerState(renderList, camera, modelMap);
-
       // Limit keyboard sends
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
@@ -212,18 +270,28 @@ public class MainLoopClient
         lastTime = time;
         sendKeyBoard();
       }
-
       // Render entities from server
       for (Entity ent : renderList)
       {
         renderer.processEntity(ent);
       }
-
+      //render HUD
+      if(HUD_DEBUG&&hudDelay+hudStart <System.currentTimeMillis())
+      {
+        hudStart = System.currentTimeMillis();
+        hudRenderList.get(2).setModel(modelMap.setScoreText((""+System.currentTimeMillis()+" ")));
+        hudRenderList.get(1).setModel(modelMap.setHealthText((""+(int)(Math.random()*100))+"% "));
+        hudRenderList.get(0).setModel(modelMap.setSpeedText(""+speed));
+      }
+      for (Entity ent : hudRenderList)
+      {
+        renderer.processHudEntity(ent);
+        // System.out.println(ent.getModel().getRawModel().getVertexCount());
+      }
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
       DisplayManager.updateDisplay();
-
       if (PRINT_FPS)
       {
         pu.updateFPS();
@@ -329,6 +397,7 @@ public class MainLoopClient
               new Vector3f(x, y, z), xr, yr, zr, s);
         }
         tmp_Entity.orientation.w(w);
+        
         /*if (object.startsWith("S"))
         {
           System.out.print("here:");
@@ -413,6 +482,44 @@ public class MainLoopClient
     myClient.sendToServer(toSend);
   }
 
+  /**
+   * Setting connection info
+   * @param host
+   * @param socket
+   */
+  public static void setConnection(String host, int socket)
+  {
+    hostName = host;
+    socketVal = socket;
+  }  
+  
+  /**
+   * Only use is to make the main menu look nice
+   * @param renderList
+   */
+  private void performPhysics(List<Entity> renderList)
+  {
+    Entity ent = null;
+    Entity other = null;
+    for (int i = 0; i < renderList.size(); i++)
+    {
+      ent = renderList.get(i);
+      if (!ent.getId().equals("Plan")) ent.move();
+    }
+    for (int i = 0; i < renderList.size(); i++)
+    {
+      ent = renderList.get(i);
+      for (int j = i + 1; j < renderList.size(); j++)
+      {
+        other = renderList.get(j);
+        if (BoxUtilities.collision(ent.getBox(), other.getBox()))
+        {
+          PhysicsUtilities.elasticCollision(ent, other);
+        }
+      }
+    }
+  }
+  
   public static void main(String[] args)
   {
     new MainLoopClient(args);
