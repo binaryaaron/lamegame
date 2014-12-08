@@ -425,10 +425,10 @@ public class MainLoopClient
           renderList.add(playerTag);
           playerTag.drawShadow=false;
         }
-        else if(object.startsWith("gCry")){
+        else if(object.startsWith("CryP")){
         	
         	
-        	Entity crystal=  new Entity("gCry", modelMap.getTexturedModelList().get("gCry"),
+        	Entity crystal=  new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
                     new Vector3f(x, y, z), xr, yr, zr, s);
                 renderList.add(crystal);
               //  crystal.drawShadow=false;

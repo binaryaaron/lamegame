@@ -3,7 +3,6 @@ package physics;
 import com.ra4king.opengl.util.math.Vector3;
 import entities.Entity;
 import entities.Globals;
-import jdk.nashorn.internal.objects.Global;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
