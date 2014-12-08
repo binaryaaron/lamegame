@@ -16,14 +16,15 @@ public class Player extends Entity
   private static Boolean DEBUG = true;
   public int score = 0;
 
+  public static final float playerScale = 3f;
   /**
    * Default constructor for a Player. Initializes position to
    * 0,0,0
    */
   public Player(String id, TexturedModel model, Vector3f position, float rotX,
-      float rotY, float rotZ, float scale, int clientId)
+      float rotY, float rotZ, int clientId)
   {
-    super(id, model, position, rotX, rotY, rotZ, scale, clientId);
+    super(id, model, position, rotX, rotY, rotZ, playerScale, clientId);
   }
 
   //  /**

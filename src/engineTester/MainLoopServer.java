@@ -351,13 +351,13 @@ public class MainLoopServer
     String startString = "Plan,0,0,0,0,0,0,100;";
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
-        new Vector3f(1000, 1010, 0), 0, 0, 0, 1f, 0);
+        new Vector3f(1000, 1010, 0), 0, 0, 0, 0);
     player1 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 1000, 0), 0, 0, 0, 1f, 1);
+        new Vector3f(1000, 1000, 0), 0, 0, 0, 1);
     player2 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 990, 0), 0, 0, 0, 1f, 2);
+        new Vector3f(1000, 990, 0), 0, 0, 0, 2);
     player3 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 980, 0), 0, 0, 0, 1f, 3);
+        new Vector3f(1000, 980, 0), 0, 0, 0, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
     startString += player2.toString() + ";";
