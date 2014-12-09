@@ -528,9 +528,9 @@ public class MainLoopClient
       {
         toSend += "KEY_E;";
       }
-      if (Keyboard.isKeyDown(Keyboard.KEY_B))
+      if (Keyboard.isKeyDown(Keyboard.KEY_F))
       {
-        toSend += "KEY_B;";
+        toSend += "KEY_F;";
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
       {
