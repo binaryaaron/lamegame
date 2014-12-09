@@ -6,14 +6,6 @@
  */
 package engineTester;
 
-import audio.AudioManager;
-
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
-
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +17,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
-import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -34,7 +25,7 @@ import server.WalkerClient;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
-import world.BoxUtilities;
+import audio.AudioManager;
 
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
@@ -62,7 +53,6 @@ public class MainLoopClient
   public MainLoopClient(String[] args)
   {
 	AudioManager.createAudio();
-	AudioManager.playMusic();
     Entity player = null;
     DisplayManager.createDisplay();
     Loader loader = new Loader();
@@ -163,6 +153,7 @@ public class MainLoopClient
     getOfflineState(renderList, camera, modelMap, menuData);
     renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
     renderList.get(0).setRotX(0.5f);
+    AudioManager.playMusic();
     while (!exitRequest&&inMenu)
     {
       if(Display.isCloseRequested())
@@ -226,6 +217,7 @@ public class MainLoopClient
         renderer.processHudEntity(ent);
       }
 
+      AudioManager.updateAudio();
       // Process rendering
       renderer.processSkyBox(skyBoxEntity);
       renderer.render(light, camera);
