@@ -68,6 +68,12 @@ public class PhysicsUtilities
     }
   }
 
+  /**
+   * Check for a collision with the planet
+   * @param planet planet object
+   * @param ent entity to check for collision
+   * @return true if collision false if not
+   */
   public static boolean planetCollide(Entity planet, Entity ent)
   {
     Vector3 ppos = new Vector3(planet.position.x, planet.position.y, planet.position.z);
@@ -83,6 +89,11 @@ public class PhysicsUtilities
     return false;
   }
 
+  /**
+   * Perform a planet collision if ent collides with planet
+   * @param planet planet object
+   * @param ent ent to check
+   */
   public static void planetCollision(Entity planet, Entity ent)
   {
     Vector3 ppos = new Vector3(planet.position.x, planet.position.y, planet.position.z);
@@ -97,6 +108,12 @@ public class PhysicsUtilities
 
     planet.vel.reset();
   }
+
+  /**
+   * Check for a collision with a the bounding game world and reverse
+   * direction if so
+   * @param ent entity to check
+   */
   public static void gameWorldCollision(Entity ent)
   {
     Vector3f position = ent.position;
@@ -139,6 +156,10 @@ public class PhysicsUtilities
     }
   }
 
+  /**
+   * Normalize a vector if length is greater than EPSILON
+   * @param vec vector to normalize
+   */
   private static void normalize(Vector3 vec)
   {
     float length = vec.length();
