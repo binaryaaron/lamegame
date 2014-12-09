@@ -229,7 +229,7 @@ public class MainLoopServer
           new Vector3(0, 0, 1)).mult(orientation);
       if (input.equals("KEY_Q")) orientation = Utils.angleAxisDeg(-rotSpeed,
           new Vector3(0, 0, 1)).mult(orientation);
-      if (input.equals("KEY_B"))
+      if (input.equals("KEY_F"))
       {
         player.vel.mult(0.95f);
       }

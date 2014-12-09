@@ -16,7 +16,8 @@ import java.net.UnknownHostException;
 public class ClientThread extends Thread
 {
   public boolean printlocation = false;
-  public static String hostName = "localhost";
+  public static String hostName = "localhost"
+      + "";
   public static int socketVal = 4444;
   public int ID=-1;
 
