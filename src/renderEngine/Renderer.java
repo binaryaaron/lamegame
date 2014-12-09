@@ -3,46 +3,57 @@ package renderEngine;
 import models.RawModel;
 import models.TexturedModel;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 import shaders.StaticShader;
 import toolbox.MathUtil;
 import entities.Entity;
 
-public class Renderer {
 
+public class Renderer 
+{
 	private static final float FOV=70;
 	private static final float NEAR_PLANE =0.1f;
 	private static final float FAR_PLANE =1000;
 	private Matrix4f projectionMatrix;
-	// prepare openGL to render game, called once every frame
-	public void prepare() {
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClearColor(0, 0, 0, 1);
-		 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT| GL11.GL_DEPTH_BUFFER_BIT);
 
-	}
-
-	public Renderer(StaticShader shader){
+	/**
+	 * Create a renderer with a shader
+	 * @param shader
+	 */
+	public Renderer(StaticShader shader)
+	{
 		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 		
 	}
+		
+	 /**
+   * Prepare openGL to render game, called once every frame
+   */ 
+  public void prepare() 
+  {
+    GL11.glEnable(GL11.GL_DEPTH_TEST);
+    GL11.glClearColor(0, 0, 0, 1);
+    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT| GL11.GL_DEPTH_BUFFER_BIT);
+  }
 	
 	
 	
-	
-	
-	
-	
-	public void render(Entity entity, StaticShader shader) {
+	/**
+	 * Render an entity into the scene using a shader
+	 * @param entity
+	 * @param shader
+	 */
+	public void render(Entity entity, StaticShader shader) 
+	{
 		TexturedModel model = entity.getModel();
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -51,14 +62,12 @@ public class Renderer {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		
-		//create new matric from entity parameters
+		//create new matrix from entity parameters
 		Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(
 				entity);
 		
-		//
 		shader.loadTransformationMatrix(transformationMatrix);
 		
-
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture()
 				.getTextureID());
@@ -71,7 +80,11 @@ public class Renderer {
 		GL30.glBindVertexArray(0);
 	}
 	
-	private void createProjectionMatrix(){
+	/**
+	 * Create a projection matrix based on the display
+	 */
+	private void createProjectionMatrix()
+	{
 		float aspectRatio=(float) Display.getWidth()/(float)Display.getHeight();
 		float y_scale =(float)((1f / Math.tan(Math.toRadians(FOV/2f)))*aspectRatio);
 		float x_scale=y_scale/aspectRatio;
@@ -84,8 +97,5 @@ public class Renderer {
 		projectionMatrix.m23=-1;
 		projectionMatrix.m32=-((2*NEAR_PLANE*FAR_PLANE)/frustum_length);
 		projectionMatrix.m33=0;
-		
 	}
-	
-
 }
