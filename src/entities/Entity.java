@@ -487,6 +487,12 @@ public class Entity
     // unimplemented in GameObject()
   }
 
+  public void randomVel()
+  {
+    vel.set(Globals.RAND.nextFloat()* 2 - 1,Globals.RAND.nextFloat()* 2 - 1,Globals.RAND.nextFloat()* 2 - 1);
+    vel.mult(Globals.RAND.nextFloat() * 3);
+  }
+
   /**
    * Gets the entity's id.
    * 
