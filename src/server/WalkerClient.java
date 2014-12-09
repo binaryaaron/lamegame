@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 public class WalkerClient extends Thread
 {
   public boolean printlocation=false;
-  public static String hostName="192.168.2.24";
+  public static String hostName="localhost";
   public static int socketVal=4444;
   public int ID;
   
