@@ -21,15 +21,23 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import world.BoundingBox;
 
-public class Loader {
+public class Loader
+{
 	private List<Integer> vaos=new ArrayList<>();
 	private List<Integer> vbos=new ArrayList<>();
 	private List<Integer> textures=new ArrayList<>();
 	
-	
-	
-	//creates a raw model to draw
-	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices, BoundingBox box){
+	/**
+	 * Creates a raw model to draw
+	 * @param positions
+	 * @param textureCoords
+	 * @param normals
+	 * @param indices
+	 * @param box
+	 * @return
+	 */
+	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices, BoundingBox box)
+	{
 		int vaoID=createVAO();
 		bindIndicesBuffer(indices);
 		vaos.add(vaoID);
@@ -40,62 +48,73 @@ public class Loader {
 		
 		unbindVAO();
 		return new RawModel (vaoID,indices.length, box);
-		
 	}
 	
 	
-	
-	public int loadTexture(String fileName){
+	/**
+	 * Load a texture given a file
+	 * @param fileName
+	 * @return
+	 */
+	public int loadTexture(String fileName)
+	{
 		Texture texture = null;
-		try {
+		try 
+		{
 			texture =TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
-		} catch (FileNotFoundException e) {
-		
+		} 
+		catch (FileNotFoundException e) 
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
 		
 		int textureID =texture.getTextureID();
 		textures.add(textureID);
 		return textureID;
-		
-		
 	}
-	
-	
-	
-	
-	//retruns the ID of a new vao objcet
-	private int createVAO(){
+
+	/**
+	 * Create a VAO
+	 * @return
+	 */
+	private int createVAO()
+	{
 		int vaoID =GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vaoID);
 		return vaoID;
-		
-		
 	}
 	
-	//clear excess memory 
-	public void cleanUp(){
-		for(int vao:vaos){
+	/**
+	 * Clear excess memory
+	 */
+	public void cleanUp()
+	{
+		for(int vao:vaos)
+		{
 			GL30.glDeleteVertexArrays(vao);	
 		}
-		
-		
-		for(int vbo:vbos){
+		for(int vbo:vbos)
+		{
 			GL15.glDeleteBuffers(vbo);
 		}
-		
-		for(int texture:textures){
-			GL11.glDeleteTextures(texture);
-			
+		for(int texture:textures)
+		{
+			GL11.glDeleteTextures(texture);	
 		}
-		
-		
 	}
 	
-	//adds vbo to attribute number in bound vao
-	private void storeDataInAttrributeList(int attributeNumber,int coordinateSize,float[] data){
+	/**
+	 * Stores data into the attribute list
+	 * @param attributeNumber
+	 * @param coordinateSize
+	 * @param data
+	 */
+	private void storeDataInAttrributeList(int attributeNumber,int coordinateSize,float[] data)
+	{
 		int vboID=GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
@@ -103,18 +122,23 @@ public class Loader {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0,0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		
-		
-		
 	}
 	
-	private void unbindVAO(){
-		GL30.glBindVertexArray(0);
-		
+	/**
+	 * Unbinds the VAO
+	 */
+	private void unbindVAO()
+	{
+		GL30.glBindVertexArray(0);	
 	}
 	
 	
-	private void bindIndicesBuffer(int[] indices){
+	/**
+	 * Binds an indices buffer to the VBO
+	 * @param indices
+	 */
+	private void bindIndicesBuffer(int[] indices)
+	{
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
@@ -122,24 +146,29 @@ public class Loader {
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,buffer,GL15.GL_STATIC_DRAW);
 	}
 	
-	private IntBuffer storeDataInIntBuffer(int[] data){
+	/**
+	 * Puts data into the int buffer
+	 * @param data
+	 * @return
+	 */
+	private IntBuffer storeDataInIntBuffer(int[] data)
+	{
 		IntBuffer buffer =BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
-		
-		
 	}
-	
-	
-	
-	//puts array of floats into a float buffer
-	private FloatBuffer storeDataInFloatBuffer(float[] data){
+
+	/**
+	 * Puts array of floats into a float buffer
+	 * @param data
+	 * @return
+	 */
+	private FloatBuffer storeDataInFloatBuffer(float[] data)
+	{
 		FloatBuffer buffer =BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
-		return buffer;
-		
-		
+		return buffer;	
 	}
 }
