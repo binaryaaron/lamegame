@@ -487,7 +487,6 @@ public class MainLoopClient
 
           if (missileSound == 1)
           {
-            System.out.println(missileSound);
             AudioManager.playRandomLaser();
           }
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
@@ -642,6 +641,7 @@ public class MainLoopClient
       {
         toSend += "KEY_Q;";
       }
+
       if (Keyboard.isKeyDown(Keyboard.KEY_E))
       {
         toSend += "KEY_E;";
@@ -649,6 +649,10 @@ public class MainLoopClient
       if (Keyboard.isKeyDown(Keyboard.KEY_F))
       {
         toSend += "KEY_F;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_O))
+      {
+        toSend += "KEY_O;";
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
       {

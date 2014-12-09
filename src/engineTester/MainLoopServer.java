@@ -159,8 +159,6 @@ public class MainLoopServer
       outputToClient = "";// clear the String
       for (Entity ent : renderList)
       {
-    	  if(gameOver&&(ent.toString().startsWith("P")||ent.toString().startsWith("lase")))continue;
-      	
         outputToClient += ent.toString() + ";";
       }
       // outputToClient += camera.toString();
@@ -272,41 +270,56 @@ public class MainLoopServer
               renderList.add(player);
             }
           }
+
+
+        }
+      }
+      if (input.equals("KEY_O"))
+      {
+        if (gameOver && player == winner)
+        {
+          renderList.clear();
+          renderList.addAll(createInitialGame(modelMap));
+          gameOver = false;
+          winner = null;
         }
       }
       if (input.equals("KEY_RSHIFT"))
       {
-        long time = System.currentTimeMillis();
-        // Limit missile to 4 per second
-        if (time - player.lastFired > 250)
+        if (!gameOver)
         {
-          player.lastFired = time;
-          player.missileSound = 1;
-          // fire a missile (100 per player active)
-          if (missileList.size() > 100)
+          long time = System.currentTimeMillis();
+          // Limit missile to 4 per second
+          if (time - player.lastFired > 250)
           {
-            renderList.remove(missileList.get(0));
-            missileList.remove(0);
+            player.lastFired = time;
+            player.missileSound = 1;
+            // fire a missile (100 per player active)
+            if (missileList.size() > 100)
+            {
+              renderList.remove(missileList.get(0));
+              missileList.remove(0);
+            }
+
+            Vector3 deltaMis = delta.copy();
+            deltaMis.y(0 * player.getScale());
+            deltaMis.z(7 * player.getScale());
+
+            missilePos.add(inverse.mult(deltaMis));
+
+            Entity missle = new Entity("lase", texturedLaser,
+                new Vector3f(0, 0, 0), 0, 0, 0, 5f);
+            // missle.setPosition(player.position);
+            missle.quadTranslate(missilePos);
+
+            missle.orientation = player.orientation.copy();
+            float pv = 20f;
+            missle.vel = player.vel.copy()
+                .add(inverse.mult(new Vector3(0, 0, pv)));
+
+            renderList.add(missle);
+            missileList.add(missle);
           }
-
-          Vector3 deltaMis = delta.copy();
-          deltaMis.y(0 * player.getScale());
-          deltaMis.z(7 * player.getScale());
-
-          missilePos.add(inverse.mult(deltaMis));
-
-          Entity missle = new Entity("lase", texturedLaser,
-              new Vector3f(0, 0, 0), 0, 0, 0, 5f);
-          // missle.setPosition(player.position);
-          missle.quadTranslate(missilePos);
-
-          missle.orientation = player.orientation.copy();
-          float pv = 20f;
-          missle.vel = player.vel.copy()
-              .add(inverse.mult(new Vector3(0, 0, pv)));
-
-          renderList.add(missle);
-          missileList.add(missle);
         }
       }
 
@@ -372,7 +385,7 @@ public class MainLoopServer
             {
               ent.score++;
               ent.entScoreStep = nextStep;
-              if(ent.score>Globals.WINPOINTS){
+              if(ent.score>=Globals.WINPOINTS){
             	  gameOver=true;
             	  winner=ent;}
               killList.add(other);
@@ -387,7 +400,7 @@ public class MainLoopServer
             {
               other.score++;
               other.entScoreStep = nextStep;
-              if(other.score>Globals.WINPOINTS){
+              if(other.score>=Globals.WINPOINTS){
             	  gameOver=true;
             	  winner=other;
             	  }
@@ -548,19 +561,22 @@ public class MainLoopServer
     new MainLoopServer(args);
 
   }
-  public void endGameStep(List<Entity> renderList,Entity winner){
-	  for(Entity ent:renderList){
-		  if(ent!=winner){
-			  ent.position.x*=0.99f;
-			  ent.position.y*=0.99f;
-			  ent.position.z*=0.99f;
-			  
-		  }
-		  else if(ent.getId().startsWith("P")){
-			  renderList.remove(ent);
-			  }
-		  }
-	  }
+
+  public void endGameStep(List<Entity> renderList, Entity winner)
+  {
+    for (Entity ent : renderList)
+    {
+      if (ent.type == Entity.EntityType.PLANET || ent.type == Entity.EntityType.CRYSTAL)
+      {
+        ent.kill();
+      }
+
+      if (ent != winner)
+      {
+        ent.multPos(0.99f);
+      }
+    }
+  }
   public String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer
