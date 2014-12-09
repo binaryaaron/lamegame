@@ -158,6 +158,7 @@ public class MainLoopClient
     renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
     renderList.get(0).setRotX(0.5f);
     AudioManager.playMusic();
+    /* Main Menu loop */
     while (!exitRequest&&inMenu)
     {
       if(Display.isCloseRequested())
@@ -255,10 +256,7 @@ public class MainLoopClient
       DisplayManager.closeDisplay();
       return;
     }
-    // controls for physics testing with two asteroids
-    // wasd control leftest asteroid, arrows control rightmost.
-    // holding shift will slow down the shifting speed.
-
+    
     //Hud Objects
     hud1 = new Entity("H001", modelMap.getTexturedModelList().get(
         "H001"), new Vector3f(0.7f, 0.37f, 1f), 0f, 0f, 0f, 0.05f);
@@ -276,6 +274,7 @@ public class MainLoopClient
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
     hudRenderList.add(hud3);
+    //attempt to connect to server
     try
     {
       myClient = new ClientThread(args);
@@ -286,8 +285,8 @@ public class MainLoopClient
       System.exit(1);
     }
 
-    /* Perform object movement as long as the window exists */
     keyReleased = true;
+    /* In-game loop */
     while (!Display.isCloseRequested())
     {
 
@@ -401,6 +400,7 @@ public class MainLoopClient
         zr = Float.parseFloat(currentLine[6]);
         w = Float.parseFloat(currentLine[7]);
         s = Float.parseFloat(currentLine[8]);
+        //laser parsing
         if (object.startsWith("l"))
         {
           Entity tmp_laser = new Entity(id,
@@ -410,6 +410,7 @@ public class MainLoopClient
           tmp_laser.drawShadow = false;
           renderList.add(tmp_laser);
         }
+        //any ship
         else if (object.startsWith("S"))
         {
           float speed = Float.parseFloat(currentLine[11]);
@@ -424,9 +425,8 @@ public class MainLoopClient
               new Vector3f(x, y, z), xr, yr, zr, s);
           tmp_Entity.orientation.w(w);
         }
-
-        if (object.startsWith("S")
-            && playerID == myClient.ID)// &&playerID==myClient.ID
+        //ship representing current player
+        if (object.startsWith("S")&& playerID == myClient.ID)
         {
           health = Integer.parseInt(currentLine[10]);
           speed = Float.parseFloat(currentLine[11]);
@@ -439,7 +439,9 @@ public class MainLoopClient
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
-        else if(object.startsWith("S")&&playerID!=myClient.ID){
+        //ship representing not the current player
+        else if(object.startsWith("S")&&playerID!=myClient.ID)
+        {
         	Vector3f scaleVec=new Vector3f();
         	Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
         	float tagScale=scaleVec.length();
@@ -448,21 +450,16 @@ public class MainLoopClient
           renderList.add(playerTag);
           playerTag.drawShadow=false;
         }
-        else if(object.startsWith("CryP")){
-        	
-        	
+        //purple crystal parsing
+        else if(object.startsWith("CryP"))
+        {  	
         	Entity crystal=  new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
-                    new Vector3f(x, y, z), xr, yr, zr, s);
-                renderList.add(crystal);
-              //  crystal.drawShadow=false;
-                
-                
-                Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-                        new Vector3f(x, y-s, z), xr, yr, zr, 10);
-                    renderList.add(crystalTag);
-                    crystalTag.drawShadow=false;
-        
-        	
+        	    new Vector3f(x, y, z), xr, yr, zr, s);
+        	renderList.add(crystal);
+        	Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
+        	    new Vector3f(x, y-s, z), xr, yr, zr, 10);
+        	renderList.add(crystalTag);
+        	crystalTag.drawShadow=false;
         }
 
         if (tmp_Entity != null)
