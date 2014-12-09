@@ -16,18 +16,20 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
+import shaders.LaserShader;
 import shaders.SkyBoxShader;
 import shaders.StaticShader;
 import skyBox.SkyBox;
 import entities.Camera;
 import entities.Entity;
+import entities.Laser;
 import entities.Light;
 
 public class MasterRenderer
 {
   private static final float FOV = 70;
   private static final float NEAR_PLANE = 0.1f;
-  private static final float FAR_PLANE = 5001;
+  private static final float FAR_PLANE = 500001;
   private Matrix4f projectionMatrix;
 
   private StaticShader shader = new StaticShader();
@@ -35,9 +37,16 @@ public class MasterRenderer
 
   private SkyBoxRenderer skyBoxRenderer;
   private SkyBoxShader skyBoxShader = new SkyBoxShader();
+  
+  private LaserShader laserShader=new LaserShader();
+  private LaserRenderer laserRenderer;
+  
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+  private Map<TexturedModel, List<Laser>> lasers = new HashMap<>();
+  private Map<TexturedModel, List<Entity>> hudEntities = new HashMap<>();
   private List <SkyBox> skyBox;
+  private List <Laser> laserList;
   private Camera camera;
   /**
    * When the master renderer is created, create a projection matrix and
@@ -51,6 +60,8 @@ public class MasterRenderer
     createProjectionMatrix();
     renderer = new EntityRenderer(shader, projectionMatrix);
     skyBox=new ArrayList<>();
+    laserList=new ArrayList<>();
+    laserRenderer= new LaserRenderer(laserShader, projectionMatrix);
     skyBoxRenderer = new SkyBoxRenderer(skyBoxShader, projectionMatrix,camera);
   }
 
@@ -73,23 +84,40 @@ public class MasterRenderer
     skyBoxRenderer.render(skyElement);
     }
     skyBoxShader.stop();
+   
     shader.start();
-    
     shader.loadLight(sun);
     shader.loadViewMatrix(camera);
     renderer.render(entities);
     shader.stop();
 
+    
+    
+    laserShader.start();
+    laserShader.loadLight(sun);
+    laserShader.loadViewMatrix(camera);
+    
+    laserRenderer.render(lasers);
+    
+    laserShader.stop();
+    
+    
+    
+    GL11.glDisable(GL11.GL_DEPTH_TEST);
+    shader.start();
+    shader.loadLight(sun);
+    shader.loadViewMatrix(new Camera());
+    renderer.render(hudEntities);
+    shader.stop();
 
-
+    hudEntities.clear();
     entities.clear();
     skyBox.clear();
+    lasers.clear();
   }
 
   /**
-   * Add a terrain to terrain list
-   * 
-   * @param terrain
+   * UPDATE THIS
    */
   public void processSkyBox(SkyBox skyBox)
   {
@@ -97,6 +125,24 @@ public class MasterRenderer
    skyBox.getSkyEntity().position=camera.position;
   }
 
+  
+  public void processLaser(Laser laser)
+  {
+	  laserList.add(laser);
+	  TexturedModel entityModel = laser.getModel();
+	    List<Laser> batch = lasers.get(entityModel);
+	    if (batch != null)
+	    {
+	      batch.add(laser);
+	    }
+	    else
+	    {
+	      List<Laser> newBatch = new ArrayList<>();
+	      newBatch.add(laser);
+	      lasers.put(entityModel, newBatch);
+	    }
+
+  }
   /**
    * add an entity to the batch
    * 
@@ -118,7 +164,22 @@ public class MasterRenderer
     }
 
   }
-
+  public void processHudEntity(Entity entity)
+  {
+    TexturedModel entityModel = entity.getModel();
+    List<Entity> batch = hudEntities.get(entityModel);
+    if (batch != null)
+    {
+      batch.add(entity);
+    }
+    else
+    {
+      List<Entity> newBatch = new ArrayList<Entity>();
+      newBatch.add(entity);
+      hudEntities.put(entityModel, newBatch);
+    }
+    
+  }
   /**
    * Sets up a scene for rendering
    */
@@ -162,6 +223,7 @@ public class MasterRenderer
   {
     shader.cleanUp();
     skyBoxShader.cleanUp();
+    laserShader.cleanUp();
   }
 
 }

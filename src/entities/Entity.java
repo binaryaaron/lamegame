@@ -10,6 +10,9 @@ import com.ra4king.opengl.util.math.Vector3;
 import toolbox.MathUtil;
 import world.BoundingBox;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Entity
 {
   private static final float initialMass = 100f;
@@ -20,24 +23,60 @@ public class Entity
   public Vector3f position;
 
   private Vector3f rotation;
-  private float rotX, rotY, rotZ;;
+  private float rotX, rotY, rotZ;
   public Quaternion orientation;
   private Matrix4f basis = new Matrix4f();
   public Matrix4f rotationMatrix = new Matrix4f();
   public Matrix4f matrix = new Matrix4f();
-  private float scale;
+  protected float scale;
   public float mass;
 
   private float size;
   private float halfSize;
-  public BoundingBox box;
+  protected BoundingBox box;
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
   // public Vector3f vel = new Vector3f(0f,0f,0f);
   private static Boolean DEBUG = true;
-  protected int hitPoints;
-  private String id;
-  private int clientId = -1;
+  protected int hitPoints = 1000;
+  protected int damage = 1;
+  protected String id;
+
+  public boolean drawShadow = true;
+  protected int clientId = -1;
+  public EntityType type;
+  public int score = 0;
+  public long entScoreStep = 0;
+
+  public enum EntityType {
+    SHIP(100, 20, 1000),
+    CRYSTAL(10000, 0, 2000000),
+    LASER(50, 1000, 4),
+    PLANET(100000, 50, 20000000),
+    ASTEROID(500, 20, 200000);
+
+    public final float mass;
+    public final int damage;
+    public final int health;
+
+    EntityType(float mass, int damage, int health)
+    {
+      this.mass = mass;
+      this.damage = damage;
+      this.health = health;
+    }
+  }
+
+  private static Map<String, EntityType> entMap;
+
+  static {
+    entMap = new HashMap<>();
+    entMap.put("l", EntityType.LASER);
+    entMap.put("A", EntityType.ASTEROID);
+    entMap.put("P", EntityType.PLANET);
+    entMap.put("S", EntityType.SHIP);
+    entMap.put("C", EntityType.CRYSTAL);
+  }
 
   public Entity()
   {
@@ -57,13 +96,23 @@ public class Entity
     this.rotY = rotY;
     this.rotZ = rotZ;
     this.scale = scale;
-
+    vel.reset();
     orientation = new Quaternion();
     orientation.x(rotX);
     orientation.y(rotY);
     orientation.z(rotZ);
     // basis will be a matrix that holds the directional vectors
     basis.setIdentity();
+    String firstChar = id.substring(0,1);
+
+    if (entMap.containsKey(firstChar))
+    {
+      type = entMap.get(firstChar);
+      damage = type.damage;
+      hitPoints = type.health;
+      mass = type.mass * scale;
+    }
+
     if (model != null)
     {
       box = model.getRawModel().getBoundingBox().deepCopy();
@@ -91,7 +140,7 @@ public class Entity
     this.rotY = rotY;
     this.rotZ = rotZ;
     this.scale = scale;
-
+    vel.reset();
     orientation = new Quaternion();
     orientation.x(rotX);
     orientation.y(rotY);
@@ -107,6 +156,32 @@ public class Entity
       box.translate(position);
       mass = initialMass * scale;
     }
+
+    if (!id.isEmpty())
+    {
+      String firstChar = id.substring(0, 1);
+      if (entMap.containsKey(firstChar))
+      {
+        type = entMap.get(firstChar);
+        damage = type.damage;
+        hitPoints = type.health;
+        mass = type.mass * scale;
+      }
+
+      if (firstChar.equals("l"))
+      {
+        box = Globals.projectileBoundingBox.deepCopy();
+        box.scale(scale);
+      }
+    }
+
+  }
+  
+  public void respawn(Vector3f position)
+  {
+    hitPoints = type.health;
+    setPosition(position);
+    vel.reset();
   }
 
   public void quadTranslate(Vector3 vec3)
@@ -343,17 +418,21 @@ public class Entity
   {
     StringBuilder result = new StringBuilder();
     String delimiter = ",";
-    result.append(id + delimiter);
-    result.append(position.x + delimiter);
-    result.append(position.y + delimiter);
-    result.append(position.z + delimiter);
-    result.append(orientation.x() + delimiter);
-    result.append(orientation.y() + delimiter);
-    result.append(orientation.z() + delimiter);
-    result.append(orientation.w() + delimiter);
-    result.append(scale + delimiter);
-    result.append(clientId + delimiter);
-    result.append(hitPoints + delimiter);
+    result.append(id).append(delimiter);
+    result.append(position.x).append(delimiter);
+    result.append(position.y).append(delimiter);
+    result.append(position.z).append(delimiter);
+    result.append(orientation.x()).append(delimiter);
+    result.append(orientation.y()).append(delimiter);
+    result.append(orientation.z()).append(delimiter);
+    result.append(orientation.w()).append(delimiter);
+    result.append(scale).append(delimiter);
+    if (id.startsWith("S"))
+    {
+      result.append(clientId).append(delimiter);
+      result.append(hitPoints).append(delimiter);
+      result.append(vel.length()).append(delimiter);
+    }
     return result.toString();
   }
 
@@ -408,5 +487,11 @@ public class Entity
   public String getId()
   {
     return id;
+  }
+
+  public static void inflictDamage(Entity first, Entity second)
+  {
+    first.damageObject(second.damage);
+    second.damageObject(first.damage);
   }
 }

@@ -69,33 +69,39 @@ public class AudioManager
    */
   public static void updateAudio() 
   {
-    while (Keyboard.next()) 
-    {
-      if (Keyboard.getEventKeyState()) 
-      {
-        if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) 
-        {
-          // play as a one off sound effect
-          playRandomLaser();
-        }
-        if (Keyboard.getEventKey() == Keyboard.KEY_R) 
-        {
-          // replace the music thats currently playing with
-          // the ogg
-          songStream.playAsMusic(1.0f, 1.0f, true);
-        }
-      }
-    }
+//    while (Keyboard.next()) 
+//    {
+//      if (Keyboard.getEventKeyState()) 
+//      {
+//        if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) 
+//        {
+//          // play as a one off sound effect
+//          playRandomLaser();
+//        }
+//        if (Keyboard.getEventKey() == Keyboard.KEY_R) 
+//        {
+//          // replace the music thats currently playing with
+//          // the ogg
+//          
+//        }
+//      }
+//    }
     // polling is required to allow streaming to get a chance to
     // queue buffers.
+    
     SoundStore.get().poll(0);
   }
-
+public static void playMusic(){
+	
+	songStream.playAsMusic(1.0f, 1.0f, true);
+}
+  
+  
   public static void closeAudio()
   {
     AL.destroy();
   }
-  private static void playRandomLaser()
+  public static void playRandomLaser()
   {
     float pitchRand = (float)(Math.random()*0.15f);
     laser01.playAsSoundEffect(1.0f-pitchRand, 1.0f, false);
