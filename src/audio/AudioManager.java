@@ -8,6 +8,11 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
+/**
+ * Controls the audio stream
+ * @author Robert Nicholson
+ * Thanks to LWJGL tutorial
+ */
 public class AudioManager 
 {
   /** The ogg sound effect */

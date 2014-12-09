@@ -49,6 +49,11 @@ public class MainLoopClient
   private long previousTime=0,currentTime=0;
   private  static int socketVal;
 
+  /**
+   * What the client runs to connect to the main server
+   * Opens a menu first, then connects to a designated server
+   * @param args
+   */
   public MainLoopClient(String[] args)
   {
 	AudioManager.createAudio();
@@ -365,6 +370,12 @@ public class MainLoopClient
     AudioManager.closeAudio();
   }
 
+  /**
+   * Parses the incoming server info into renderlist
+   * @param renderList
+   * @param camera
+   * @param modelMap
+   */
   public void getServerState(List<Entity> renderList,
       Camera camera,
       ModelMap modelMap)
@@ -462,6 +473,14 @@ public class MainLoopClient
     }
   }
 
+  /**
+   * Add things to render based on a string passed in
+   * Does NOT work well with rotated models
+   * @param renderList
+   * @param camera
+   * @param modelMap
+   * @param data
+   */
   public void getOfflineState(List<Entity> renderList, Camera camera,
       ModelMap modelMap,String data)
   {
@@ -500,22 +519,14 @@ public class MainLoopClient
               new Vector3f(x, y, z), xr, yr, zr, s);
         }
         tmp_Entity.orientation.w(w);
-        
-        /*if (object.startsWith("S"))
-        {
-          System.out.print("here:");
-          Quaternion inverse = tmp_Entity.orientation.copy().inverse();
-          Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
-              * tmp_Entity.getScale());
-          deltaCam = inverse.mult(deltaCam);
-          camera.setPosition(new Vector3f(x, y, z));
-          camera.move(deltaCam);
-          camera.orientation = tmp_Entity.orientation.copy();
-        }*/
         renderList.add(tmp_Entity);
       }
     }
   }
+  
+  /**
+   * Sends keyboard input to the server
+   */
   public void sendKeyBoard()
   {
     String toSend = ";";
