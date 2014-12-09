@@ -32,8 +32,8 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import entities.Camera;
 import entities.Entity;
-import entities.Globals;
 import entities.Light;
+import entities.Globals;
 
 public class MainLoopClient
 {

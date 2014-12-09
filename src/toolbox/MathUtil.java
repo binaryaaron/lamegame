@@ -9,10 +9,23 @@ import com.ra4king.opengl.util.math.Vector3;
 import entities.Camera;
 import entities.Entity;
 
+/**
+ * Math utilities mostly for matrices
+ */
 public class MathUtil
 {
 
   //translation for global world objects
+
+  /**
+   * Translation from global to local
+   * @param translation
+   * @param rx
+   * @param ry
+   * @param rz
+   * @param scale
+   * @return
+   */
   public static Matrix4f createTransformationMatrix(Vector3f translation,
       float rx, float ry, float rz, float scale)
   {
@@ -47,7 +60,6 @@ public class MathUtil
 
     return matrix;
   }
-  
   public static Matrix4f createViewMatrix(Camera camera)
   {
 
@@ -60,6 +72,11 @@ public class MathUtil
 
   }
 
+  /**
+   * Translation from Matrix4 to Matrix4f
+   * @param viewMatrix matrix to transform
+   * @return transfromed matrix
+   */
   public static Matrix4f mat4fToMat4(Matrix4 viewMatrix)
   {
     Matrix4f matrix = new Matrix4f();
@@ -83,11 +100,17 @@ public class MathUtil
     return matrix;
   }
 
-  public static float vectorDist(Vector3f max, Vector3f min)
+  /**
+   * Find the vector distance between two vector3f objects
+   * @param first first object
+   * @param second second object
+   * @return euclidean distance
+   */
+  public static float vectorDist(Vector3f first, Vector3f second)
   {
-    float x = max.x - min.x;
-    float y = max.y - min.y;
-    float z = max.z - min.z;
+    float x = first.x - second.x;
+    float y = first.y - second.y;
+    float z = first.z - second.z;
     return (float) Math.sqrt(x*x + y*y + z*z);
   }
 }

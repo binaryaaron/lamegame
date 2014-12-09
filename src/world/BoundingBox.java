@@ -214,6 +214,10 @@ public class BoundingBox implements Box
     center.translate(trans.x, trans.y, trans.z);
   }
 
+  /**
+   * Change boundingbox scale
+   * @param size
+   */
   public void scale(float size)
   {
     min.scale(size);
@@ -221,6 +225,12 @@ public class BoundingBox implements Box
     updateCenter();
   }
 
+  /**
+   * translate box by deltas
+   * @param dx delta x
+   * @param dy delta y
+   * @param dz delta z
+   */
   public void translate(float dx, float dy, float dz)
   {
     min.translate(dx, dy, dz);
@@ -228,6 +238,10 @@ public class BoundingBox implements Box
     center.translate(dx, dy, dz);
   }
 
+  /**
+   * Create a deep copy of the bounding box
+   * @return new bounding box
+   */
   public BoundingBox deepCopy()
   {
     return new BoundingBox(new Vector3f(min), new Vector3f(max));

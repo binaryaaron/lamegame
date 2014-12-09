@@ -4,6 +4,9 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Test the BoundingBox with box interface
+ */
 public class BoxUtilitiesTest extends TestCase
 {
   private Box b1;
@@ -13,6 +16,10 @@ public class BoxUtilitiesTest extends TestCase
   private Box b5;
   private Box b6;
 
+  /**
+   * Set up test objects
+   * @throws Exception
+   */
   @Before public void setUp() throws Exception
   {
     Vector3f min = new Vector3f(0f, 0f, 0f);
@@ -29,6 +36,10 @@ public class BoxUtilitiesTest extends TestCase
     b6 = new BoundingBox(new Vector3f(4f, 4f, 4f), new Vector3f(8f, 8f, 8f));
   }
 
+  /**
+   * Test the collision detection
+   * @throws Exception
+   */
   public void testCollision() throws Exception
   {
     // check identity

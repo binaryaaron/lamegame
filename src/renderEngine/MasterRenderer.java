@@ -16,7 +16,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
-import shaders.LaserShader;
 import shaders.SkyBoxShader;
 import shaders.StaticShader;
 import skyBox.SkyBox;
@@ -36,7 +35,6 @@ public class MasterRenderer
 
   private SkyBoxRenderer skyBoxRenderer;
   private SkyBoxShader skyBoxShader = new SkyBoxShader();
-  
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
   private Map<TexturedModel, List<Entity>> hudEntities = new HashMap<>();
   private List <SkyBox> skyBox;
@@ -104,8 +102,6 @@ public class MasterRenderer
    skyBox.getSkyEntity().position=camera.position;
   }
 
-  
-
   /**
    * Add an entity to the batch
    * @param entity
@@ -124,7 +120,6 @@ public class MasterRenderer
       newBatch.add(entity);
       entities.put(entityModel, newBatch);
     }
-
   }
   
   /**

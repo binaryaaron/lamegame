@@ -11,13 +11,7 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class Player extends Entity
 {
-  public static short PLAYER_COUNT = 0;
-  //private final short playerId;
-  private Boolean alive = true;
-  private Boolean playing = true;
-
   public long lastFired = System.currentTimeMillis();
-
   public static final float playerScale = 3f;
   public int missileSound = 0;
 
@@ -48,67 +42,6 @@ public class Player extends Entity
   public int getHitPoints()
   {
     return hitPoints;
-  }
-
-  /**
-   * Sets the player's health
-   *
-   * @param health the updated health score
-   */
-  public void setHealth(int health)
-  {
-    hitPoints = health;
-  }
-
-  /**
-   * Gets the 'alive' flag for this player.
-   */
-  public boolean getAlive()
-  {
-    return alive;
-  }
-
-  /**
-   * Sets the 'alive' flag for this player.
-   */
-  public void setAlive(Boolean alive)
-  {
-    this.alive = alive;
-  }
-
-  /**
-   * Gets the status of the player - are they playing the game? logging off?
-   * delete them!
-   *
-   * @return if the player is playing or not
-   */
-  public Boolean getPlaying()
-  {
-    return playing;
-
-  }
-
-  public void setPlaying(Boolean playing)
-  {
-    this.playing = playing;
-  }
-
-  /**
-   * @DEPRECATED
-   * Kills this player object. Should send a signal to the screen and say
-   * that the player is dead, allowing the player to respawn or something
-   * could assign a new player with the same ID as this one ...?
-   *
-   * @param player the game object to die
-   */
-  protected void uponDeath(Player player)
-  {
-    System.out.println("I'm dead!");
-  }
-
-  public int getClientID()
-  {
-    return clientId;
   }
 
   /**

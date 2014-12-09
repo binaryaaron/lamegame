@@ -6,7 +6,7 @@ import entities.Globals;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * Created by wortiz on 11/16/14.
+ * Class for physics utilities
  */
 public class PhysicsUtilities
 {
