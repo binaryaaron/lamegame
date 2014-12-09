@@ -46,7 +46,7 @@ public class MainLoopClient
   private static int socketVal = -1;
   
   private float speed;
-
+  private int score;
   private int health;
   private long previousTime=0,currentTime=0;
 
@@ -318,7 +318,7 @@ public class MainLoopClient
         hudStart = System.currentTimeMillis();
 
         hudRenderList.get(2).setModel(
-            modelMap.setScoreText(("" + System.currentTimeMillis() + "  ")));
+            modelMap.setScoreText(("" + score)));
         hudRenderList.get(1).setModel(modelMap.setHealthText("" + health));
 
         hudRenderList.get(0).setModel(modelMap.setSpeedText("" + speed));
@@ -400,6 +400,7 @@ public class MainLoopClient
         {
           health = Integer.parseInt(currentLine[10]);
           speed = Float.parseFloat(currentLine[11]);
+          score = Integer.parseInt(currentLine[12]);
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
               * tmp_Entity.getScale());
@@ -414,14 +415,13 @@ public class MainLoopClient
         	float tagScale=scaleVec.length();
           Entity playerTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
               new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
-          System.out.println(tagScale);
           renderList.add(playerTag);
           playerTag.drawShadow=false;
         }
-        else if(object.startsWith("gCry")){
+        else if(object.startsWith("CryP")){
         	
         	
-        	Entity crystal=  new Entity("gCry", modelMap.getTexturedModelList().get("gCry"),
+        	Entity crystal=  new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
                     new Vector3f(x, y, z), xr, yr, zr, s);
                 renderList.add(crystal);
               //  crystal.drawShadow=false;

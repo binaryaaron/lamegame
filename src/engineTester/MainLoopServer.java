@@ -311,13 +311,13 @@ public class MainLoopServer
     {
       renderList.removeAll(killList);
       killList.clear();
-      killStep+=4;
+      killStep+=1;
     }
     nextStep++;
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
-      if (!ent.getId().equals("Plan")) ent.move();
+      if (!(ent.type == Entity.EntityType.PLANET)) ent.move();
     }
     for (int i = 0; i < renderList.size(); i++)
     {
@@ -326,15 +326,41 @@ public class MainLoopServer
       for (int j = i + 1; j < renderList.size(); j++)
       {
         other = renderList.get(j);
-        if (BoxUtilities.collision(ent.getBox(), other.getBox()))
+        if (ent.type == Entity.EntityType.PLANET)
         {
-          PhysicsUtilities.elasticCollision(ent, other);
+          PhysicsUtilities.planetCollision(ent, other);
+        }
+        else if (other.type == Entity.EntityType.PLANET)
+        {
+          PhysicsUtilities.planetCollision(other, ent);
+        }
+        else if (BoxUtilities.collision(ent.getBox(), other.getBox()))
+        {
+          if (ent.type == Entity.EntityType.SHIP && other.type == Entity.EntityType.CRYSTAL)
+          {
+            if (ent.entScoreStep != nextStep)
+            {
+              ent.score++;
+              ent.entScoreStep = nextStep;
+              killList.add(other);
+            }
+          }
+          else if (ent.type == Entity.EntityType.CRYSTAL && other.type == Entity.EntityType.SHIP)
+          {
+            if (other.entScoreStep != nextStep)
+            {
+              other.score++;
+              killList.add(ent);
+            }
+          } else {
+            PhysicsUtilities.elasticCollision(ent, other);
+          }
         }
       }
       if (ent.getHitPoints() <= 0)
       {
         killList.add(ent);
-        if (ent.getId().startsWith("S") && !deadPlayers.contains(ent))
+        if (ent.type == Entity.EntityType.SHIP && !deadPlayers.contains(ent))
         {
           deadPlayers.add((Player) ent);
         }
@@ -344,7 +370,7 @@ public class MainLoopServer
 
   private String createInitialGameString(ModelMap modelMap)
   {
-    String startString = "Plan,0,0,0,0,0,0,100;gCry,1000,1000,1000,0,0,0,100;";
+    String startString = "Plan,0,0,0,0,0,0,100;CryP,1000,1000,1000,0,0,0,100;";
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
         new Vector3f(1000, 1050, 0), 0, 0, 0, 0);

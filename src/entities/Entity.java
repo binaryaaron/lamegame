@@ -44,21 +44,38 @@ public class Entity
 
   public boolean drawShadow = true;
   protected int clientId = -1;
+  public EntityType type;
+  public int score = 0;
+  public long entScoreStep = 0;
 
-  private static Map<String, Integer> damageMap;
-  private static Map<String, Integer> healthMap;
+  public enum EntityType {
+    SHIP(100, 20, 1000),
+    CRYSTAL(10000, 0, 2000000),
+    LASER(50, 1000, 4),
+    PLANET(100000, 50, 20000000),
+    ASTEROID(500, 20, 200000);
+
+    public final float mass;
+    public final int damage;
+    public final int health;
+
+    EntityType(float mass, int damage, int health)
+    {
+      this.mass = mass;
+      this.damage = damage;
+      this.health = health;
+    }
+  }
+
+  private static Map<String, EntityType> entMap;
 
   static {
-    damageMap = new HashMap<>();
-    healthMap = new HashMap<>();
-    damageMap.put("A", 20);
-    damageMap.put("P", 20);
-    damageMap.put("l", 100);
-    damageMap.put("S", 100);
-    healthMap.put("A", 20000);
-    healthMap.put("P", 2000000);
-    healthMap.put("l", 1);
-    healthMap.put("S", 1000);
+    entMap = new HashMap<>();
+    entMap.put("l", EntityType.LASER);
+    entMap.put("A", EntityType.ASTEROID);
+    entMap.put("P", EntityType.PLANET);
+    entMap.put("S", EntityType.SHIP);
+    entMap.put("C", EntityType.CRYSTAL);
   }
 
   public Entity()
@@ -88,9 +105,12 @@ public class Entity
     basis.setIdentity();
     String firstChar = id.substring(0,1);
 
-    if (damageMap.containsKey(firstChar))
+    if (entMap.containsKey(firstChar))
     {
-      damage = damageMap.get(firstChar);
+      type = entMap.get(firstChar);
+      damage = type.damage;
+      hitPoints = type.health;
+      mass = type.mass * scale;
     }
 
     if (model != null)
@@ -140,14 +160,12 @@ public class Entity
     if (!id.isEmpty())
     {
       String firstChar = id.substring(0, 1);
-      if (damageMap.containsKey(firstChar))
+      if (entMap.containsKey(firstChar))
       {
-        damage = damageMap.get(firstChar);
-      }
-
-      if (healthMap.containsKey(firstChar))
-      {
-        hitPoints = healthMap.get(firstChar);
+        type = entMap.get(firstChar);
+        damage = type.damage;
+        hitPoints = type.health;
+        mass = type.mass * scale;
       }
 
       if (firstChar.equals("l"))
@@ -156,11 +174,12 @@ public class Entity
         box.scale(scale);
       }
     }
+
   }
   
   public void respawn(Vector3f position)
   {
-    hitPoints = healthMap.get(id.substring(0, 1));
+    hitPoints = type.health;
     setPosition(position);
     vel.reset();
   }

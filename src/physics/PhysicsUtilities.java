@@ -3,7 +3,6 @@ package physics;
 import com.ra4king.opengl.util.math.Vector3;
 import entities.Entity;
 import entities.Globals;
-import jdk.nashorn.internal.objects.Global;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -62,13 +61,27 @@ public class PhysicsUtilities
       vec1.mult(1.01f);
       vec2.mult(1.01f);
     }
-    else
+    else if (Globals.EASY_MODE)
     {
       vec1.mult(0.97f);
       vec2.mult(0.97f);
     }
   }
 
+  public static void planetCollision(Entity planet, Entity ent)
+  {
+    Vector3 ppos = new Vector3(planet.position.x, planet.position.y, planet.position.z);
+    Vector3 epos = new Vector3(ent.position.x, ent.position.y, ent.position.z);
+    Vector3 dist = epos.copy();
+    dist.sub(ppos);
+
+    if (dist.length() < Globals.PLANET_RADIUS)
+    {
+      elasticCollision(planet, ent);
+    }
+
+    planet.vel.reset();
+  }
   public static void gameWorldCollision(Entity ent)
   {
     Vector3f position = ent.position;
