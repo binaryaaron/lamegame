@@ -7,11 +7,12 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.RawModel;
+import models.Vertex;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import models.RawModel;
-import models.Vertex;
 import world.BoxUtilities;
 
 public class OBJLoader
@@ -144,12 +145,10 @@ public class OBJLoader
     for (int i = 0; i < textureArrayList.size(); i++)
     {
       textureArray[i] = textureArrayList.get(i);
-
     }
     for (int i = 0; i < normalsArrayList.size(); i++)
     {
       normalsArray[i] = normalsArrayList.get(i);
-
     }
 
     int vertexPointer = 0;
@@ -158,7 +157,6 @@ public class OBJLoader
       verticesArray[vertexPointer++] = vertex.x;
       verticesArray[vertexPointer++] = vertex.y;
       verticesArray[vertexPointer++] = vertex.z;
-
     }
 
     for (int i = 0; i < indices.size(); i++)
@@ -177,6 +175,8 @@ public class OBJLoader
   }
 
   /**
+   * Process a vertex, given normals, indices and texture points, into the
+   * local texture/normal/indices/vertices array list
    * @param vertexData
    * @param indices
    * @param textures

@@ -81,7 +81,7 @@ public class Renderer
 	}
 	
 	/**
-	 * Create a projection matrix based on the display
+	 * Create a projection matrix based on the Display
 	 */
 	private void createProjectionMatrix()
 	{
