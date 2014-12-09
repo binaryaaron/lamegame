@@ -1,7 +1,8 @@
 package world;
 
-import com.ra4king.opengl.util.math.Vector3;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.ra4king.opengl.util.math.Vector3;
 
 /**
  * A bounding box class that implements box, currently just for testing
@@ -125,7 +126,6 @@ public class BoundingBox implements Box
    */
   public void setPosition(Vector3 position)
   {
-    Vector3 diff = new Vector3();
     setPosition(new Vector3f(position.x(), position.y(), position.z()));
   }
   /**

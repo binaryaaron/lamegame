@@ -1,20 +1,30 @@
 package models;
 
 import textures.ModelTexture;
-import world.BoundingBox;
 
-public class TexturedModel {
-	
+public class TexturedModel 
+{
 	private RawModel rawModel;
 	private ModelTexture texture;
 	private String id;
-	public TexturedModel(String id, RawModel model,ModelTexture texture){
-		
+	
+	/**
+	 * Create a textured model with an id, model and texture
+	 * @param id
+	 * @param model
+	 * @param texture
+	 */
+	public TexturedModel(String id, RawModel model,ModelTexture texture)
+	{
 		this.rawModel=model;
 		this.texture =texture;
 		this.id = id;
 	}
 
+	/**
+	 * Getters
+	 * @return
+	 */
 	public String getId()
 	{
 		return id;

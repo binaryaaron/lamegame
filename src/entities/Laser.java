@@ -4,11 +4,12 @@ import models.TexturedModel;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
+
 import toolbox.MathUtil;
 import world.BoundingBox;
+
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
 
 public class Laser
 
@@ -35,7 +36,6 @@ public class Laser
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
   // public Vector3f vel = new Vector3f(0f,0f,0f);
-  private static Boolean DEBUG = true;
   protected int hitPoints;
   private String id;
   private int clientId = -1;
@@ -164,13 +164,6 @@ public class Laser
 
   public Matrix4f setNewBasis(float rotX, float rotY, float rotZ)
   {
-
-    float cx = (float) Math.cos(rotX);
-    float sx = (float) Math.sin(rotX);
-    float cy = (float) Math.cos(rotY);
-    float sy = (float) Math.sin(rotY);
-    float cz = (float) Math.cos(rotZ);
-    float sz = (float) Math.sin(rotZ);
 
     Matrix4f rotMat = new Matrix4f();
     rotMat.m00 = (float) (Math.cos(rotX) * Math.cos(rotZ) - Math.sin(rotX)

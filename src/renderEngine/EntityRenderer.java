@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 import shaders.StaticShader;
@@ -23,6 +22,11 @@ public class EntityRenderer
 
   private StaticShader shader;
 
+  /**
+   * Create an entity renderer with a shader and load a projection matrix into it
+   * @param shader
+   * @param projectionMatrix
+   */
   public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix)
   {
     this.shader = shader;
@@ -30,9 +34,12 @@ public class EntityRenderer
     shader.start();
     shader.loadProjectionMatrix(projectionMatrix);
     shader.stop();
-
   }
 
+  /**
+   * render all models in the entities list to the screen
+   * @param entities
+   */
   public void render(Map<TexturedModel, List<Entity>> entities)
   {
     for (TexturedModel model : entities.keySet())
@@ -46,11 +53,13 @@ public class EntityRenderer
             .getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
       }
       unbindTexturedModel();
-
     }
-
   }
 
+  /**
+   * Bind a textured model
+   * @param model
+   */
   private void prepareTexturedModel(TexturedModel model)
   {
     RawModel rawModel = model.getRawModel();
@@ -67,6 +76,9 @@ public class EntityRenderer
     GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
   }
 
+  /**
+   * Unbind a textured model
+   */
   private void unbindTexturedModel()
   {
     GL20.glDisableVertexAttribArray(0);
@@ -75,12 +87,14 @@ public class EntityRenderer
     GL30.glBindVertexArray(0);
   }
 
+  /**
+   * Load an entity into the transformation matrix
+   * @param entity
+   */
   private void prepareInstance(Entity entity)
   {
     shader.loadDrawShadow(entity.drawShadow);
     Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(entity);
     shader.loadTransformationMatrix(transformationMatrix);
-
   }
-
 }

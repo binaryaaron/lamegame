@@ -14,7 +14,6 @@ import java.net.Socket;
 
 public class ServerThread extends Thread
 {
-  private static final boolean DEBUG=false;
   public boolean printlocation = true;
   public boolean printclients = false;
   public String inputFromClient = null;
@@ -46,12 +45,10 @@ public class ServerThread extends Thread
       out = new PrintWriter(myClientSocket.getOutputStream(), true);
       in = new BufferedReader(new InputStreamReader(
           myClientSocket.getInputStream()));
-      int loop = 0;
 //      out.println(ID);//send ID to WalkerClient as first item
 
       while ((inputFromClient = in.readLine()) != null)
       {
-        loop++;
         try
         {
           Thread.sleep(17);// check for input 60 times a second
@@ -60,7 +57,6 @@ public class ServerThread extends Thread
         {
           e.printStackTrace();
         }
-        if(DEBUG)System.out.println("loops "+loop);
       }
     }
     catch (java.net.SocketException e)

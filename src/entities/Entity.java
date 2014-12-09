@@ -1,17 +1,18 @@
 package entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import models.TexturedModel;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
+
 import toolbox.MathUtil;
 import world.BoundingBox;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
 
 /**
  * Entity is the basic object of a game. Each object has various parameters
@@ -41,8 +42,6 @@ public class Entity
   protected BoundingBox box;
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
-  // public Vector3f vel = new Vector3f(0f,0f,0f);
-  private static Boolean DEBUG = true;
   protected int hitPoints = 1000;
   protected int damage = 1;
   protected String id;
@@ -81,8 +80,8 @@ public class Entity
    */
   private static Map<String, EntityType> entMap;
 
-  // Initialize entity map
-  static {
+  static
+  {
     entMap = new HashMap<>();
     entMap.put("l", EntityType.LASER);
     entMap.put("A", EntityType.ASTEROID);
@@ -96,7 +95,7 @@ public class Entity
    */
   public Entity()
   {
-    
+
   }
 
   /**
@@ -204,7 +203,11 @@ public class Entity
     }
 
   }
-  
+
+  /**
+   * recreate the object in a different location with starting health
+   * @param position
+   */
   public void respawn(Vector3f position)
   {
     hitPoints = type.health;
@@ -212,6 +215,10 @@ public class Entity
     vel.reset();
   }
 
+  /**
+   * Move the object without changing orientation
+   * @param vec3
+   */
   public void quadTranslate(Vector3 vec3)
   {
     this.box.setPosition(vec3);
@@ -234,7 +241,7 @@ public class Entity
 
   /**
    * Translates the position vector using three floats
-   * 
+   *
    * @param dx x direction
    * @param dy y direction
    * @param dz z direction
@@ -254,7 +261,11 @@ public class Entity
     position.z *= s;
     box.setPosition(position);
   }
-  
+
+  /**
+   * Getters and setters
+   * @return
+   */
   public float getSize()
   {
     return size;
@@ -278,14 +289,6 @@ public class Entity
 
   public Matrix4f setNewBasis(float rotX, float rotY, float rotZ)
   {
-
-    float cx = (float) Math.cos(rotX);
-    float sx = (float) Math.sin(rotX);
-    float cy = (float) Math.cos(rotY);
-    float sy = (float) Math.sin(rotY);
-    float cz = (float) Math.cos(rotZ);
-    float sz = (float) Math.sin(rotZ);
-
     Matrix4f rotMat = new Matrix4f();
     rotMat.m00 = (float) (Math.cos(rotX) * Math.cos(rotZ) - Math.sin(rotX)
         * Math.cos(rotY) * Math.sin(rotZ));
@@ -302,9 +305,7 @@ public class Entity
     rotMat.m02 = (float) (Math.sin(rotY) * Math.sin(rotX));
     rotMat.m12 = (float) (-Math.sin(rotY) * Math.cos(rotX));
     rotMat.m22 = (float) (Math.cos(rotY));
-
     return rotMat;
-
   }
 
   public BoundingBox getBox()
@@ -403,7 +404,7 @@ public class Entity
    * toString allows the entity to be parsed by the server's string handlers. it
    * builds the string by the id, positions, orientations, scale, and if needed,
    * the client id, hit points, and velocity length
-   * 
+   *
    * @return String
    */
   @Override
@@ -431,7 +432,7 @@ public class Entity
 
   /**
    * Updates the hit points of the object
-   * 
+   *
    * @param dmg
    */
   public void damageObject(int dmg)
@@ -460,7 +461,7 @@ public class Entity
 
   /**
    * Heals the hit points of the object
-   * 
+   *
    * @param heal
    */
   public void healEntity(int heal)
@@ -478,21 +479,17 @@ public class Entity
 
   /**
    * What happens when you die?
-   * 
+   *
    * @param ent
    *          the game object to die
    */
   protected void uponDeath(Entity ent)
   {
-    // unimplemented in GameObject()
+
   }
 
   /**
-<<<<<<< HEAD
    * Updates the object with a random inital velocity - used for creation
-=======
-   * Set a random velocity
->>>>>>> origin/weston_comments
    */
   public void randomVel()
   {
@@ -502,7 +499,7 @@ public class Entity
 
   /**
    * Gets the entity's id.
-   * 
+   *
    * @return
    */
   public String getId()
@@ -511,7 +508,8 @@ public class Entity
   }
 
   /**
-   * Damages the entity.
+   * Get hurt by something, hurt something else.
+   * All damage is based on collisions
    * @param first
    * @param second
    */

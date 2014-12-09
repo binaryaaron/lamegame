@@ -1,15 +1,12 @@
 /*** 
- * Thanks to youtube user ThinMatrix
  * Generates board and fills it with objects, such as asteroids and ships.
  * Updates the position of the objects and camera.
- * Updates the GUI
+ * Updates the GUI.
+ * Send information to clients.
+ * Run this once to make the server.
  */
 package engineTester;
 
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector;
-import com.ra4king.opengl.util.math.Vector3;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +17,6 @@ import models.RawModel;
 import models.TexturedModel;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -31,17 +27,21 @@ import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
 import server.ServerMaster;
 import server.ServerThread;
-import skyBox.SkyBox;
 import textures.ModelTexture;
 import world.BoxUtilities;
+
+import com.ra4king.opengl.util.Utils;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+
 import entities.Camera;
 import entities.Entity;
 import entities.Globals;
-import entities.Light;
 import entities.Player;
 
 public class MainLoopServer
 {
+
 	  public ServerMaster myServer;
 	  private int loop = 0;
 	  float crystalSize = 100f;
@@ -51,7 +51,7 @@ public class MainLoopServer
 	  Player player3;
 	  ModelMap modelMap;
 	  List<Player> deadPlayers;
-	 
+
 	  private static final int nAsteroids = 200;
 	  private static final int nCrystals = 10;
 	  private boolean gameOver=false;
@@ -61,9 +61,12 @@ public class MainLoopServer
 	  long nextStep = 4;
 	  long killStep = 4;
 
+  /**
+   * Creates a server and a black Window that represents the server
+   * @param args
+   */
   public MainLoopServer(String[] args)
   {
-
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     modelMap = new ModelMap();
@@ -78,8 +81,6 @@ public class MainLoopServer
 
     // create lights and camera for the player. camera position should be set in
     // parsing routine
-    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
-        1.0f, 1.0f));
     MasterRenderer renderer = new MasterRenderer(new Camera());
 
     String outputToClient;
@@ -92,7 +93,6 @@ public class MainLoopServer
     {
       e.printStackTrace();
     }
-    String startString;
 
     List<Entity> renderList = createInitialGame(modelMap);
 
@@ -104,7 +104,6 @@ public class MainLoopServer
     deadPlayers = new LinkedList<>();
     long lastTime = System.currentTimeMillis();
 
-    float scale;
     while (!Display.isCloseRequested())
     {
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
@@ -149,21 +148,18 @@ public class MainLoopServer
         }
         lastTime = time;
         if(gameOver){
-        	
+
         	endGameStep(renderList,winner);
         }
         performPhysics(renderList);
       }
 
-      // ///instead of rendering, build strings and send them to the client
+      //instead of rendering, build strings and send them to the client
       outputToClient = "";// clear the String
       for (Entity ent : renderList)
       {
         outputToClient += ent.toString() + ";";
       }
-      // outputToClient += camera.toString();
-
-      // for (WalkerThread wt : myServer.threadList)
       for (int i = 0; i < ServerMaster.threadList.size(); i++)
       {
         ServerThread wt = ServerMaster.threadList.get(i);
@@ -190,7 +186,6 @@ public class MainLoopServer
       List<Entity> renderList, List<Entity> missileList,
       Camera camera, Player player)
   {
-    float scale;
     Quaternion orientation;
     Vector3 position;
     Vector3 cameraPos;
@@ -198,11 +193,6 @@ public class MainLoopServer
     String[] clientInput = inputFromClient.split(";");
     for (String input : clientInput)
     {
-
-      if (input.equals("KEY_LSHIFT"))
-      {
-        scale = 0.01f;
-      }
 
       orientation = player.orientation;
       position = new Vector3(player.position.x, player.position.y,
@@ -217,7 +207,6 @@ public class MainLoopServer
       float rotSpeed = 1f;
 
       // pitch
-      int dy = Mouse.getDY();
       if (input.equals("KEY_W"))
       {
         orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(1, 0, 0)).mult(
@@ -229,7 +218,6 @@ public class MainLoopServer
             orientation);
       }
       // yaw
-      int dx = Mouse.getDX();
       if (input.equals("KEY_A"))
       {
         orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(0, 1, 0)).mult(
@@ -483,7 +471,6 @@ public class MainLoopServer
   private Entity randEntity(String id, float size)
   {
 
-    int a = Globals.RAND.nextInt(2) + 1;
 
     int r = 0;
     int x = Globals.RAND.nextInt(8000) - 1500;
@@ -600,6 +587,7 @@ public class MainLoopServer
     return ents;
   }
 
+
   public static void main(String[] args)
   {
     new MainLoopServer(args);
@@ -621,11 +609,15 @@ public class MainLoopServer
       }
     }
   }
+
+  /**
+   * What to do when the game is won
+   * @param i
+   */
   public String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer
     String input = ServerMaster.threadList.get(i).getClientInput();
-    loop++;
     return input;
   }
 }

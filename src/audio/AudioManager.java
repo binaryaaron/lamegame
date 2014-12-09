@@ -15,8 +15,6 @@ import org.newdawn.slick.util.ResourceLoader;
  */
 public class AudioManager 
 {
-  /** The ogg sound effect */
-  private static Audio oggEffect;
   /** The ogg song */
   private static Audio songStream;
   /** Completely silent song */

@@ -4,9 +4,9 @@ import models.TexturedModel;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.ra4king.opengl.util.math.Vector3;
-
 import world.BoundingBox;
+
+import com.ra4king.opengl.util.math.Vector3;
 
 /**
  * Asteroid is the main asteroid class, obviously.
@@ -16,7 +16,6 @@ import world.BoundingBox;
 public class Asteroid extends Entity
 {
   private static short ASTEROID_COUNT = 0;
-  private static Boolean DEBUG = true;
   private final String id;
   private final int intId;
 

@@ -80,7 +80,6 @@ public class FontLoader
         Vector2f uv_down_right = new Vector2f(uv_x+1.0f/16.0f-spaceOffset,(uv_y+1.0f/16.0f));
         Vector2f uv_down_left = new Vector2f(uv_x+spaceOffset, (uv_y+1.0f/16.0f));
 
-        
         textures.add(uv_down_left);
         textures.add(uv_down_right);
         textures.add(uv_up_right);
@@ -157,7 +156,6 @@ public class FontLoader
     for (int i = 0; i < normalsArrayList.size(); i++)
     {
       normalsArray[i] = normalsArrayList.get(i);
-
     }
 
     int vertexPointer = 0;
@@ -166,7 +164,6 @@ public class FontLoader
       verticesArray[vertexPointer++] = vertex.x;
       verticesArray[vertexPointer++] = vertex.y;
       verticesArray[vertexPointer++] = vertex.z;
-
     }
 
     for (int i = 0; i < indices.size(); i++)
@@ -183,10 +180,10 @@ public class FontLoader
     return loader.loadToVAO(verticesArray, textureArray, normalsArray,
         indicesArray, BoxUtilities.createBoundingBoxFromVertices(vertarray));
   }
-
-  
   
   /**
+   * Processes a vertex given normals and texture data into the normals array list,
+   * indices, texture array list and process verticies
    * @param vertexData
    * @param indices
    * @param textures
@@ -220,7 +217,6 @@ public class FontLoader
       normalsArrayList.add(currentNorm.x);
       normalsArrayList.add(currentNorm.y);
       normalsArrayList.add(currentNorm.z);
-
     }
     else
     {

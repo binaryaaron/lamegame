@@ -1,8 +1,8 @@
 package entities;
 
 import models.TexturedModel;
+
 import org.lwjgl.util.vector.Vector3f;
-import world.BoundingBox;
 
 /**
  * Player is the main class for a given player. It extends Entity and is build
@@ -15,7 +15,7 @@ public class Player extends Entity
   //private final short playerId;
   private Boolean alive = true;
   private Boolean playing = true;
-  private static Boolean DEBUG = true;
+
   public long lastFired = System.currentTimeMillis();
 
   public static final float playerScale = 3f;

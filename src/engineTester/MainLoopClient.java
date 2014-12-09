@@ -1,8 +1,8 @@
 /*** 
  * Thanks to youtube user ThinMatrix
- * Generates board and fills it with objects, such as asteroids and ships.
- * Updates the position of the objects and camera.
- * Updates the GUI
+ * Recieves information from Main Loop server
+ * Draws scenes based on server information/offline information
+ * Run this once for each client.
  */
 package engineTester;
 
@@ -32,14 +32,11 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import entities.Camera;
 import entities.Entity;
-import entities.Laser;
-import entities.Light;
 import entities.Globals;
+import entities.Light;
 
 public class MainLoopClient
 {
-
-  private final boolean HUD_DEBUG = false;
   private boolean exitRequest = false;
   private static String hostName;
   public final boolean PRINT_FPS = false;
@@ -63,7 +60,6 @@ public class MainLoopClient
   public MainLoopClient(String[] args)
   {
     AudioManager.createAudio();
-    Entity player = null;
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
@@ -92,16 +88,12 @@ public class MainLoopClient
 
     // this will be information read from a socket
     // format: ID,x,y,z,rotx,rot,y,rotz,scale
-    String outputToServer = null;
-    String inputFromServer = null;
 
-    long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
     long hudDelay = 100;
     long hudStart = 0;
     //Hud Objects
     List<Entity> renderList = new ArrayList<>();
-    List<Laser> lasers = new ArrayList<>();
 
     List<Entity> hudRenderList = new ArrayList<>();
 
@@ -146,14 +138,14 @@ public class MainLoopClient
       {
         menuData += "A003,";
       }
-      menuData += (Math.random() * 20 + 10) + ","; //x
-      menuData += (Math.random() * 30 - 15) + ","; //y
-      menuData += (Math.random() * 60 + 50) + ",";//z
-      menuData += "0,";//(Math.random()*4)+",";//rx
-      menuData += "0,";//(Math.random()*4)+",";//ry
-      menuData += "0,";//(Math.random()*4)+",";//rz
-      menuData += "0,";//w
-      menuData += (Math.random() * .2 + 0.6) + ";";
+      menuData+=(Math.random()*20+10)+","; //x
+      menuData+=(Math.random()*30-15)+","; //y
+      menuData+=(Math.random()*60+50)+",";//z
+      menuData+="0,";//rx
+      menuData+="0,";//ry
+      menuData+="0,";//rz
+      menuData+="0,";//w
+      menuData+=(Math.random()*.2+0.6)+";";
     }
 
     if (PRINT_FPS)
@@ -456,7 +448,6 @@ public class MainLoopClient
         //any ship
         else if (object.startsWith("S"))
         {
-          float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
@@ -579,7 +570,6 @@ public class MainLoopClient
         s = Float.parseFloat(currentLine[8]);
         if (object.startsWith("S"))
         {
-          float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);

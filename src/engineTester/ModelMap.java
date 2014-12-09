@@ -15,28 +15,15 @@ public class ModelMap
 {
   //generate a hashmap of all textured models that we could use in the scene and
   //associate key them to an int as an id
-  /*the current key mapping is as follows
-	
-	*1-> square rock asteroid
-	*2->high poly rock asteroid
-	*3->asteroid
-	*4->ship,SciFi_FighterMK
-	*5->space_frigate_6
-	*
-	*/
   private Map<String, TexturedModel> texturedModelList = new HashMap<>();
 
   Loader loader = new Loader();
   StaticShader shader = new StaticShader();
+  //these rawmodels kept global for editing
   RawModel speedLabel;
   RawModel healthLabel;
   RawModel scoreLabel;
-  RawModel connectLabel;
-  RawModel helpLabel;
-  RawModel creditsLabel;
-  RawModel quitLabel;
-  RawModel deathLabel;
-  RawModel deathHelpLabel;
+  //global for use across all text textures
   ModelTexture textTx;
 
   public ModelMap()
@@ -56,12 +43,12 @@ public class ModelMap
     speedLabel = FontLoader.loadFontModel("0", loader, true, 1);
     healthLabel = FontLoader.loadFontModel("0%", loader, true, 1);
     scoreLabel = FontLoader.loadFontModel("0", loader, true, 1);
-    connectLabel = FontLoader.loadFontModel("Connect", loader, true, 1);
-    helpLabel = FontLoader.loadFontModel("Help", loader, true, 1);
-    creditsLabel = FontLoader.loadFontModel("Credits", loader, true, 1);
-    quitLabel = FontLoader.loadFontModel("Exit", loader, true, 1);
-    deathLabel = FontLoader.loadFontModel("YOU ARE DEAD", loader, true, 1);
-    deathHelpLabel = FontLoader.loadFontModel("Press P to respawn!", loader, true, 1);
+    RawModel connectLabel = FontLoader.loadFontModel("Connect", loader, true, 1);
+    RawModel helpLabel = FontLoader.loadFontModel("Help", loader, true, 1);
+    RawModel creditsLabel = FontLoader.loadFontModel("Credits", loader, true, 1);
+    RawModel quitLabel = FontLoader.loadFontModel("Exit", loader, true, 1);
+    RawModel deathLabel = FontLoader.loadFontModel("YOU ARE DEAD", loader, true, 1);
+    RawModel deathHelpLabel = FontLoader.loadFontModel("Press P to respawn!", loader, true, 1);
     ModelTexture shipTexture = new ModelTexture(
         loader.loadTexture("SciFi_FighterMK_diffuse"));
     ModelTexture ship2Texture = new ModelTexture(
@@ -111,6 +98,7 @@ public class ModelMap
     TexturedModel purpCrystal = new TexturedModel("CryP", crystal,
     		purpTexture);
 
+    //Add each text texture/model to the list
     texturedModelList.put("H001", texturedSpeed);
     texturedModelList.put("H002", texturedHealth);
     texturedModelList.put("H003", texturedScore);
@@ -120,7 +108,7 @@ public class ModelMap
     texturedModelList.put("H007", texturedQuit);
     texturedModelList.put("H008", texturedDeath);
     texturedModelList.put("H009", texturedDeathHelp);
-    
+    //Add each non-text texture/model to the list
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
     texturedModelList.put("A003", texturedModelStone);
@@ -134,6 +122,10 @@ public class ModelMap
 
   }
 
+  /**
+   * Getter and text setters
+   * @return
+   */
   public Map<String, TexturedModel> getTexturedModelList()
   {
     return texturedModelList;
