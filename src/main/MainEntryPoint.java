@@ -11,6 +11,10 @@ import java.io.File;
  */
 public class MainEntryPoint
 {
+  /**
+   * Main entry point for code, run either server or client based on call
+   * @param args
+   */
   public static void main(String[] args)
   {
     System.out.println(new File(".").getAbsoluteFile());
@@ -24,8 +28,7 @@ public class MainEntryPoint
     {
       if (args.length <= 0)
       {
-        System.out.println(
-            "Please enter either 'server' or <hostname> 'client' to start the game");
+        new MainLoopClient(args);
       }
       else if (args[0].equals("server"))
       {

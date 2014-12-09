@@ -32,7 +32,6 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import entities.Camera;
 import entities.Entity;
-import entities.Laser;
 import entities.Light;
 import entities.Globals;
 
@@ -101,7 +100,6 @@ public class MainLoopClient
     long hudStart = 0;
     //Hud Objects
     List<Entity> renderList = new ArrayList<>();
-    List<Laser> lasers = new ArrayList<>();
 
     List<Entity> hudRenderList = new ArrayList<>();
 

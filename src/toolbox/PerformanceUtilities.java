@@ -2,6 +2,9 @@ package toolbox;
 
 import org.lwjgl.Sys;
 
+/**
+ *
+ */
 public class PerformanceUtilities {
 	private long lastFrame;
 	private int fps;
