@@ -47,8 +47,8 @@ public class MainLoopClient
   private int score;
   private int health;
   private long previousTime=0,currentTime=0;
-  private  static int socketVal;
-
+  private static int socketVal;
+  private static boolean death = false;
   /**
    * What the client runs to connect to the main server
    * Opens a menu first, then connects to a designated server
@@ -264,10 +264,16 @@ public class MainLoopClient
     hud2 = new Entity("H002", modelMap.getTexturedModelList().get(
         "H002"), new Vector3f(0.7f, 0.07f, 1f), 0f, 0f, 0f, 0.05f);
     hud2.drawShadow = false;
-     hud3 = new Entity("H003", modelMap.getTexturedModelList().get(
+    hud3 = new Entity("H003", modelMap.getTexturedModelList().get(
         "H003"), new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 0.05f);
     hud3.drawShadow = false;
 
+    Entity hud5 = new Entity("H008", modelMap.getTexturedModelList().get(
+        "H008"), new Vector3f(0.3f, -0.1f, 0.8f), 0f, 0f, 0f, 0.06f);
+    hud5.drawShadow = false;
+    Entity hud6 = new Entity("H009", modelMap.getTexturedModelList().get(
+        "H009"), new Vector3f(0.4f, 0.0f, 0.8f), 0f, 0f, 0f, 0.05f);
+    hud6.drawShadow = false;
     light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
         1.0f, 1.0f));
     hudRenderList = new ArrayList<>();
@@ -289,7 +295,16 @@ public class MainLoopClient
     /* In-game loop */
     while (!Display.isCloseRequested())
     {
-
+      if(death && hudRenderList.size() < 4)
+      {
+        hudRenderList.add(hud5);
+        hudRenderList.add(hud6);
+      }
+      else if(!death&& hudRenderList.size() > 4)
+      {
+       hudRenderList.remove(hud5);
+       hudRenderList.remove(hud6);
+      }
       boolean keyPressed = false;
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
@@ -429,6 +444,15 @@ public class MainLoopClient
         if (object.startsWith("S")&& playerID == myClient.ID)
         {
           health = Integer.parseInt(currentLine[10]);
+          if(health <=0)
+          {
+            health = 0;
+            death = true;
+          }
+          else if(death && health >0)
+          {
+            death = false;
+          }
           speed = Float.parseFloat(currentLine[11]);
           score = Integer.parseInt(currentLine[12]);
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
@@ -581,7 +605,6 @@ public class MainLoopClient
       if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
       {
         toSend += "KEY_RSHIFT;";
-
         AudioManager.playRandomLaser();
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
@@ -591,6 +614,7 @@ public class MainLoopClient
     }
     else
     {
+      //Respawn player
       if (Keyboard.isKeyDown(Keyboard.KEY_P))
       {
         currentTime=System.currentTimeMillis();
