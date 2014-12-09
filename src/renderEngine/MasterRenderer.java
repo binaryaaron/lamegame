@@ -22,7 +22,6 @@ import shaders.StaticShader;
 import skyBox.SkyBox;
 import entities.Camera;
 import entities.Entity;
-import entities.Laser;
 import entities.Light;
 
 public class MasterRenderer
@@ -38,16 +37,11 @@ public class MasterRenderer
   private SkyBoxRenderer skyBoxRenderer;
   private SkyBoxShader skyBoxShader = new SkyBoxShader();
   
-  private LaserShader laserShader=new LaserShader();
-  private LaserRenderer laserRenderer;
-  
-
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-  private Map<TexturedModel, List<Laser>> lasers = new HashMap<>();
   private Map<TexturedModel, List<Entity>> hudEntities = new HashMap<>();
   private List <SkyBox> skyBox;
-  private List <Laser> laserList;
   private Camera camera;
+
   /**
    * When the master renderer is created, create a projection matrix and
    * renderers
@@ -60,8 +54,6 @@ public class MasterRenderer
     createProjectionMatrix();
     renderer = new EntityRenderer(shader, projectionMatrix);
     skyBox=new ArrayList<>();
-    laserList=new ArrayList<>();
-    laserRenderer= new LaserRenderer(laserShader, projectionMatrix);
     skyBoxRenderer = new SkyBoxRenderer(skyBoxShader, projectionMatrix,camera);
   }
 
@@ -90,12 +82,6 @@ public class MasterRenderer
     renderer.render(entities);
     shader.stop();
 
-    laserShader.start();
-    laserShader.loadLight(sun);
-    laserShader.loadViewMatrix(camera);
-    laserRenderer.render(lasers);
-    laserShader.stop();
-
     GL11.glDisable(GL11.GL_DEPTH_TEST);
     shader.start();
     shader.loadLight(sun);
@@ -106,7 +92,6 @@ public class MasterRenderer
     hudEntities.clear();
     entities.clear();
     skyBox.clear();
-    lasers.clear();
   }
 
   /**
@@ -120,28 +105,7 @@ public class MasterRenderer
   }
 
   
-  /**
-   * Process the laser
-   * @param laser
-   */
-  public void processLaser(Laser laser)
-  {
-	  laserList.add(laser);
-	  TexturedModel entityModel = laser.getModel();
-	    List<Laser> batch = lasers.get(entityModel);
-	    if (batch != null)
-	    {
-	      batch.add(laser);
-	    }
-	    else
-	    {
-	      List<Laser> newBatch = new ArrayList<>();
-	      newBatch.add(laser);
-	      lasers.put(entityModel, newBatch);
-	    }
 
-  }
-  
   /**
    * Add an entity to the batch
    * @param entity
@@ -224,6 +188,5 @@ public class MasterRenderer
   {
     shader.cleanUp();
     skyBoxShader.cleanUp();
-    laserShader.cleanUp();
   }
 }

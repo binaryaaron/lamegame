@@ -612,7 +612,7 @@ public class MainLoopServer
 
   /**
    * What to do when the game is won
-   * @param i
+   * @param i the player can reset
    */
   public String getInput(int i)
   {
