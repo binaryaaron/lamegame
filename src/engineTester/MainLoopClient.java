@@ -413,7 +413,11 @@ public class MainLoopClient
   }
 
   /**
-   * Parses the incoming server info into renderlist
+   * Takes input String from ServerThread and builds a list of objects to render.
+   * Within an object fields are comma delimited. Objects are semicolon delimited.
+   * Searches list of objects for player objects (starts with 'S') and matches
+   * myClient.ID to the ship object. No return value, modifies values in given
+   * renderList.
    *
    * @param renderList
    * @param camera
@@ -597,7 +601,8 @@ public class MainLoopClient
   }
 
   /**
-   * Sends keyboard input to the server
+   * Sends String representation of keyboard input to Client through myCLient
+   * object.
    */
   public void sendKeyBoard()
   {
