@@ -34,6 +34,7 @@ import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
 
+import engineTester.ModelMap;
 import entities.Camera;
 import entities.Entity;
 import entities.Globals;
@@ -42,22 +43,24 @@ import entities.Player;
 
 public class MainLoopServer
 {
-  public ServerMaster myServer;
-  private int loop = 0;
-  float crystalSize = 100f;
-  Player player0;
-  Player player1;
-  Player player2;
-  Player player3;
-  ModelMap modelMap;
-  List<Player> deadPlayers;
+	  public ServerMaster myServer;
+	  private int loop = 0;
+	  float crystalSize = 100f;
+	  Player player0;
+	  Player player1;
+	  Player player2;
+	  Player player3;
+	  ModelMap modelMap;
+	  List<Player> deadPlayers;
 
-  private static final int nAsteroids = 200;
-  private static final int nCrystals = 5;
-  TexturedModel texturedLaser;
-  List<Entity> killList = new LinkedList<>();
-  long nextStep = 4;
-  long killStep = 4;
+	  private static final int nAsteroids = 200;
+	  private static final int nCrystals = 5;
+	  private boolean gameOver=false;
+	  Entity winner;
+	  TexturedModel texturedLaser;
+	  List<Entity> killList = new LinkedList<>();
+	  long nextStep = 4;
+	  long killStep = 4;
 
   public MainLoopServer(String[] args)
   {
@@ -145,6 +148,10 @@ public class MainLoopServer
           }
         }
         lastTime = time;
+        if(gameOver){
+        	
+        	endGameStep(renderList,winner);
+        }
         performPhysics(renderList);
       }
 
@@ -152,6 +159,8 @@ public class MainLoopServer
       outputToClient = "";// clear the String
       for (Entity ent : renderList)
       {
+    	  if(gameOver&&(ent.toString().startsWith("P")||ent.toString().startsWith("lase")))continue;
+      	
         outputToClient += ent.toString() + ";";
       }
       // outputToClient += camera.toString();
@@ -356,6 +365,10 @@ public class MainLoopServer
             {
               ent.score++;
               ent.entScoreStep = nextStep;
+              if(ent.score>0){
+            	  gameOver=true;
+            	  winner=ent;}
+              killList.add(other);
               killList.add(other);
               crystalsNeeded++;
             }
@@ -367,6 +380,10 @@ public class MainLoopServer
             {
               other.score++;
               other.entScoreStep = nextStep;
+              if(other.score>0){
+            	  gameOver=true;
+            	  winner=other;
+            	  }
               killList.add(ent);
               crystalsNeeded++;
             }
@@ -554,7 +571,19 @@ public class MainLoopServer
     }
     return renderList;
   }
-
+  public void endGameStep(List<Entity> renderList,Entity winner){
+	  for(Entity ent:renderList){
+		  if(ent!=winner){
+			  ent.position.x*=0.99f;
+			  ent.position.y*=0.99f;
+			  ent.position.z*=0.99f;
+			  
+		  }
+		  else if(ent.getId().startsWith("P")){
+			  renderList.remove(ent);
+			  }
+		  }
+	  }
   public String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer

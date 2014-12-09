@@ -71,6 +71,8 @@ public class ModelMap
     ModelTexture planetTexture = new ModelTexture(loader.loadTexture("planet"));
     ModelTexture laserTexture = new ModelTexture(loader.loadTexture("green"));
     ModelTexture greenTexture = new ModelTexture(loader.loadTexture("green"));
+    ModelTexture blueTexture = new ModelTexture(loader.loadTexture("blue"));
+    
     ModelTexture purpTexture = new ModelTexture(loader.loadTexture("WestonLavender"));
     				purpTexture.setReflectivity(0.9f);
     				purpTexture.setShadeDamper(1);
@@ -100,6 +102,8 @@ public class ModelMap
         laserTexture);
     TexturedModel greenCone = new TexturedModel("gCone", cone,
         greenTexture);
+    TexturedModel blueCone = new TexturedModel("bCone", cone,
+    		blueTexture);
     TexturedModel purpCrystal = new TexturedModel("CryP", crystal,
     		purpTexture);
 
@@ -119,6 +123,7 @@ public class ModelMap
     texturedModelList.put("lase", texturedLaser);
     texturedModelList.put("Plan", texturedPlanet);
     texturedModelList.put("gCone", greenCone);
+    texturedModelList.put("bCone", blueCone);
     texturedModelList.put("CryP", purpCrystal);
 
   }

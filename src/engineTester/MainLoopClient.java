@@ -42,6 +42,8 @@ public class MainLoopClient
   private static String hostName;
   public final boolean PRINT_FPS = false;
 
+  private boolean gameOver=false;
+  private String endGame="GameOver";
   public ClientThread myClient = null;
   private float speed;
   private int score;
@@ -300,9 +302,16 @@ public class MainLoopClient
       {
         hudStart = System.currentTimeMillis();
 
+        if(score<1){
         hudRenderList.get(2).setModel(
             modelMap.setScoreText(("" + score)));
-        modelMap.setScoreText("" + score);
+        modelMap.setScoreText("" + score);}
+        else{
+        	hudRenderList.get(2).setModel(
+                    modelMap.setScoreText((endGame)));
+                modelMap.setScoreText(endGame);
+        	
+        }
         hudRenderList.get(1).setModel(modelMap.setHealthText("" + health));
         modelMap.setHealthText("" + health);
         hudRenderList.get(0).setModel(modelMap.setSpeedText("" + speed));
@@ -394,6 +403,9 @@ public class MainLoopClient
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
+        if( score>0){gameOver=true;
+        endGame="WINNER";
+        }
         else if(object.startsWith("S")&&playerID!=myClient.ID){
         	Vector3f scaleVec=new Vector3f();
         	Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
@@ -402,6 +414,9 @@ public class MainLoopClient
               new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
           renderList.add(playerTag);
           playerTag.drawShadow=false;
+          if( Integer.parseInt(currentLine[12])>0){gameOver=true;
+          endGame="LOSER";
+          }
         }
         else if(object.startsWith("CryP")){
         	
@@ -412,10 +427,10 @@ public class MainLoopClient
               //  crystal.drawShadow=false;
                 
                 
-                Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-                        new Vector3f(x, y-s, z), xr, yr, zr, 10);
-                    renderList.add(crystalTag);
-                    crystalTag.drawShadow=false;
+                Entity crTag=  new Entity("bCone", modelMap.getTexturedModelList().get("bCone"),
+                        new Vector3f(x, y-50, z), xr, yr, zr, tagScale/100);
+                    renderList.add(crTag);
+                    crTag.drawShadow=false;
         
         	
         }
@@ -515,6 +530,10 @@ public class MainLoopClient
       if (Keyboard.isKeyDown(Keyboard.KEY_W))
       {
         toSend += "KEY_W;";
+      }
+      if (Keyboard.isKeyDown(Keyboard.KEY_B))
+      {
+        toSend += "KEY_B;";
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_S))
       {
