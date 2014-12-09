@@ -483,6 +483,13 @@ public class MainLoopClient
           }
           speed = Float.parseFloat(currentLine[11]);
           score = Integer.parseInt(currentLine[12]);
+          int missileSound = Integer.parseInt(currentLine[13]);
+
+          if (missileSound == 1)
+          {
+            System.out.println(missileSound);
+            AudioManager.playRandomLaser();
+          }
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(),
               -9 * tmp_Entity.getScale());
@@ -650,7 +657,6 @@ public class MainLoopClient
       if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
       {
         toSend += "KEY_RSHIFT;";
-        AudioManager.playRandomLaser();
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
       {

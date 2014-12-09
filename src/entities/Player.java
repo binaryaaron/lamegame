@@ -14,8 +14,11 @@ public class Player extends Entity
   private Boolean alive = true;
   private Boolean playing = true;
   private static Boolean DEBUG = true;
+  public long lastFired = System.currentTimeMillis();
 
   public static final float playerScale = 3f;
+  public int missileSound = 0;
+
   /**
    * Default constructor for a Player. Initializes position to
    * 0,0,0
@@ -160,6 +163,7 @@ public class Player extends Entity
     result.append(hitPoints).append(delimiter);
     result.append(vel.length()).append(delimiter);
     result.append(score).append(delimiter);
+    result.append(missileSound).append(delimiter);
     return result.toString();
   }
 
