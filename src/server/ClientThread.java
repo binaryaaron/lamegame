@@ -18,7 +18,7 @@ public class ClientThread extends Thread
   public boolean printlocation = false;
   public static String hostName = "localhost";
   public static int socketVal = 4444;
-  public int ID;
+  public int ID=-1;
 
   Socket mySocket = null;
   PrintWriter out = null;
@@ -65,25 +65,30 @@ public class ClientThread extends Thread
    * value of String inputFromServer.*/
   public void run()
   {
-    try
-    {
-      System.out.println("catching ID");
-      ID = Integer.parseInt(in.readLine());
-      System.out.println("ID=" + ID);
-    }
-    catch (NumberFormatException e2)
-    {
-      e2.printStackTrace();
-    }
-    catch (IOException e2)
-    {
-      e2.printStackTrace();
-    }
+//    try
+//    {
+//      System.out.println("catching ID");
+//      ID = Integer.parseInt(in.readLine());
+//      System.out.println("ID=" + ID);
+//    }
+//    catch (NumberFormatException e2)
+//    {
+//      e2.printStackTrace();
+//    }
+//    catch (IOException e2)
+//    {
+//      e2.printStackTrace();
+//    }
 
     try
     {
       while ((inputFromServer = in.readLine()) != null)
       {
+        if(ID==-1)
+        {
+          ID=Integer.parseInt(inputFromServer.substring(0,1));
+          System.out.println("caught ID "+ID);
+        }
         if (DEBUG) System.out.println("input from server: " + inputFromServer);
       }
     }
@@ -119,6 +124,10 @@ public class ClientThread extends Thread
    * for a new input from ServerThread.*/
   public synchronized String getInputFromServer()
   {
-    return inputFromServer;
+    while (inputFromServer=="")
+    {
+      //wait for input to be initialized
+    }
+    return inputFromServer.substring(2);
   }
 }
