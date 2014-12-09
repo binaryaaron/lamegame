@@ -501,6 +501,8 @@ public class MainLoopServer
       int a = Globals.RAND.nextInt(2) + 1;
       float s = Globals.RAND.nextFloat() * 100;
       addEntity(ents, "A00" + a, s);
+      Entity ass = ents.get(ents.size()-1);
+      ass.randomVel();
     }
     for (int i = 0; i < nCrystals; i++)
     {
