@@ -55,7 +55,7 @@ public class MainLoopClient
   private static int socketVal = -1;
   
   private float speed;
-
+  private int score;
   private int health;
   private long previousTime=0,currentTime=0;
 
@@ -326,7 +326,7 @@ public class MainLoopClient
         hudStart = System.currentTimeMillis();
 
         hudRenderList.get(2).setModel(
-            modelMap.setScoreText(("" + System.currentTimeMillis() + "  ")));
+            modelMap.setScoreText(("" + score)));
         hudRenderList.get(1).setModel(modelMap.setHealthText("" + health));
 
         hudRenderList.get(0).setModel(modelMap.setSpeedText("" + speed));
@@ -408,6 +408,7 @@ public class MainLoopClient
         {
           health = Integer.parseInt(currentLine[10]);
           speed = Float.parseFloat(currentLine[11]);
+          score = Integer.parseInt(currentLine[12]);
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
           Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
               * tmp_Entity.getScale());

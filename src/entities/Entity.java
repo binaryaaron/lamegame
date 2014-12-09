@@ -45,8 +45,9 @@ public class Entity
   public boolean drawShadow = true;
   protected int clientId = -1;
   public EntityType type;
+  public int score = 0;
 
-  enum EntityType {
+  public enum EntityType {
     SHIP(100, 20, 1000),
     CRYSTAL(10000, 0, 2000000),
     LASER(50, 1000, 4),
