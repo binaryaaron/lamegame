@@ -65,21 +65,6 @@ public class ClientThread extends Thread
    * value of String inputFromServer.*/
   public void run()
   {
-//    try
-//    {
-//      System.out.println("catching ID");
-//      ID = Integer.parseInt(in.readLine());
-//      System.out.println("ID=" + ID);
-//    }
-//    catch (NumberFormatException e2)
-//    {
-//      e2.printStackTrace();
-//    }
-//    catch (IOException e2)
-//    {
-//      e2.printStackTrace();
-//    }
-
     try
     {
       while ((inputFromServer = in.readLine()) != null)

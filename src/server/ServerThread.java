@@ -45,7 +45,6 @@ public class ServerThread extends Thread
       out = new PrintWriter(myClientSocket.getOutputStream(), true);
       in = new BufferedReader(new InputStreamReader(
           myClientSocket.getInputStream()));
-//      out.println(ID);//send ID to WalkerClient as first item
 
       while ((inputFromClient = in.readLine()) != null)
       {
