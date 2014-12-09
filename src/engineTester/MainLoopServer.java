@@ -52,7 +52,7 @@ public class MainLoopServer
 	  Player player3;
 	  ModelMap modelMap;
 	  List<Player> deadPlayers;
-
+	 
 	  private static final int nAsteroids = 200;
 	  private static final int nCrystals = 5;
 	  private boolean gameOver=false;
@@ -365,7 +365,7 @@ public class MainLoopServer
             {
               ent.score++;
               ent.entScoreStep = nextStep;
-              if(ent.score>0){
+              if(ent.score>Globals.WINPOINTS){
             	  gameOver=true;
             	  winner=ent;}
               killList.add(other);
@@ -380,7 +380,7 @@ public class MainLoopServer
             {
               other.score++;
               other.entScoreStep = nextStep;
-              if(other.score>0){
+              if(other.score>Globals.WINPOINTS){
             	  gameOver=true;
             	  winner=other;
             	  }

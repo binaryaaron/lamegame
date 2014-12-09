@@ -34,9 +34,11 @@ import entities.Camera;
 import entities.Entity;
 import entities.Laser;
 import entities.Light;
+import entities.Globals;
 
 public class MainLoopClient
 {
+ 
   private final boolean HUD_DEBUG = false;
   private boolean exitRequest = false;
   private static String hostName;
@@ -403,7 +405,7 @@ public class MainLoopClient
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
-        if( score>0){gameOver=true;
+        if( score>Globals.WINPOINTS){gameOver=true;
         endGame="WINNER";
         }
         else if(object.startsWith("S")&&playerID!=myClient.ID){
@@ -414,7 +416,7 @@ public class MainLoopClient
               new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
           renderList.add(playerTag);
           playerTag.drawShadow=false;
-          if( Integer.parseInt(currentLine[12])>0){gameOver=true;
+          if( Integer.parseInt(currentLine[12])>Globals.WINPOINTS){gameOver=true;
           endGame="LOSER";
           }
         }

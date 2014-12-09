@@ -18,6 +18,7 @@ public class Globals
   public static final BoundingBox projectileBoundingBox;
   public static final BoundingBox shipBoundingBox;
   public static final float PLANET_RADIUS = 800f;
+  public static int WINPOINTS=5;
 
   static {
     projectileBoundingBox = new BoundingBox(new Vector3f(-0.5f,-0.5f,-0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
