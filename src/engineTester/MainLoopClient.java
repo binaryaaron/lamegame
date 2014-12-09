@@ -34,14 +34,18 @@ import entities.Camera;
 import entities.Entity;
 import entities.Laser;
 import entities.Light;
+import entities.Globals;
 
 public class MainLoopClient
 {
+ 
   private final boolean HUD_DEBUG = false;
   private boolean exitRequest = false;
   private static String hostName;
   public final boolean PRINT_FPS = false;
 
+  private boolean gameOver=false;
+  private String endGame="GameOver";
   public ClientThread myClient = null;
   private float speed;
   private int score;
@@ -349,9 +353,16 @@ public class MainLoopClient
       {
         hudStart = System.currentTimeMillis();
 
+        if(score < Globals.WINPOINTS){
         hudRenderList.get(2).setModel(
             modelMap.setScoreText(("" + score)));
-        modelMap.setScoreText("" + score);
+        modelMap.setScoreText("" + score);}
+        else{
+        	hudRenderList.get(2).setModel(
+                    modelMap.setScoreText((endGame)));
+                modelMap.setScoreText(endGame);
+        	
+        }
         hudRenderList.get(1).setModel(modelMap.setHealthText("" + health));
         modelMap.setHealthText("" + health);
         hudRenderList.get(0).setModel(modelMap.setSpeedText("" + speed));
@@ -463,9 +474,10 @@ public class MainLoopClient
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
-        //ship representing not the current player
-        else if(object.startsWith("S")&&playerID!=myClient.ID)
-        {
+        if( score>Globals.WINPOINTS){gameOver=true;
+        endGame="WINNER";
+        }
+        else if(object.startsWith("S")&&playerID!=myClient.ID){
         	Vector3f scaleVec=new Vector3f();
         	Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
         	float tagScale=scaleVec.length();
@@ -473,17 +485,24 @@ public class MainLoopClient
               new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
           renderList.add(playerTag);
           playerTag.drawShadow=false;
+          if( Integer.parseInt(currentLine[12])>Globals.WINPOINTS){gameOver=true;
+          endGame="LOSER";
+          }
         }
         //purple crystal parsing
         else if(object.startsWith("CryP"))
-        {  	
-        	Entity crystal=  new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
-        	    new Vector3f(x, y, z), xr, yr, zr, s);
-        	renderList.add(crystal);
-        	Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-        	    new Vector3f(x, y-s, z), xr, yr, zr, 10);
-        	renderList.add(crystalTag);
-        	crystalTag.drawShadow=false;
+        {
+          Vector3f scaleVec=new Vector3f();
+          Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
+          float tagScale=scaleVec.length();
+          Entity crystal=  new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
+              new Vector3f(x, y, z), xr, yr, zr, s);
+          renderList.add(crystal);
+          //  crystal.drawShadow=false;
+          Entity crTag=  new Entity("bCone", modelMap.getTexturedModelList().get("bCone"),
+              new Vector3f(x, y-50, z), xr, yr, zr, tagScale/100);
+          renderList.add(crTag);
+          crTag.drawShadow=false;
         }
 
         if (tmp_Entity != null)
