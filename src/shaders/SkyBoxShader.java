@@ -8,8 +8,8 @@ import entities.Light;
 
 public class SkyBoxShader extends ShaderProgram{
 
-	private static final String VERTEX_FILE="src/shaders/skyVertexShader.txt";
-	private static final String FRAGMENT_FILE="src/shaders/skyFragmentShader.txt";
+	private static final String VERTEX_FILE="res/skyVertexShader.txt";
+	private static final String FRAGMENT_FILE="res/skyFragmentShader.txt";
 	
 	private int location_TransformationMatrix;
 	private int location_ProjectionMatrix;

@@ -30,7 +30,7 @@ public class WalkerClient extends Thread
   {
     if(args.length>0)
     {
-      hostName=args[0];
+      hostName=args[1];
     }
 
     try
