@@ -570,7 +570,5 @@ public class MainLoopServer
   public static void main(String[] args)
   {
     new MainLoopServer(args);
-
   }
-
 }

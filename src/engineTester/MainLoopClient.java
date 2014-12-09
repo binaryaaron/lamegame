@@ -138,9 +138,9 @@ public class MainLoopClient
       menuData+=(Math.random()*20+10)+","; //x
       menuData+=(Math.random()*30-15)+","; //y
       menuData+=(Math.random()*60+50)+",";//z
-      menuData+="0,";//(Math.random()*4)+",";//rx
-      menuData+="0,";//(Math.random()*4)+",";//ry
-      menuData+="0,";//(Math.random()*4)+",";//rz
+      menuData+="0,";//rx
+      menuData+="0,";//ry
+      menuData+="0,";//rz
       menuData+="0,";//w
       menuData+=(Math.random()*.2+0.6)+";";
     }
