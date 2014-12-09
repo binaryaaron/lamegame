@@ -174,6 +174,7 @@ public class Entity
         box.scale(scale);
       }
     }
+
   }
   
   public void respawn(Vector3f position)

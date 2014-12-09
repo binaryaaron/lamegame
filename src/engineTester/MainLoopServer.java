@@ -313,7 +313,7 @@ public class MainLoopServer
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
-      if (!ent.getId().equals("Plan")) ent.move();
+      if (!(ent.type == Entity.EntityType.PLANET)) ent.move();
     }
     for (int i = 0; i < renderList.size(); i++)
     {
@@ -322,7 +322,15 @@ public class MainLoopServer
       for (int j = i + 1; j < renderList.size(); j++)
       {
         other = renderList.get(j);
-        if (BoxUtilities.collision(ent.getBox(), other.getBox()))
+        if (ent.type == Entity.EntityType.PLANET)
+        {
+          PhysicsUtilities.planetCollision(ent, other);
+        }
+        else if (other.type == Entity.EntityType.PLANET)
+        {
+          PhysicsUtilities.planetCollision(other, ent);
+        }
+        else if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
           if (ent.type == Entity.EntityType.SHIP && other.type == Entity.EntityType.CRYSTAL)
           {
@@ -348,7 +356,7 @@ public class MainLoopServer
       if (ent.getHitPoints() <= 0)
       {
         killList.add(ent);
-        if (ent.getId().startsWith("S") && !deadPlayers.contains(ent))
+        if (ent.type == Entity.EntityType.SHIP && !deadPlayers.contains(ent))
         {
           deadPlayers.add((Player) ent);
         }
