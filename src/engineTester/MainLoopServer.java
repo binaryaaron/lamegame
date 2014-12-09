@@ -40,7 +40,7 @@ public class MainLoopServer
 {
   public WalkerServer myServer;
   private int loop = 0;
-  float crystalSize=100f;
+  float crystalSize = 100f;
   Player player0;
   Player player1;
   Player player2;
@@ -61,8 +61,8 @@ public class MainLoopServer
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     modelMap = new ModelMap();
-//    Camera camera = new Camera();
-//    camera.followObj = player0;
+    //    Camera camera = new Camera();
+    //    camera.followObj = player0;
     // create skybox, this is not an entity so it is seperate
     RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
     ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
@@ -114,25 +114,30 @@ public class MainLoopServer
       {
         for (int i = 0; i < WalkerServer.threadList.size(); i++)
         {
-          int playerID= WalkerServer.threadList.get(i).ID;
-          Player currentPlayer=null;
+          int playerID = WalkerServer.threadList.get(i).ID;
+          Player currentPlayer = null;
           switch (playerID)
           {
-            case 0: currentPlayer=player0;
-            break;
-            case 1: currentPlayer=player1;
-            break;
-            case 2: currentPlayer=player2;
-            break;
-            case 3: currentPlayer=player3;
-            
+            case 0:
+              currentPlayer = player0;
+              break;
+            case 1:
+              currentPlayer = player1;
+              break;
+            case 2:
+              currentPlayer = player2;
+              break;
+            case 3:
+              currentPlayer = player3;
+
           }
-            
+
           String inputFromClient = WalkerServer.inputFromClient.get(i);
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, modelMap, renderList, missileList, new Camera(), currentPlayer);
+            parseClientInput(inputFromClient, modelMap, renderList, missileList,
+                new Camera(), currentPlayer);
           }
         }
         lastTime = time;
@@ -160,7 +165,8 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
-  public void parseClientInput(String inputFromClient, ModelMap modelMap, List<Entity> renderList, List<Entity> missileList,
+  public void parseClientInput(String inputFromClient, ModelMap modelMap,
+      List<Entity> renderList, List<Entity> missileList,
       Camera camera, Player player)
   {
     float scale;
@@ -241,18 +247,18 @@ public class MainLoopServer
       if (input.equals("KEY_LCONTROL")) delta.y(delta.y() + speed);
       if (player.getHitPoints() <= 0)
       {
-      if(input.equals("KEY_P"))
-      {
-        if(deadPlayers.contains(player))
+        if (input.equals("KEY_P"))
         {
-          player.respawn(new Vector3f(1100,1100,0));
-          deadPlayers.remove(player);
-          if(!renderList.contains(player))
+          if (deadPlayers.contains(player))
           {
-            renderList.add(player);
+            player.respawn(new Vector3f(1100, 1100, 0));
+            deadPlayers.remove(player);
+            if (!renderList.contains(player))
+            {
+              renderList.add(player);
+            }
           }
         }
-      }
       }
       if (input.equals("KEY_RSHIFT"))
       {
@@ -289,7 +295,8 @@ public class MainLoopServer
 
       player.vel.add(inverse.mult(delta));
       // limit velocity of player
-      if (player.vel.lengthSquared() > 400) {
+      if (player.vel.lengthSquared() > 400)
+      {
         player.vel.normalize();
         player.vel.mult(20f);
       }
@@ -304,15 +311,17 @@ public class MainLoopServer
 
   private void performPhysics(List<Entity> renderList)
   {
+    int crystalsNeeded = 0;
     Entity ent = null;
     Entity other = null;
     if (nextStep >= killStep)
     {
       renderList.removeAll(killList);
       killList.clear();
-      killStep+=1;
+      killStep += 1;
     }
     nextStep++;
+
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
@@ -335,23 +344,30 @@ public class MainLoopServer
         }
         else if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
-          if (ent.type == Entity.EntityType.SHIP && other.type == Entity.EntityType.CRYSTAL)
+          if (ent.type == Entity.EntityType.SHIP
+              && other.type == Entity.EntityType.CRYSTAL)
           {
             if (ent.entScoreStep != nextStep)
             {
               ent.score++;
               ent.entScoreStep = nextStep;
               killList.add(other);
+              crystalsNeeded++;
             }
           }
-          else if (ent.type == Entity.EntityType.CRYSTAL && other.type == Entity.EntityType.SHIP)
+          else if (ent.type == Entity.EntityType.CRYSTAL
+              && other.type == Entity.EntityType.SHIP)
           {
             if (other.entScoreStep != nextStep)
             {
               other.score++;
+              other.entScoreStep = nextStep;
               killList.add(ent);
+              crystalsNeeded++;
             }
-          } else {
+          }
+          else
+          {
             PhysicsUtilities.elasticCollision(ent, other);
           }
         }
@@ -365,33 +381,58 @@ public class MainLoopServer
         }
       }
     }
+
+    for (int i = 0; i < crystalsNeeded; i++)
+    {
+      addCrystal(renderList);
+    }
   }
 
-  
-  private void addCrystal(List<Entity> renderList){
-	
-	  int a = Globals.RAND.nextInt(2) + 1;
-
-      int y = Globals.RAND.nextInt(20) - 10;
-      int r = 0;
-      int x = Globals.RAND.nextInt(8000) - 1500;
-      int z = Globals.RAND.nextInt(8000) - 1500;
-      while (r < 1000000 || r > 4000000)
+  private void addCrystal(List<Entity> renderList)
+  {
+    while (true)
+    {
+      Entity crys = randCrystal();
+      boolean canAdd = true;
+      for (Entity ent : renderList)
       {
-        x = Globals.RAND.nextInt(8000) - 1500;
-        z = Globals.RAND.nextInt(8000) - 1500;
-        r = x * x + z * z;
+        if (BoxUtilities.collision(ent.getBox(), crys.getBox()))
+        {
+          canAdd = false;
+          break;
+        }
       }
-      crystalSize*=0.75;
-      Entity crystal =new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
-	            new Vector3f(x, y, z), 0, 0, 0, crystalSize);
-	  renderList.add(crystal);
+      if (canAdd)
+      {
+        renderList.add(crys);
+        return;
+      }
+    }
   }
-  
-  
-  
-  
-  
+
+  private Entity randCrystal()
+  {
+
+    int a = Globals.RAND.nextInt(2) + 1;
+
+    int r = 0;
+    int x = Globals.RAND.nextInt(8000) - 1500;
+    int z = Globals.RAND.nextInt(8000) - 1500;
+    while (r < 1000000 || r > 4000000)
+    {
+      x = Globals.RAND.nextInt(8000) - 1500;
+      z = Globals.RAND.nextInt(8000) - 1500;
+      r = x * x + z * z;
+    }
+    int y = Globals.RAND.nextInt(3000) - 1500;
+    crystalSize *= 0.9;
+    Entity crystal = new Entity("CryP",
+        modelMap.getTexturedModelList().get("CryP"),
+        new Vector3f(x, y, z), 0, 0, 0, crystalSize);
+
+    return crystal;
+  }
+
   private String createInitialGameString(ModelMap modelMap)
   {
     String startString = "Plan,0,0,0,0,0,0,100;";
@@ -441,8 +482,8 @@ public class MainLoopServer
         z = Globals.RAND.nextInt(8000) - 1500;
         r = x * x + z * z;
       }
-      
-      startString = startString.concat("CryP"+ "," + x + "," + y + "," + z
+
+      startString = startString.concat("CryP" + "," + x + "," + y + "," + z
           + ",0,0,0," + crystalSize + ";");
     }
     return startString;
@@ -463,7 +504,7 @@ public class MainLoopServer
     for (String object : sceneInfo)
     {
       Entity tmp_Entity;
-      Entity currentPlayer=null;
+      Entity currentPlayer = null;
       String[] currentLine = object.split(",");
       String id;
       int playerID;
@@ -481,16 +522,20 @@ public class MainLoopServer
       if (object.startsWith("S"))
       {
         playerID = Integer.parseInt(currentLine[9]);
-        System.out.println("adding player "+playerID);
+        System.out.println("adding player " + playerID);
         switch (playerID)
         {
-          case 0: currentPlayer=player0;
-          break;
-          case 1: currentPlayer=player1;
-          break;
-          case 2: currentPlayer=player2;
-          break;
-          case 3: currentPlayer=player3;       
+          case 0:
+            currentPlayer = player0;
+            break;
+          case 1:
+            currentPlayer = player1;
+            break;
+          case 2:
+            currentPlayer = player2;
+            break;
+          case 3:
+            currentPlayer = player3;
         }
         renderList.add(currentPlayer);
       }
