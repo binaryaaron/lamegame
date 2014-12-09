@@ -26,6 +26,7 @@ public class Player extends Entity
     super(id, model, position, rotX, rotY, rotZ, playerScale, clientId);
     box = Globals.shipBoundingBox.deepCopy();
     box.scale(playerScale * 0.9f);
+    box.translate(position);
   }
 
   //  /**

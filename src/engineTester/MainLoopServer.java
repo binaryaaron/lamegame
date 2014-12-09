@@ -465,7 +465,7 @@ public class MainLoopServer
 
   private Player randPlayer(String id, int clientID)
   {
-    int r = 2000 + Globals.RAND.nextInt(1000);
+    int r = 1000 + Globals.RAND.nextInt(1000);
     int x = (int) (r * Math.cos(Globals.RAND.nextDouble()));
     int z = (int) (r * Math.sin(Globals.RAND.nextDouble()));
     int y = Globals.RAND.nextInt(8000) - 4000;
@@ -477,8 +477,6 @@ public class MainLoopServer
 
   private List<Entity> createInitialGame(ModelMap modelMap)
   {
-    String startString = "Plan,0,0,0,0,0,0,100;";
-
     Entity planet = new Entity("Plan", modelMap.getTexturedModelList().get("Plan"), new Vector3f(0,0,0), 0, 0, 0, 100);
 
     List<Entity> ents = new ArrayList<>(nAsteroids + 20);
@@ -518,61 +516,6 @@ public class MainLoopServer
   {
     new MainLoopServer(args);
 
-  }
-
-  private List<Entity> parseGameStateString(String testInput,
-      ModelMap modelMap)
-  {
-
-    List<Entity> renderList = new ArrayList<>();
-    String[] sceneInfo = testInput.split(";");
-    for (String object : sceneInfo)
-    {
-      Entity tmp_Entity;
-      Entity currentPlayer = null;
-      String[] currentLine = object.split(",");
-      String id;
-      int playerID;
-      float x, y, z, xr, yr, zr, s;
-      // translate all input data into appropriate entities;
-      id = currentLine[0];
-      x = Float.parseFloat(currentLine[1]);
-      y = Float.parseFloat(currentLine[2]);
-      z = Float.parseFloat(currentLine[3]);
-      xr = Float.parseFloat(currentLine[4]);
-      yr = Float.parseFloat(currentLine[5]);
-      zr = Float.parseFloat(currentLine[6]);
-      s = Float.parseFloat(currentLine[7]);
-
-      if (object.startsWith("S"))
-      {
-        playerID = Integer.parseInt(currentLine[9]);
-        System.out.println("adding player " + playerID);
-        switch (playerID)
-        {
-          case 0:
-            currentPlayer = player0;
-            break;
-          case 1:
-            currentPlayer = player1;
-            break;
-          case 2:
-            currentPlayer = player2;
-            break;
-          case 3:
-            currentPlayer = player3;
-        }
-        renderList.add(currentPlayer);
-      }
-      else
-      {
-
-        tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(
-            id), new Vector3f(x, y, z), xr, yr, zr, s);
-        renderList.add(tmp_Entity);
-      }
-    }
-    return renderList;
   }
 
   public String getInput(int i)

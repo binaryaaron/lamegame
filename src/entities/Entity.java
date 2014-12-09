@@ -51,7 +51,7 @@ public class Entity
   public enum EntityType {
     SHIP(100, 20, 1000),
     CRYSTAL(10000, 0, 2000000),
-    LASER(50, 1000, 50),
+    LASER(50, 1000, 3),
     PLANET(100000, 50, 20000000),
     ASTEROID(500, 20, 200000);
 
@@ -172,6 +172,7 @@ public class Entity
       {
         box = Globals.projectileBoundingBox.deepCopy();
         box.scale(scale);
+        box.translate(position);
       }
     }
 
@@ -443,7 +444,14 @@ public class Entity
    */
   public void damageObject(int dmg)
   {
-    this.hitPoints -= dmg;
+    if (type == EntityType.LASER)
+    {
+      hitPoints -= 1;
+    }
+    else
+    {
+      this.hitPoints -= dmg;
+    }
     if (hitPoints <= 0)
     {
       uponDeath(this);
