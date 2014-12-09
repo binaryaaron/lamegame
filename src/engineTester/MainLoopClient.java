@@ -176,6 +176,11 @@ public class MainLoopClient
         keyPressed = true;
         keyReleased = false;
       }
+      if(Keyboard.isKeyDown(Keyboard.KEY_F2))
+      {
+        currentResolution++;
+        DisplayManager.changeResolution(currentResolution);
+      }
       if(Keyboard.isKeyDown(Keyboard.KEY_M))
       {
         if(keyReleased)
@@ -275,8 +280,13 @@ public class MainLoopClient
       System.err.println("Couldn't get I/O for the connection to: " + hostName);
       System.exit(1);
     }
-    /* Perform object movement as long as the window exists */while (!Display.isCloseRequested())
+
+    /* Perform object movement as long as the window exists */
+    keyReleased = true;
+    while (!Display.isCloseRequested())
     {
+
+      boolean keyPressed = false;
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         break;
@@ -289,6 +299,16 @@ public class MainLoopClient
       if(Keyboard.isKeyDown(Keyboard.KEY_F1))
       {
         DisplayManager.changeFullScreen();
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_M))
+      {
+        if(keyReleased)
+        {
+          AudioManager.muteOrUnmute();
+          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+        }
+        keyPressed = true;
+        keyReleased = false;
       }
       // Get render/objects from server
       getServerState(renderList, camera, modelMap);
@@ -333,6 +353,10 @@ public class MainLoopClient
       {
         pu.updateFPS();
         System.out.println(pu.getFPS());
+      }
+      if(!keyPressed)
+      {
+        keyReleased = true;
       }
     }
     renderer.cleanUp();

@@ -56,7 +56,6 @@ public class AudioManager
    */
   public static void playMusic()
   {
-
     songStream.playAsMusic(1.0f, 1.0f, true);
   }
   
