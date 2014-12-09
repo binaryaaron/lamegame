@@ -73,15 +73,14 @@ public class MasterRenderer
    */
   public void render(Light sun, Camera camera)
   {
-
     prepare();
 
-    
     skyBoxShader.start();
     skyBoxShader.loadLight(sun);
     skyBoxShader.loadViewMatrix(camera);
-    for(SkyBox skyElement:skyBox){
-    skyBoxRenderer.render(skyElement);
+    for(SkyBox skyElement:skyBox)
+    {
+      skyBoxRenderer.render(skyElement);
     }
     skyBoxShader.stop();
    
@@ -91,18 +90,12 @@ public class MasterRenderer
     renderer.render(entities);
     shader.stop();
 
-    
-    
     laserShader.start();
     laserShader.loadLight(sun);
     laserShader.loadViewMatrix(camera);
-    
     laserRenderer.render(lasers);
-    
     laserShader.stop();
-    
-    
-    
+
     GL11.glDisable(GL11.GL_DEPTH_TEST);
     shader.start();
     shader.loadLight(sun);
@@ -117,7 +110,8 @@ public class MasterRenderer
   }
 
   /**
-   * UPDATE THIS
+   * Process the skybox into the renderer
+   * @param skyBox
    */
   public void processSkyBox(SkyBox skyBox)
   {
@@ -126,6 +120,10 @@ public class MasterRenderer
   }
 
   
+  /**
+   * Process the laser
+   * @param laser
+   */
   public void processLaser(Laser laser)
   {
 	  laserList.add(laser);
@@ -143,9 +141,9 @@ public class MasterRenderer
 	    }
 
   }
+  
   /**
-   * add an entity to the batch
-   * 
+   * Add an entity to the batch
    * @param entity
    */
   public void processEntity(Entity entity)
@@ -164,6 +162,11 @@ public class MasterRenderer
     }
 
   }
+  
+  /**
+   * Process a HUD entity into the list
+   * @param entity
+   */
   public void processHudEntity(Entity entity)
   {
     TexturedModel entityModel = entity.getModel();
@@ -178,20 +181,19 @@ public class MasterRenderer
       newBatch.add(entity);
       hudEntities.put(entityModel, newBatch);
     }
-    
   }
+  
+  
   /**
    * Sets up a scene for rendering
    */
   public void prepare()
   {
-
     GL11.glEnable(GL11.GL_BLEND);
     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     GL11.glEnable(GL11.GL_DEPTH_TEST);
     GL11.glClearColor(1, 1, 1, 1);
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
   }
 
   /**
@@ -213,11 +215,10 @@ public class MasterRenderer
     projectionMatrix.m23 = -1;
     projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
     projectionMatrix.m33 = 0;
-
   }
 
   /**
-   * cleans up excess memory in the shaders
+   * Cleans up excess memory in the shaders
    */
   public void cleanUp()
   {
@@ -225,5 +226,4 @@ public class MasterRenderer
     skyBoxShader.cleanUp();
     laserShader.cleanUp();
   }
-
 }
