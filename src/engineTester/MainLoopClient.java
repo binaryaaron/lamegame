@@ -533,10 +533,6 @@ public class MainLoopClient
       {
         toSend += "KEY_W;";
       }
-      if (Keyboard.isKeyDown(Keyboard.KEY_B))
-      {
-        toSend += "KEY_B;";
-      }
       if (Keyboard.isKeyDown(Keyboard.KEY_S))
       {
         toSend += "KEY_S;";
