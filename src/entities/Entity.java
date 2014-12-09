@@ -1,17 +1,18 @@
 package entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import models.TexturedModel;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
+
 import toolbox.MathUtil;
 import world.BoundingBox;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
 
 public class Entity
 {
@@ -36,7 +37,6 @@ public class Entity
   protected BoundingBox box;
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
-  // public Vector3f vel = new Vector3f(0f,0f,0f);
   private static Boolean DEBUG = true;
   protected int hitPoints = 1000;
   protected int damage = 1;
@@ -48,7 +48,8 @@ public class Entity
   public int score = 0;
   public long entScoreStep = 0;
 
-  public enum EntityType {
+  public enum EntityType 
+  {
     SHIP(100, 20, 1000),
     CRYSTAL(10000, 0, 2000000),
     LASER(50, 1000, 3),
@@ -76,11 +77,6 @@ public class Entity
     entMap.put("P", EntityType.PLANET);
     entMap.put("S", EntityType.SHIP);
     entMap.put("C", EntityType.CRYSTAL);
-  }
-
-  public Entity()
-  {
-    
   }
 
   public Entity(String id, TexturedModel model, Vector3f position, float rotX,
@@ -178,6 +174,10 @@ public class Entity
 
   }
   
+  /**
+   * recreate the object in a different location with starting health
+   * @param position
+   */
   public void respawn(Vector3f position)
   {
     hitPoints = type.health;
@@ -185,6 +185,10 @@ public class Entity
     vel.reset();
   }
 
+  /**
+   * Move the object without changing orientation
+   * @param vec3
+   */
   public void quadTranslate(Vector3 vec3)
   {
     this.box.setPosition(vec3);
@@ -216,6 +220,10 @@ public class Entity
     box.translate(dx, dy, dz);
   }
   
+  /**
+   * Getters and setters
+   * @return
+   */
   public float getSize()
   {
     return size;
@@ -239,7 +247,6 @@ public class Entity
 
   public Matrix4f setNewBasis(float rotX, float rotY, float rotZ)
   {
-
     float cx = (float) Math.cos(rotX);
     float sx = (float) Math.sin(rotX);
     float cy = (float) Math.cos(rotY);
@@ -263,21 +270,7 @@ public class Entity
     rotMat.m02 = (float) (Math.sin(rotY) * Math.sin(rotX));
     rotMat.m12 = (float) (-Math.sin(rotY) * Math.cos(rotX));
     rotMat.m22 = (float) (Math.cos(rotY));
-
-    // rotMat.m00=(cx*cz)-(cy*sx*sz);
-    // rotMat.m10=(cz*sx)+(cx*cz*cy);
-    // rotMat.m20=sy*sz;
-    //
-    // rotMat.m01=-(cx*sz)-(cy*cz*sx);
-    // rotMat.m11=(cx*cz*cy)-(sx*sz);
-    // rotMat.m21=cz*sy;
-    //
-    // rotMat.m02=sx*sy;
-    // rotMat.m12=-cx*sy;
-    // rotMat.m22=cy;
-
     return rotMat;
-
   }
 
   public BoundingBox getBox()
@@ -484,9 +477,12 @@ public class Entity
    */
   protected void uponDeath(Entity ent)
   {
-    // unimplemented in GameObject()
+    
   }
 
+  /**
+   * set this to a random velocity
+   */
   public void randomVel()
   {
     vel.set(Globals.RAND.nextFloat()* 2 - 1,Globals.RAND.nextFloat()* 2 - 1,Globals.RAND.nextFloat()* 2 - 1);
@@ -503,6 +499,12 @@ public class Entity
     return id;
   }
 
+  /**
+   * Get hurt by something, hurt something else.
+   * All damage is based on collisions
+   * @param first
+   * @param second
+   */
   public static void inflictDamage(Entity first, Entity second)
   {
     first.damageObject(second.damage);
