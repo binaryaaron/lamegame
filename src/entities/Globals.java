@@ -14,6 +14,7 @@ public class Globals
   public static final Random RAND = new Random();
   public static final int WORLD_SIZE = 3000;
   public static boolean HARD_MODE = false;
+  public static boolean EASY_MODE = false;
   public static final BoundingBox projectileBoundingBox;
   public static final BoundingBox shipBoundingBox;
 

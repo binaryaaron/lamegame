@@ -3,7 +3,6 @@ package physics;
 import com.ra4king.opengl.util.math.Vector3;
 import entities.Entity;
 import entities.Globals;
-import jdk.nashorn.internal.objects.Global;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -62,7 +61,7 @@ public class PhysicsUtilities
       vec1.mult(1.01f);
       vec2.mult(1.01f);
     }
-    else
+    else if (Globals.EASY_MODE)
     {
       vec1.mult(0.97f);
       vec2.mult(0.97f);

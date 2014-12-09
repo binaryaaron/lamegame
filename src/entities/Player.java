@@ -14,7 +14,6 @@ public class Player extends Entity
   private Boolean alive = true;
   private Boolean playing = true;
   private static Boolean DEBUG = true;
-  public int score = 0;
 
   public static final float playerScale = 3f;
   /**

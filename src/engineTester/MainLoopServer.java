@@ -324,7 +324,18 @@ public class MainLoopServer
         other = renderList.get(j);
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
-          PhysicsUtilities.elasticCollision(ent, other);
+          if (ent.type == Entity.EntityType.SHIP && other.type == Entity.EntityType.CRYSTAL)
+          {
+            ent.score++;
+            killList.add(other);
+          }
+          else if (ent.type == Entity.EntityType.CRYSTAL && other.type == Entity.EntityType.SHIP)
+          {
+            other.score++;
+            killList.add(ent);
+          } else {
+            PhysicsUtilities.elasticCollision(ent, other);
+          }
         }
       }
       if (ent.getHitPoints() <= 0)
@@ -340,7 +351,7 @@ public class MainLoopServer
 
   private String createInitialGameString(ModelMap modelMap)
   {
-    String startString = "Plan,0,0,0,0,0,0,100;gCry,1000,1000,1000,0,0,0,100;";
+    String startString = "Plan,0,0,0,0,0,0,100;CryP,1000,1000,1000,0,0,0,100;";
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
         new Vector3f(1000, 1050, 0), 0, 0, 0, 0);
