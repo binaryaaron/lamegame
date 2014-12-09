@@ -32,6 +32,7 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import entities.Camera;
 import entities.Entity;
+import entities.Globals;
 import entities.Light;
 
 public class MainLoopClient
@@ -40,16 +41,20 @@ public class MainLoopClient
   private static String hostName;
   public final boolean PRINT_FPS = false;
 
+  private boolean gameOver = false;
+  private String endGame = "Game Point!";
   public ClientThread myClient = null;
   private float speed;
   private int score;
   private int health;
-  private long previousTime=0,currentTime=0;
+  private long previousTime = 0, currentTime = 0;
   private static int socketVal;
   private static boolean death = false;
+
   /**
    * What the client runs to connect to the main server
    * Opens a menu first, then connects to a designated server
+   *
    * @param args
    */
   public MainLoopClient(String[] args)
@@ -65,16 +70,17 @@ public class MainLoopClient
     TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox,
         skyTexture);
     SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
-    
+
     RawModel barrier = OBJLoader.loadObjModel("SkyBox", loader, true);
     ModelTexture barrierTexture = new ModelTexture(loader.loadTexture("font"));
     TexturedModel texturedBarrier = new TexturedModel("Barrier", barrier,
-    		barrierTexture);
-    Entity barrierEntity = new Entity("Barrier", texturedBarrier, new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 3000);
+        barrierTexture);
+    Entity barrierEntity = new Entity("Barrier", texturedBarrier,
+        new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 3000);
     // create lights and camera for the player. camera position should be set in
     // parsing routine
-    Light light = new Light(new Vector3f(1000f, 5f, 500f), new Vector3f(1.0f,
-        1.0f, 1.0f));
+    Light light = new Light(new Vector3f(1000f, 5f, 500f),
+        new Vector3f(1.0f, 1.0f, 1.0f));
     Camera camera = new Camera();
     MasterRenderer renderer = new MasterRenderer(camera);
 
@@ -90,19 +96,23 @@ public class MainLoopClient
     List<Entity> renderList = new ArrayList<>();
 
     List<Entity> hudRenderList = new ArrayList<>();
-    
+
     float xDiff = -0.2f;
-    Entity hud1 = new Entity("H004",modelMap.getTexturedModelList().get(
-        "H004"), new Vector3f(xDiff,-0.25f,1f),0f,0f,0f, 0.05f);
+    Entity hud1 = new Entity("H004",
+        modelMap.getTexturedModelList().get("H004"),
+        new Vector3f(xDiff, -0.25f, 1f), 0f, 0f, 0f, 0.05f);
     hud1.drawShadow = false;
-    Entity hud2 = new Entity("H005",modelMap.getTexturedModelList().get(
-        "H005"), new Vector3f(xDiff,-0.07f,1f),0f,0f,0f, 0.05f);
+    Entity hud2 = new Entity("H005",
+        modelMap.getTexturedModelList().get("H005"),
+        new Vector3f(xDiff, -0.07f, 1f), 0f, 0f, 0f, 0.05f);
     hud2.drawShadow = false;
-    Entity hud3 = new Entity("H006",modelMap.getTexturedModelList().get(
-        "H006"), new Vector3f(xDiff,0.11f,1f),0f,0f,0f, 0.05f);
+    Entity hud3 = new Entity("H006",
+        modelMap.getTexturedModelList().get("H006"),
+        new Vector3f(xDiff, 0.11f, 1f), 0f, 0f, 0f, 0.05f);
     hud3.drawShadow = false;
-    Entity hud4 = new Entity("H007",modelMap.getTexturedModelList().get(
-        "H007"), new Vector3f(xDiff,0.28f,1f),0f,0f,0f, 0.05f);
+    Entity hud4 = new Entity("H007",
+        modelMap.getTexturedModelList().get("H007"),
+        new Vector3f(xDiff, 0.28f, 1f), 0f, 0f, 0f, 0.05f);
     hud4.drawShadow = false;
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
@@ -110,23 +120,23 @@ public class MainLoopClient
     hudRenderList.add(hud4);
     hudStart = System.currentTimeMillis();
     String menuData = "S001,0,0,0,0,0,0,0,0,0,0,0;" +
-        "A001,0,0,2,0,0,0,0,0.1;" + 
+        "A001,0,0,2,0,0,0,0,0.1;" +
         "Plan,20,0,70,0,0,0,0,1.1;";
     //random asteroids for the start menu;
-    for(int i = 0; i<30; i++)
+    for (int i = 0; i < 30; i++)
     {
-      int asteroidChoose = (int)(Math.random()*4);
-      if(asteroidChoose == 0)
+      int asteroidChoose = (int) (Math.random() * 4);
+      if (asteroidChoose == 0)
       {
-       menuData+="A001,"; 
+        menuData += "A001,";
       }
-      else if(asteroidChoose <3)
+      else if (asteroidChoose < 3)
       {
-        menuData+="A002,";
+        menuData += "A002,";
       }
       else
       {
-        menuData+="A003,";
+        menuData += "A003,";
       }
       menuData+=(Math.random()*20+10)+","; //x
       menuData+=(Math.random()*30-15)+","; //y
@@ -148,74 +158,80 @@ public class MainLoopClient
     boolean inMenu = true;
 
     getOfflineState(renderList, camera, modelMap, menuData);
-    renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+    renderList.get(1)
+        .setPosition(new Vector3f(xDiff + 0.1f, Menu.getYPos(), 1));
     renderList.get(0).setRotX(0.5f);
     AudioManager.playMusic();
     /* Main Menu loop */
-    while (!exitRequest&&inMenu)
+    while (!exitRequest && inMenu)
     {
-      if(Display.isCloseRequested())
+      if (Display.isCloseRequested())
       {
         exitRequest = true;
         break;
       }
       boolean keyPressed = false;
-      if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+      if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         exitRequest = true;
         break;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP))
+      if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard
+          .isKeyDown(Keyboard.KEY_UP))
       {
-        if(keyReleased)
+        if (keyReleased)
         {
           Menu.up();
-          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+          renderList.get(1)
+              .setPosition(new Vector3f(xDiff + 0.1f, Menu.getYPos(), 1));
         }
         keyPressed = true;
         keyReleased = false;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_F2))
+      if (Keyboard.isKeyDown(Keyboard.KEY_F2))
       {
         currentResolution++;
         DisplayManager.changeResolution(currentResolution);
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_M))
+      if (Keyboard.isKeyDown(Keyboard.KEY_M))
       {
-        if(keyReleased)
+        if (keyReleased)
         {
           AudioManager.muteOrUnmute();
-          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+          renderList.get(1)
+              .setPosition(new Vector3f(xDiff + 0.1f, Menu.getYPos(), 1));
         }
         keyPressed = true;
         keyReleased = false;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+      if (Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard
+          .isKeyDown(Keyboard.KEY_DOWN))
       {
-        if(keyReleased)
+        if (keyReleased)
         {
           Menu.down();
-          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+          renderList.get(1)
+              .setPosition(new Vector3f(xDiff + 0.1f, Menu.getYPos(), 1));
         }
         keyPressed = true;
         keyReleased = false;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_RETURN))
+      if (Keyboard.isKeyDown(Keyboard.KEY_RETURN))
       {
-        if(keyReleased)
+        if (keyReleased)
         {
           int result = Menu.choose();
-          if(result == 3) exitRequest = true;
-          if(result == 0) inMenu = false;
+          if (result == 3) exitRequest = true;
+          if (result == 0) inMenu = false;
         }
         keyPressed = true;
         keyReleased = false;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_Q))
+      if (Keyboard.isKeyDown(Keyboard.KEY_Q))
       {
         inMenu = false;
       }
-      if(!keyPressed)
+      if (!keyPressed)
       {
         keyReleased = true;
       }
@@ -242,33 +258,35 @@ public class MainLoopClient
       }
     }
 
-    if(Display.isCloseRequested() || exitRequest)
+    if (Display.isCloseRequested() || exitRequest)
     {
       renderer.cleanUp();
       loader.cleanUp();
       DisplayManager.closeDisplay();
       return;
     }
-    
+
     //Hud Objects
-    hud1 = new Entity("H001", modelMap.getTexturedModelList().get(
-        "H001"), new Vector3f(0.7f, 0.37f, 1f), 0f, 0f, 0f, 0.05f);
+    hud1 = new Entity("H001", modelMap.getTexturedModelList().get("H001"),
+        new Vector3f(0.7f, 0.37f, 1f), 0f, 0f, 0f, 0.05f);
     hud1.drawShadow = false;
-    hud2 = new Entity("H002", modelMap.getTexturedModelList().get(
-        "H002"), new Vector3f(0.7f, 0.07f, 1f), 0f, 0f, 0f, 0.05f);
+    hud2 = new Entity("H002", modelMap.getTexturedModelList().get("H002"),
+        new Vector3f(0.7f, 0.07f, 1f), 0f, 0f, 0f, 0.05f);
     hud2.drawShadow = false;
-    hud3 = new Entity("H003", modelMap.getTexturedModelList().get(
-        "H003"), new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 0.05f);
+    hud3 = new Entity("H003", modelMap.getTexturedModelList().get("H003"),
+        new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 0.05f);
     hud3.drawShadow = false;
 
-    Entity hud5 = new Entity("H008", modelMap.getTexturedModelList().get(
-        "H008"), new Vector3f(0.3f, -0.1f, 0.8f), 0f, 0f, 0f, 0.06f);
+    Entity hud5 = new Entity("H008",
+        modelMap.getTexturedModelList().get("H008"),
+        new Vector3f(0.3f, -0.1f, 0.8f), 0f, 0f, 0f, 0.06f);
     hud5.drawShadow = false;
-    Entity hud6 = new Entity("H009", modelMap.getTexturedModelList().get(
-        "H009"), new Vector3f(0.4f, 0.0f, 0.8f), 0f, 0f, 0f, 0.05f);
+    Entity hud6 = new Entity("H009",
+        modelMap.getTexturedModelList().get("H009"),
+        new Vector3f(0.4f, 0.0f, 0.8f), 0f, 0f, 0f, 0.05f);
     hud6.drawShadow = false;
-    light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
-        1.0f, 1.0f));
+    light = new Light(new Vector3f(10f, 5f, 2000f),
+        new Vector3f(1.0f, 1.0f, 1.0f));
     hudRenderList = new ArrayList<>();
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
@@ -288,36 +306,37 @@ public class MainLoopClient
     /* In-game loop */
     while (!Display.isCloseRequested())
     {
-      if(death && hudRenderList.size() < 4)
+      if (death && hudRenderList.size() < 4)
       {
         hudRenderList.add(hud5);
         hudRenderList.add(hud6);
       }
-      else if(!death&& hudRenderList.size() > 4)
+      else if (!death && hudRenderList.size() > 4)
       {
-       hudRenderList.remove(hud5);
-       hudRenderList.remove(hud6);
+        hudRenderList.remove(hud5);
+        hudRenderList.remove(hud6);
       }
       boolean keyPressed = false;
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         break;
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_F2))
+      if (Keyboard.isKeyDown(Keyboard.KEY_F2))
       {
         currentResolution++;
         DisplayManager.changeResolution(currentResolution);
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_F1))
+      if (Keyboard.isKeyDown(Keyboard.KEY_F1))
       {
         DisplayManager.changeFullScreen();
       }
-      if(Keyboard.isKeyDown(Keyboard.KEY_M))
+      if (Keyboard.isKeyDown(Keyboard.KEY_M))
       {
-        if(keyReleased)
+        if (keyReleased)
         {
           AudioManager.muteOrUnmute();
-          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+          renderList.get(1)
+              .setPosition(new Vector3f(xDiff + 0.1f, Menu.getYPos(), 1));
         }
         keyPressed = true;
         keyReleased = false;
@@ -342,9 +361,17 @@ public class MainLoopClient
       {
         hudStart = System.currentTimeMillis();
 
-        hudRenderList.get(2).setModel(
-            modelMap.setScoreText(("" + score)));
-        modelMap.setScoreText("" + score);
+        if (score < Globals.WINPOINTS)
+        {
+          hudRenderList.get(2).setModel(modelMap.setScoreText(("" + score)));
+          modelMap.setScoreText("" + score);
+        }
+        else
+        {
+          hudRenderList.get(2).setModel(modelMap.setScoreText((endGame)));
+          modelMap.setScoreText(endGame);
+
+        }
         hudRenderList.get(1).setModel(modelMap.setHealthText("" + health));
         modelMap.setHealthText("" + health);
         hudRenderList.get(0).setModel(modelMap.setSpeedText("" + speed));
@@ -366,7 +393,7 @@ public class MainLoopClient
         pu.updateFPS();
         System.out.println(pu.getFPS());
       }
-      if(!keyPressed)
+      if (!keyPressed)
       {
         keyReleased = true;
       }
@@ -379,12 +406,12 @@ public class MainLoopClient
 
   /**
    * Parses the incoming server info into renderlist
+   *
    * @param renderList
    * @param camera
    * @param modelMap
    */
-  public void getServerState(List<Entity> renderList,
-      Camera camera,
+  public void getServerState(List<Entity> renderList, Camera camera,
       ModelMap modelMap)
   {
     String[] sceneInfo = myClient.getInputFromServer().split(";");
@@ -412,8 +439,8 @@ public class MainLoopClient
         if (object.startsWith("l"))
         {
           Entity tmp_laser = new Entity(id,
-              modelMap.getTexturedModelList().get(id),
-              new Vector3f(x, y, z), xr, yr, zr, s);
+              modelMap.getTexturedModelList().get(id), new Vector3f(x, y, z),
+              xr, yr, zr, s);
           tmp_laser.orientation.w(w);
           tmp_laser.drawShadow = false;
           renderList.add(tmp_laser);
@@ -433,49 +460,72 @@ public class MainLoopClient
           tmp_Entity.orientation.w(w);
         }
         //ship representing current player
-        if (object.startsWith("S")&& playerID == myClient.ID)
+        if (object.startsWith("S") && playerID == myClient.ID)
         {
           health = Integer.parseInt(currentLine[10]);
-          if(health <=0)
+          if (health <= 0)
           {
             health = 0;
             death = true;
           }
-          else if(death && health >0)
+          else if (death && health > 0)
           {
             death = false;
           }
           speed = Float.parseFloat(currentLine[11]);
           score = Integer.parseInt(currentLine[12]);
+          int missileSound = Integer.parseInt(currentLine[13]);
+
+          if (missileSound == 1)
+          {
+            System.out.println(missileSound);
+            AudioManager.playRandomLaser();
+          }
           Quaternion inverse = tmp_Entity.orientation.copy().inverse();
-          Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
-              * tmp_Entity.getScale());
+          Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(),
+              -9 * tmp_Entity.getScale());
           deltaCam = inverse.mult(deltaCam);
           camera.setPosition(new Vector3f(x, y, z));
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
-        //ship representing not the current player
-        else if(object.startsWith("S")&&playerID!=myClient.ID)
+        if (score >= Globals.WINPOINTS)
         {
-        	Vector3f scaleVec=new Vector3f();
-        	Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
-        	float tagScale=scaleVec.length();
-          Entity playerTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-              new Vector3f(x, y-2, z), xr, yr, zr, tagScale/100);
+          gameOver = true;
+          endGame = "WINNER";
+        }
+        else if (object.startsWith("S") && playerID != myClient.ID)
+        {
+          Vector3f scaleVec = new Vector3f();
+          Vector3f.sub(new Vector3f(x, y - 2, z), camera.position, scaleVec);
+          float tagScale = scaleVec.length();
+          Entity playerTag = new Entity("gCone",
+              modelMap.getTexturedModelList().get("gCone"),
+              new Vector3f(x, y - 2, z), xr, yr, zr, tagScale / 100);
           renderList.add(playerTag);
-          playerTag.drawShadow=false;
+          playerTag.drawShadow = false;
+          if (Integer.parseInt(currentLine[12]) > Globals.WINPOINTS)
+          {
+            gameOver = true;
+            endGame = "LOSER";
+          }
         }
         //purple crystal parsing
-        else if(object.startsWith("CryP"))
-        {  	
-        	Entity crystal=  new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
-        	    new Vector3f(x, y, z), xr, yr, zr, s);
-        	renderList.add(crystal);
-        	Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-        	    new Vector3f(x, y-s, z), xr, yr, zr, 10);
-        	renderList.add(crystalTag);
-        	crystalTag.drawShadow=false;
+        else if (object.startsWith("CryP"))
+        {
+          Vector3f scaleVec = new Vector3f();
+          Vector3f.sub(new Vector3f(x, y - 2, z), camera.position, scaleVec);
+          float tagScale = scaleVec.length();
+          Entity crystal = new Entity("CryP",
+              modelMap.getTexturedModelList().get("CryP"),
+              new Vector3f(x, y, z), xr, yr, zr, s);
+          renderList.add(crystal);
+          //  crystal.drawShadow=false;
+          Entity crTag = new Entity("bCone",
+              modelMap.getTexturedModelList().get("bCone"),
+              new Vector3f(x, y - 50, z), xr, yr, zr, tagScale / 100);
+          renderList.add(crTag);
+          crTag.drawShadow = false;
         }
 
         if (tmp_Entity != null)
@@ -489,13 +539,14 @@ public class MainLoopClient
   /**
    * Add things to render based on a string passed in
    * Does NOT work well with rotated models
+   *
    * @param renderList
    * @param camera
    * @param modelMap
    * @param data
    */
   public void getOfflineState(List<Entity> renderList, Camera camera,
-      ModelMap modelMap,String data)
+      ModelMap modelMap, String data)
   {
     String[] sceneInfo = data.split(";");
     renderList.clear();
@@ -535,7 +586,7 @@ public class MainLoopClient
       }
     }
   }
-  
+
   /**
    * Sends keyboard input to the server
    */
@@ -596,7 +647,6 @@ public class MainLoopClient
       if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
       {
         toSend += "KEY_RSHIFT;";
-        AudioManager.playRandomLaser();
       }
       if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
       {
@@ -608,8 +658,8 @@ public class MainLoopClient
       //Respawn player
       if (Keyboard.isKeyDown(Keyboard.KEY_P))
       {
-        currentTime=System.currentTimeMillis();
-        if(currentTime-previousTime>1000)
+        currentTime = System.currentTimeMillis();
+        if (currentTime - previousTime > 1000)
         {
           try
           {
@@ -620,7 +670,7 @@ public class MainLoopClient
             // TODO Auto-generated catch block
             e.printStackTrace();
           }
-          currentTime=previousTime;
+          currentTime = previousTime;
           System.out.println("respawn me!");
           toSend += "KEY_P;";
         }
@@ -631,6 +681,7 @@ public class MainLoopClient
 
   /**
    * Setting connection info
+   *
    * @param host
    * @param socket
    */
@@ -638,7 +689,7 @@ public class MainLoopClient
   {
     hostName = host;
     socketVal = socket;
-  }  
+  }
 
   public static void main(String[] args)
   {

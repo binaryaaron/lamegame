@@ -9,6 +9,7 @@ package engineTester;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,21 +41,25 @@ import entities.Player;
 
 public class MainLoopServer
 {
-  public ServerMaster myServer;
-  float crystalSize = 100f;
-  Player player0;
-  Player player1;
-  Player player2;
-  Player player3;
-  ModelMap modelMap;
-  List<Player> deadPlayers;
 
-  private static final int nAsteroids = 200;
-  private static final int nCrystals = 5;
-  TexturedModel texturedLaser;
-  List<Entity> killList = new LinkedList<>();
-  long nextStep = 4;
-  long killStep = 4;
+	  public ServerMaster myServer;
+	  private int loop = 0;
+	  float crystalSize = 100f;
+	  Player player0;
+	  Player player1;
+	  Player player2;
+	  Player player3;
+	  ModelMap modelMap;
+	  List<Player> deadPlayers;
+	 
+	  private static final int nAsteroids = 200;
+	  private static final int nCrystals = 5;
+	  private boolean gameOver=false;
+	  Entity winner;
+	  TexturedModel texturedLaser;
+	  List<Entity> killList = new LinkedList<>();
+	  long nextStep = 4;
+	  long killStep = 4;
 
   /**
    * Creates a server and a black Window that represents the server
@@ -91,7 +96,11 @@ public class MainLoopServer
 
     List<Entity> renderList = createInitialGame(modelMap);
 
-    List<Entity> missileList = new ArrayList<>();
+    HashMap<Integer, List<Entity>> missileMap = new HashMap<>();
+    for (int i = 0; i < 4; i++)
+    {
+      missileMap.put(i, new LinkedList<>());
+    }
     deadPlayers = new LinkedList<>();
     long lastTime = System.currentTimeMillis();
 
@@ -105,6 +114,10 @@ public class MainLoopServer
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
+        player0.missileSound = 0;
+        player1.missileSound = 0;
+        player2.missileSound = 0;
+        player3.missileSound = 0;
         for (int i = 0; i < ServerMaster.threadList.size(); i++)
         {
           int playerID= ServerMaster.threadList.get(i).ID;
@@ -129,11 +142,15 @@ public class MainLoopServer
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, modelMap, renderList, missileList,
+            parseClientInput(inputFromClient, modelMap, renderList, missileMap.get(playerID),
                 new Camera(), currentPlayer);
           }
         }
         lastTime = time;
+        if(gameOver){
+        	
+        	endGameStep(renderList,winner);
+        }
         performPhysics(renderList);
       }
 
@@ -141,6 +158,8 @@ public class MainLoopServer
       outputToClient = "";// clear the String
       for (Entity ent : renderList)
       {
+    	  if(gameOver&&(ent.toString().startsWith("P")||ent.toString().startsWith("lase")))continue;
+      	
         outputToClient += ent.toString() + ";";
       }
       for (int i = 0; i < ServerMaster.threadList.size(); i++)
@@ -255,31 +274,38 @@ public class MainLoopServer
       }
       if (input.equals("KEY_RSHIFT"))
       {
-
-        // fire a missile
-        if (missileList.size() > 200)
+        long time = System.currentTimeMillis();
+        // Limit missile to 4 per second
+        if (time - player.lastFired > 250)
         {
-          renderList.remove(missileList.get(0));
-          missileList.remove(0);
+          player.lastFired = time;
+          player.missileSound = 1;
+          // fire a missile (100 per player active)
+          if (missileList.size() > 100)
+          {
+            renderList.remove(missileList.get(0));
+            missileList.remove(0);
+          }
+
+          Vector3 deltaMis = delta.copy();
+          deltaMis.y(0 * player.getScale());
+          deltaMis.z(7 * player.getScale());
+
+          missilePos.add(inverse.mult(deltaMis));
+
+          Entity missle = new Entity("lase", texturedLaser,
+              new Vector3f(0, 0, 0), 0, 0, 0, 5f);
+          // missle.setPosition(player.position);
+          missle.quadTranslate(missilePos);
+
+          missle.orientation = player.orientation.copy();
+          float pv = 20f;
+          missle.vel = player.vel.copy()
+              .add(inverse.mult(new Vector3(0, 0, pv)));
+
+          renderList.add(missle);
+          missileList.add(missle);
         }
-
-        Vector3 deltaMis = delta.copy();
-        deltaMis.y(0 * player.getScale());
-        deltaMis.z(7 * player.getScale());
-
-        missilePos.add(inverse.mult(deltaMis));
-
-        Entity missle = new Entity("lase", texturedLaser,
-            new Vector3f(0, 0, 0), 0, 0, 0, 5f);
-        // missle.setPosition(player.position);
-        missle.quadTranslate(missilePos);
-
-        missle.orientation = player.orientation.copy();
-        float pv = 20f;
-        missle.vel = player.vel.copy().add(inverse.mult(new Vector3(0, 0, pv)));
-
-        renderList.add(missle);
-        missileList.add(missle);
       }
 
       Vector3 deltaCam = delta.copy();
@@ -348,6 +374,10 @@ public class MainLoopServer
             {
               ent.score++;
               ent.entScoreStep = nextStep;
+              if(ent.score>Globals.WINPOINTS){
+            	  gameOver=true;
+            	  winner=ent;}
+              killList.add(other);
               killList.add(other);
               crystalsNeeded++;
             }
@@ -359,6 +389,10 @@ public class MainLoopServer
             {
               other.score++;
               other.entScoreStep = nextStep;
+              if(other.score>Globals.WINPOINTS){
+            	  gameOver=true;
+            	  winner=other;
+            	  }
               killList.add(ent);
               crystalsNeeded++;
             }
@@ -538,6 +572,35 @@ public class MainLoopServer
 
     return ents;
   }
+
+
+  public static void main(String[] args)
+  {
+    new MainLoopServer(args);
+
+  }
+  
+  /**
+   * What to do when the game is won
+   * @param renderList
+   * @param winner
+   */
+  public void endGameStep(List<Entity> renderList,Entity winner)
+  {
+	  for(Entity ent:renderList){
+		  if(ent!=winner){
+			  ent.position.x*=0.99f;
+			  ent.position.y*=0.99f;
+			  ent.position.z*=0.99f;
+			  
+		  }
+		  else if(ent.getId().startsWith("P"))
+		  {
+			  renderList.remove(ent);
+			  }
+		  }
+	  }
+
   /**
    * Way to shorten code (receiving input from a thread)
    * @param i
@@ -548,10 +611,5 @@ public class MainLoopServer
     // start with first element in walker thread, expand to multiplayer
     String input = ServerMaster.threadList.get(i).getClientInput();
     return input;
-  }
-  
-  public static void main(String[] args)
-  {
-    new MainLoopServer(args);
   }
 }
