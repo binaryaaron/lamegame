@@ -53,11 +53,6 @@ public class Entity
   public int score = 0;
   public long entScoreStep = 0;
 
-  public void kill()
-  {
-    hitPoints = 0;
-  }
-
   /**
    * Serves as a short listing of various amounts of health, mass, and damage
    * an entity may have.
@@ -86,6 +81,7 @@ public class Entity
    */
   private static Map<String, EntityType> entMap;
 
+  // Initialize entity map
   static {
     entMap = new HashMap<>();
     entMap.put("l", EntityType.LASER);
@@ -307,18 +303,6 @@ public class Entity
     rotMat.m12 = (float) (-Math.sin(rotY) * Math.cos(rotX));
     rotMat.m22 = (float) (Math.cos(rotY));
 
-    // rotMat.m00=(cx*cz)-(cy*sx*sz);
-    // rotMat.m10=(cz*sx)+(cx*cz*cy);
-    // rotMat.m20=sy*sz;
-    //
-    // rotMat.m01=-(cx*sz)-(cy*cz*sx);
-    // rotMat.m11=(cx*cz*cy)-(sx*sz);
-    // rotMat.m21=cz*sy;
-    //
-    // rotMat.m02=sx*sy;
-    // rotMat.m12=-cx*sy;
-    // rotMat.m22=cy;
-
     return rotMat;
 
   }
@@ -367,42 +351,6 @@ public class Entity
   public void setRotX(float rotX)
   {
     this.rotX = rotX;
-  }
-
-  public float getRotY()
-  {
-    return rotY;
-  }
-
-  public void setRotY(float rotY)
-  {
-    this.rotY = rotY;
-  }
-
-  public float getRotZ()
-  {
-    return rotZ;
-  }
-
-  public void setRotZ(float rotZ)
-  {
-    this.rotZ = rotZ;
-  }
-
-  public void setVelocity(Vector3 vel)
-  {
-    this.vel = vel;
-  }
-
-  /**
-   * Updates the vel by a constant in all directions
-   *
-   * @param increase
-   *          the amount to increase the vel by. may be negative.
-   */
-  public void increaseVelocity(float increase)
-  {
-    vel.set(vel.x() + increase, vel.y() + increase, vel.z() + increase);
   }
 
   /**
@@ -503,6 +451,14 @@ public class Entity
   }
 
   /**
+   * Set entity health to 0
+   */
+  public void kill()
+  {
+    hitPoints = 0;
+  }
+
+  /**
    * Heals the hit points of the object
    * 
    * @param heal
@@ -532,7 +488,11 @@ public class Entity
   }
 
   /**
+<<<<<<< HEAD
    * Updates the object with a random inital velocity - used for creation
+=======
+   * Set a random velocity
+>>>>>>> origin/weston_comments
    */
   public void randomVel()
   {

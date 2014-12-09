@@ -177,6 +177,15 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
+  /**
+   * Parse the clients input string
+   * @param inputFromClient client's input string
+   * @param modelMap game model map
+   * @param renderList game render list
+   * @param missileList client render list
+   * @param camera client camera
+   * @param player client player
+   */
   public void parseClientInput(String inputFromClient, ModelMap modelMap,
       List<Entity> renderList, List<Entity> missileList,
       Camera camera, Player player)
@@ -344,6 +353,11 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Perform physics for the game
+   *
+   * @param renderList games object list
+   */
   private void performPhysics(List<Entity> renderList)
   {
     int crystalsNeeded = 0;
@@ -432,6 +446,12 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Add an entity to the renderlist without collision
+   * @param renderList games renderlist
+   * @param id type of entity
+   * @param size size of entity
+   */
   private void addEntity(List<Entity> renderList, String id, float size)
   {
     while (true)
@@ -454,6 +474,12 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Generate a random entity somewhere near the game
+   * @param id type of entity
+   * @param size size of entity
+   * @return random entity
+   */
   private Entity randEntity(String id, float size)
   {
 
@@ -477,6 +503,12 @@ public class MainLoopServer
     return ent;
   }
 
+  /**
+   * Find a good position for the player
+   * @param renderList games render list
+   * @param id id of player ship
+   * @return good position for the player
+   */
   private Vector3f goodPlayerPos(List<Entity> renderList, String id)
   {
     while (true)
@@ -506,6 +538,12 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Generate a random player
+   * @param id ship id
+   * @param clientID client id
+   * @return random player
+   */
   private Player randPlayer(String id, int clientID)
   {
     int r = 1000 + Globals.RAND.nextInt(1000);
@@ -518,6 +556,11 @@ public class MainLoopServer
     return player;
   }
 
+  /**
+   * Create the initial game with 4 players
+   * @param modelMap game's model map
+   * @return new game state
+   */
   private List<Entity> createInitialGame(ModelMap modelMap)
   {
     Entity planet = new Entity("Plan", modelMap.getTexturedModelList().get("Plan"), new Vector3f(0,0,0), 0, 0, 0, 100);
