@@ -46,13 +46,18 @@ public class Entity
   public EntityType type;
   public int score = 0;
   public long entScoreStep = 0;
-
   
+  /**
+   * Set this entity's health to 0 (dead)
+   */
   public void kill()
   {
     hitPoints = 0;
   }
 
+  /**
+   * An enum to hold different entity's mass, damage, and health
+   */
   public enum EntityType 
   {
     SHIP(100, 20, 1000),
@@ -73,8 +78,8 @@ public class Entity
     }
   }
 
+  //A map using different entity's starting ID char
   private static Map<String, EntityType> entMap;
-
   static 
   {
     entMap = new HashMap<>();
@@ -85,11 +90,25 @@ public class Entity
     entMap.put("C", EntityType.CRYSTAL);
   }
 
+  /**
+   * Necessary default constructor
+   */
   public Entity()
   {
     
   }
   
+  /**
+   * Create a complete entity with a model, position, rotation, scale and client ID
+   * @param id
+   * @param model
+   * @param position
+   * @param rotX
+   * @param rotY
+   * @param rotZ
+   * @param scale
+   * @param clientId
+   */
   public Entity(String id, TexturedModel model, Vector3f position, float rotX,
       float rotY, float rotZ, float scale, int clientId)
   {
@@ -240,7 +259,7 @@ public class Entity
   }
   
   /**
-   * Getters and setters
+   * getter
    * @return
    */
   public float getSize()
@@ -248,22 +267,40 @@ public class Entity
     return size;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public float getHalfSize()
   {
     return halfSize;
   }
 
+  /**
+   * Move something based on a velocity vector
+   * @param vel
+   */
   public void translate(Vector3f vel)
   {
     position.translate(vel.x, vel.y, vel.z);
     box.translate(vel);
   }
 
+  /**
+   * Move this based on this entity's velocity
+   */
   public void move()
   {
     move(vel);
   }
 
+  /**
+   * Creates a new basis for the entity, rotating the model
+   * @param rotX
+   * @param rotY
+   * @param rotZ
+   * @return
+   */
   public Matrix4f setNewBasis(float rotX, float rotY, float rotZ)
   {
     Matrix4f rotMat = new Matrix4f();
@@ -285,72 +322,129 @@ public class Entity
     return rotMat;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public BoundingBox getBox()
   {
     return box;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public float getScale()
   {
     return scale;
   }
 
+  /**
+   * setter
+   * @param scale
+   */
   public void setScale(float scale)
   {
     this.scale = scale;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public TexturedModel getModel()
   {
     return model;
   }
 
+  /**
+   * setter
+   * @param model
+   */
   public void setModel(TexturedModel model)
   {
     this.model = model;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public Vector3f getPosition()
   {
     return position;
   }
 
+  /**
+   * setter
+   * sets both the position of the entity and the bounding box
+   * @param position
+   */
   public void setPosition(Vector3f position)
   {
     this.position = new Vector3f(position);
     this.box.setPosition(position);
   }
 
+  /**
+   * getter
+   * @return
+   */
   public float getRotX()
   {
     return rotX;
   }
 
+  /**
+   * setter
+   * @param rotX
+   */
   public void setRotX(float rotX)
   {
     this.rotX = rotX;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public float getRotY()
   {
     return rotY;
   }
 
+  /**
+   * setter
+   * @param rotY
+   */
   public void setRotY(float rotY)
   {
     this.rotY = rotY;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public float getRotZ()
   {
     return rotZ;
   }
 
+  /**
+   * setter
+   * @param rotZ
+   */
   public void setRotZ(float rotZ)
   {
     this.rotZ = rotZ;
   }
 
+  /**
+   * setter
+   * @param vel
+   */
   public void setVelocity(Vector3 vel)
   {
     this.vel = vel;
