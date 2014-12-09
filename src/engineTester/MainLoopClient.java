@@ -176,6 +176,16 @@ public class MainLoopClient
         keyPressed = true;
         keyReleased = false;
       }
+      if(Keyboard.isKeyDown(Keyboard.KEY_M))
+      {
+        if(keyReleased)
+        {
+          AudioManager.muteOrUnmute();
+          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+        }
+        keyPressed = true;
+        keyReleased = false;
+      }
       if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN))
       {
         if(keyReleased)
