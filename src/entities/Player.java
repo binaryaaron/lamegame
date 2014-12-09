@@ -14,7 +14,6 @@ public class Player extends Entity
   private Boolean alive = true;
   private Boolean playing = true;
   private static Boolean DEBUG = true;
-  public int score = 0;
 
   public static final float playerScale = 3f;
   /**
@@ -25,6 +24,8 @@ public class Player extends Entity
       float rotY, float rotZ, int clientId)
   {
     super(id, model, position, rotX, rotY, rotZ, playerScale, clientId);
+    box = Globals.shipBoundingBox.deepCopy();
+    box.scale(playerScale * 0.9f);
   }
 
   //  /**

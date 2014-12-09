@@ -1,27 +1,11 @@
 package server;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.AllPermission;
-import java.util.LinkedList;
-import java.util.Random;
-
-import javax.swing.ImageIcon;
-
-import org.lwjgl.input.Keyboard;
-
-import renderEngine.DisplayManager;
-import renderEngine.MasterRenderer;
 
 public class WalkerClient extends Thread
 {
@@ -112,6 +96,12 @@ public class WalkerClient extends Thread
   public void sendToServer(String toSend)
   {
     out.println(toSend);
+  }
+  
+  public static void setConnection(String server, int socket)
+  {
+    hostName = server;
+    socketVal = socket;
   }
   
   public void firstSend(String output)//TODO unnecessary method?

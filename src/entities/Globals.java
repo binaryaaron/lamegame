@@ -13,11 +13,15 @@ public class Globals
 
   public static final Random RAND = new Random();
   public static final int WORLD_SIZE = 3000;
-
+  public static boolean HARD_MODE = false;
+  public static boolean EASY_MODE = false;
   public static final BoundingBox projectileBoundingBox;
+  public static final BoundingBox shipBoundingBox;
+  public static final float PLANET_RADIUS = 800f;
 
   static {
     projectileBoundingBox = new BoundingBox(new Vector3f(-0.5f,-0.5f,-0.5f), new Vector3f(0.5f, 0.5f, 0.5f));
+    shipBoundingBox = new BoundingBox(new Vector3f(-2.5f,-2.5f,-2.5f), new Vector3f(2.5f, 2.5f, 2.5f));
   }
   /**
    * Returns a pseudo-random number between min and max, inclusive.

@@ -31,8 +31,11 @@ public class ModelMap
   RawModel speedLabel;
   RawModel healthLabel;
   RawModel scoreLabel;
-  RawModel xLabel;
-  RawModel yLabel;
+  RawModel connectLabel;
+  RawModel helpLabel;
+  RawModel creditsLabel;
+  RawModel quitLabel;
+  
   ModelTexture textTx;
 
   public ModelMap()
@@ -52,8 +55,10 @@ public class ModelMap
     speedLabel = FontLoader.loadFontModel("78", loader, true, 1);
     healthLabel = FontLoader.loadFontModel("0%", loader, true, 1);
     scoreLabel = FontLoader.loadFontModel("3 frags", loader, true, 1);
-    xLabel = FontLoader.loadFontModel("X", loader, true, 1);
-    yLabel = FontLoader.loadFontModel("Y", loader, true, 1);
+    connectLabel = FontLoader.loadFontModel("Connect", loader, true, 1);
+    helpLabel = FontLoader.loadFontModel("Help", loader, true, 1);
+    creditsLabel = FontLoader.loadFontModel("Credits", loader, true, 1);
+    quitLabel = FontLoader.loadFontModel("Exit", loader, true, 1);
 
     ModelTexture shipTexture = new ModelTexture(
         loader.loadTexture("SciFi_FighterMK_diffuse"));
@@ -71,18 +76,14 @@ public class ModelMap
     				purpTexture.setShadeDamper(1);
     textTx = new ModelTexture(loader.loadTexture("font"));
 
-    //	    ModelTexture speedTexture = new ModelTexture(loader.loadTexture("font"));
-    //      ModelTexture healthTexture = new ModelTexture(loader.loadTexture("font"));
-    //      ModelTexture scoreTexture = new ModelTexture(loader.loadTexture("font"));
-    //      ModelTexture xTexture = new ModelTexture(loader.loadTexture("font"));
-    //      ModelTexture yTexture = new ModelTexture(loader.loadTexture("font"));
-
     TexturedModel texturedSpeed = new TexturedModel("H001", speedLabel, textTx);
     TexturedModel texturedHealth = new TexturedModel("H002", healthLabel,
         textTx);
     TexturedModel texturedScore = new TexturedModel("H003", scoreLabel, textTx);
-    TexturedModel texturedX = new TexturedModel("H004", xLabel, textTx);
-    TexturedModel texturedY = new TexturedModel("H005", yLabel, textTx);
+    TexturedModel texturedConnect = new TexturedModel("H004", connectLabel, textTx);
+    TexturedModel texturedhelp = new TexturedModel("H005", helpLabel, textTx);
+    TexturedModel texturedCredits = new TexturedModel("H006", creditsLabel, textTx);
+    TexturedModel texturedQuit = new TexturedModel("H007", quitLabel, textTx);
 
     TexturedModel texturedModelAsteroid = new TexturedModel("A001",
         modelAsteroid, asteroidTexture);
@@ -99,13 +100,17 @@ public class ModelMap
         laserTexture);
     TexturedModel greenCone = new TexturedModel("gCone", cone,
         greenTexture);
-    TexturedModel greenCystal = new TexturedModel("gCry", crystal,
+    TexturedModel purpCrystal = new TexturedModel("CryP", crystal,
     		purpTexture);
 
     texturedModelList.put("H001", texturedSpeed);
     texturedModelList.put("H002", texturedHealth);
     texturedModelList.put("H003", texturedScore);
-
+    texturedModelList.put("H004", texturedConnect);
+    texturedModelList.put("H005", texturedhelp);
+    texturedModelList.put("H006", texturedCredits);
+    texturedModelList.put("H007", texturedQuit);
+    
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
     texturedModelList.put("A003", texturedModelStone);
@@ -114,7 +119,7 @@ public class ModelMap
     texturedModelList.put("lase", texturedLaser);
     texturedModelList.put("Plan", texturedPlanet);
     texturedModelList.put("gCone", greenCone);
-    texturedModelList.put("gCry", greenCystal);
+    texturedModelList.put("CryP", purpCrystal);
 
   }
 

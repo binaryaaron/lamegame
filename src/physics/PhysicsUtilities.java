@@ -55,35 +55,72 @@ public class PhysicsUtilities
 
     vec1.add(diff);
     vec2.sub(diff);
+
+    if (Globals.HARD_MODE)
+    {
+      vec1.mult(1.01f);
+      vec2.mult(1.01f);
+    }
+    else if (Globals.EASY_MODE)
+    {
+      vec1.mult(0.97f);
+      vec2.mult(0.97f);
+    }
   }
 
+  public static void planetCollision(Entity planet, Entity ent)
+  {
+    Vector3 ppos = new Vector3(planet.position.x, planet.position.y, planet.position.z);
+    Vector3 epos = new Vector3(ent.position.x, ent.position.y, ent.position.z);
+    Vector3 dist = epos.copy();
+    dist.sub(ppos);
+
+    if (dist.length() < Globals.PLANET_RADIUS)
+    {
+      elasticCollision(planet, ent);
+    }
+
+    planet.vel.reset();
+  }
   public static void gameWorldCollision(Entity ent)
   {
     Vector3f position = ent.position;
+    boolean hit = false;
 
     if (position.x > Globals.WORLD_SIZE)
     {
       ent.vel.x(-Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.y > Globals.WORLD_SIZE)
     {
       ent.vel.y(-Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.z > Globals.WORLD_SIZE)
     {
       ent.vel.z(-Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.x < -Globals.WORLD_SIZE)
     {
       ent.vel.x(Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.y < -Globals.WORLD_SIZE)
     {
       ent.vel.y(Math.abs(ent.vel.x()));
+      hit = true;
     }
     if (position.z < -Globals.WORLD_SIZE)
     {
       ent.vel.z(Math.abs(ent.vel.x()));
+      hit = true;
+    }
+
+    if (hit && ent.getId().startsWith("l"))
+    {
+      ent.damageObject(1);
     }
   }
 
