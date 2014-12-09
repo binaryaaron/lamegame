@@ -19,11 +19,20 @@ public class SkyBoxShader extends ShaderProgram{
 	private int location_shineDamper;
 	private int location_reflectivity;	
 	
+	/**
+	 * Skybox Shaders are Shader programs that work on Skyboxes.
+	 * They are required to have a no shadow shader that is bound to the camera.
+	 * 
+	 * 
+	 */
 	public SkyBoxShader(){
 		super(VERTEX_FILE, FRAGMENT_FILE);
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see shaders.ShaderProgram#bindAttributes()
+	 */
 	@Override
 	protected void bindAttributes(){
 		super.bindAttribute(0, "position");
@@ -32,6 +41,9 @@ public class SkyBoxShader extends ShaderProgram{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see shaders.ShaderProgram#getAllUniformLocations()
+	 */
 	@Override
 	protected void getAllUniformLocations() {
 		location_TransformationMatrix=super.getUniformLocation("transformationMatrix");
@@ -43,6 +55,11 @@ public class SkyBoxShader extends ShaderProgram{
 		location_reflectivity=super.getUniformLocation("reflectivity");
 	}
 	
+	/**
+	 * For assining shine variables
+	 * @param shineDamper
+	 * @param reflectivity
+	 */
 	public void loadShineVariables(float shineDamper, float reflectivity){
 			super.loadFloat(location_shineDamper, shineDamper);
 			super.loadFloat(location_reflectivity, reflectivity);
@@ -51,6 +68,9 @@ public class SkyBoxShader extends ShaderProgram{
 	
 	
 	
+	/**
+	 * @param matrix
+	 */
 	public void loadTransformationMatrix(Matrix4f matrix){
 		
 		super.loadMatrix(location_TransformationMatrix, matrix);
@@ -59,6 +79,9 @@ public class SkyBoxShader extends ShaderProgram{
 	}
 	
 	
+	/**
+	 * @param light
+	 */
 	public void loadLight(Light light){
 		super.loadVector(location_lightPosition,light.getPosition());
 		super.loadVector(location_lightColor, light.getColor());
@@ -68,6 +91,9 @@ public class SkyBoxShader extends ShaderProgram{
 	
 	
 	
+/**
+ * @param camera
+ */
 public void loadViewMatrix(Camera camera){
 		
 		Matrix4f viewMatrix=MathUtil.createViewMatrix(camera);
@@ -75,6 +101,9 @@ public void loadViewMatrix(Camera camera){
 		
 		
 	}
+	/**
+	 * @param matrix
+	 */
 	public void loadProjectionMatrix(Matrix4f matrix){
 		
 		super.loadMatrix(location_ProjectionMatrix, matrix);
