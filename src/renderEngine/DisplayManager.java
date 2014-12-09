@@ -13,6 +13,9 @@ public class DisplayManager
   private static DisplayMode []modes;
   private static boolean fullScreen = false;
   
+  /**
+   * Create a display in opengl 3.2
+   */
   public static void createDisplay()
   {
 
@@ -21,10 +24,10 @@ public class DisplayManager
 
     try
     {
-      //Display.create();
       Display.setTitle("LameGame");
       modes = Display.getAvailableDisplayModes();
       DisplayMode initialMode = modes[0];
+      
       //set default mode to 1280x720
       for (DisplayMode mode : modes)
       {
@@ -35,15 +38,12 @@ public class DisplayManager
       }
       Display.setDisplayMode(initialMode);
       Display.create(new PixelFormat(), attribs);
-
     }
     catch (LWJGLException e)
     {
       e.printStackTrace();
     }
-
     GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
-
   }
 
   /**
@@ -81,17 +81,20 @@ public class DisplayManager
     }
     GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());  
   }
+  
+  /**
+   * updates the display
+   */
   public static void updateDisplay()
   {
-//    Display.sync(FPS_CAP);
     Display.update();
-
   }
 
+  /**
+   * Destroys the display
+   */
   public static void closeDisplay()
   {
     Display.destroy();
-
   }
-
 }
