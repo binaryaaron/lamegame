@@ -51,7 +51,7 @@ public class Entity
   public enum EntityType {
     SHIP(100, 20, 1000),
     CRYSTAL(10000, 0, 2000000),
-    LASER(50, 1000, 4),
+    LASER(50, 1000, 50),
     PLANET(100000, 50, 20000000),
     ASTEROID(500, 20, 200000);
 

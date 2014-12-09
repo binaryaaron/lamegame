@@ -40,13 +40,16 @@ public class MainLoopServer
 {
   public WalkerServer myServer;
   private int loop = 0;
+  float crystalSize=100f;
   Player player0;
   Player player1;
   Player player2;
   Player player3;
+  ModelMap modelMap;
   List<Player> deadPlayers;
 
   private static final int nAsteroids = 200;
+  private static final int nCrystals = 5;
   TexturedModel texturedLaser;
   List<Entity> killList = new LinkedList<>();
   long nextStep = 4;
@@ -57,7 +60,7 @@ public class MainLoopServer
 
     DisplayManager.createDisplay();
     Loader loader = new Loader();
-    ModelMap modelMap = new ModelMap();
+    modelMap = new ModelMap();
 //    Camera camera = new Camera();
 //    camera.followObj = player0;
     // create skybox, this is not an entity so it is seperate
@@ -364,9 +367,34 @@ public class MainLoopServer
     }
   }
 
+  
+  private void addCrystal(List<Entity> renderList){
+	
+	  int a = Globals.RAND.nextInt(2) + 1;
+
+      int y = Globals.RAND.nextInt(20) - 10;
+      int r = 0;
+      int x = Globals.RAND.nextInt(8000) - 1500;
+      int z = Globals.RAND.nextInt(8000) - 1500;
+      while (r < 1000000 || r > 4000000)
+      {
+        x = Globals.RAND.nextInt(8000) - 1500;
+        z = Globals.RAND.nextInt(8000) - 1500;
+        r = x * x + z * z;
+      }
+      crystalSize*=0.75;
+      Entity crystal =new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
+	            new Vector3f(x, y, z), 0, 0, 0, crystalSize);
+	  renderList.add(crystal);
+  }
+  
+  
+  
+  
+  
   private String createInitialGameString(ModelMap modelMap)
   {
-    String startString = "Plan,0,0,0,0,0,0,100;CryP,1000,1000,1000,0,0,0,100;";
+    String startString = "Plan,0,0,0,0,0,0,100;";
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
         new Vector3f(1000, 1050, 0), 0, 0, 0, 0);
@@ -398,6 +426,24 @@ public class MainLoopServer
       float s = Globals.RAND.nextFloat() * 100;
       startString = startString.concat("A00" + a + "," + x + "," + y + "," + z
           + ",0,0,0," + s + ";");
+    }
+    for (int i = 0; i < nCrystals; i++)
+    {
+      int a = Globals.RAND.nextInt(2) + 1;
+
+      int y = Globals.RAND.nextInt(20) - 10;
+      int r = 0;
+      int x = Globals.RAND.nextInt(8000) - 1500;
+      int z = Globals.RAND.nextInt(8000) - 1500;
+      while (r < 1000000 || r > 4000000)
+      {
+        x = Globals.RAND.nextInt(8000) - 1500;
+        z = Globals.RAND.nextInt(8000) - 1500;
+        r = x * x + z * z;
+      }
+      
+      startString = startString.concat("CryP"+ "," + x + "," + y + "," + z
+          + ",0,0,0," + crystalSize + ";");
     }
     return startString;
   }
