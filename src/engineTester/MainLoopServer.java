@@ -8,6 +8,7 @@ package engineTester;
 
 import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector;
 import com.ra4king.opengl.util.math.Vector3;
 
 import entities.*;
@@ -34,7 +35,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public class MainLoopServer
 {
@@ -94,9 +94,8 @@ public class MainLoopServer
     }
     String startString;
 
-    startString = createInitialGameString(modelMap);
+    List<Entity> renderList = createInitialGame(modelMap);
 
-    List<Entity> renderList = parseGameStateString(startString, modelMap);
     List<Entity> missileList = new ArrayList<>();
     deadPlayers = new LinkedList<>();
     long lastTime = System.currentTimeMillis();
@@ -252,7 +251,7 @@ public class MainLoopServer
         {
           if (deadPlayers.contains(player))
           {
-            player.respawn(new Vector3f(1100, 1100, 0));
+            player.respawn(goodPlayerPos(renderList, player.getId()));
             deadPlayers.remove(player);
             if (!renderList.contains(player))
             {
@@ -385,15 +384,16 @@ public class MainLoopServer
 
     for (int i = 0; i < crystalsNeeded; i++)
     {
-      addCrystal(renderList);
+      addEntity(renderList, "CryP", crystalSize);
+      crystalSize *= 0.9;
     }
   }
 
-  private void addCrystal(List<Entity> renderList)
+  private void addEntity(List<Entity> renderList, String id, float size)
   {
     while (true)
     {
-      Entity crys = randCrystal();
+      Entity crys = randEntity(id, size);
       boolean canAdd = true;
       for (Entity ent : renderList)
       {
@@ -411,7 +411,7 @@ public class MainLoopServer
     }
   }
 
-  private Entity randCrystal()
+  private Entity randEntity(String id, float size)
   {
 
     int a = Globals.RAND.nextInt(2) + 1;
@@ -426,68 +426,92 @@ public class MainLoopServer
       r = x * x + z * z;
     }
     int y = Globals.RAND.nextInt(3000) - 1500;
-    crystalSize *= 0.9;
-    Entity crystal = new Entity("CryP",
-        modelMap.getTexturedModelList().get("CryP"),
-        new Vector3f(x, y, z), 0, 0, 0, crystalSize);
 
-    return crystal;
+    Entity ent = new Entity(id,
+        modelMap.getTexturedModelList().get(id),
+        new Vector3f(x, y, z), 0, 0, 0, size);
+
+    return ent;
   }
 
-  private String createInitialGameString(ModelMap modelMap)
+  private Vector3f goodPlayerPos(List<Entity> renderList, String id)
+  {
+    while (true)
+    {
+      Player player = randPlayer(id, 0);
+      boolean canAdd = true;
+      for (Entity ent : renderList)
+      {
+        if (ent.type == Entity.EntityType.PLANET)
+        {
+          if (PhysicsUtilities.planetCollide(ent, player))
+          {
+            canAdd = false;
+            break;
+          }
+        }
+        else if (BoxUtilities.collision(ent.getBox(), player.getBox()))
+        {
+          canAdd = false;
+          break;
+        }
+      }
+      if (canAdd)
+      {
+        return player.position;
+      }
+    }
+  }
+
+  private Player randPlayer(String id, int clientID)
+  {
+    int r = 2000 + Globals.RAND.nextInt(1000);
+    int x = (int) (r * Math.cos(Globals.RAND.nextDouble()));
+    int z = (int) (r * Math.sin(Globals.RAND.nextDouble()));
+    int y = Globals.RAND.nextInt(8000) - 4000;
+    Player player = new Player(id,
+        modelMap.getTexturedModelList().get(id),
+        new Vector3f(x, y, z), 0, 0, 0, clientID);
+    return player;
+  }
+
+  private List<Entity> createInitialGame(ModelMap modelMap)
   {
     String startString = "Plan,0,0,0,0,0,0,100;";
 
-    player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
-        new Vector3f(1000, 1050, 0), 0, 0, 0, 0);
-    player1 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 1000, 0), 0, 0, 0, 1);
-    player2 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 950, 0), 0, 0, 0, 2);
-    player3 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 900, 0), 0, 0, 0, 3);
-    startString += player0.toString() + ";";
-    startString += player1.toString() + ";";
-    startString += player2.toString() + ";";
-    startString += player3.toString() + ";";
+    Entity planet = new Entity("Plan", modelMap.getTexturedModelList().get("Plan"), new Vector3f(0,0,0), 0, 0, 0, 100);
+
+    List<Entity> ents = new ArrayList<>(nAsteroids + 20);
+    ents.add(planet);
+
+    player0 = randPlayer("S001", 0);
+    player1 = randPlayer("S002", 1);
+    player2 = randPlayer("S001", 2);
+    player3 = randPlayer("S002", 3);
+
+    ents.add(player0);
+    ents.add(player1);
+    ents.add(player2);
+    ents.add(player3);
+
+    player0.respawn(goodPlayerPos(ents, player0.getId()));
+    player1.respawn(goodPlayerPos(ents, player0.getId()));
+    player2.respawn(goodPlayerPos(ents, player0.getId()));
+    player3.respawn(goodPlayerPos(ents, player0.getId()));
+
+    System.out.println("Players set up");
     for (int i = 0; i < nAsteroids; i++)
     {
       int a = Globals.RAND.nextInt(2) + 1;
-
-      int y = Globals.RAND.nextInt(20) - 10;
-      int r = 0;
-      int x = Globals.RAND.nextInt(8000) - 1500;
-      int z = Globals.RAND.nextInt(8000) - 1500;
-      while (r < 1000000 || r > 4000000)
-      {
-        x = Globals.RAND.nextInt(8000) - 1500;
-        z = Globals.RAND.nextInt(8000) - 1500;
-        r = x * x + z * z;
-      }
-
       float s = Globals.RAND.nextFloat() * 100;
-      startString = startString.concat("A00" + a + "," + x + "," + y + "," + z
-          + ",0,0,0," + s + ";");
+      addEntity(ents, "A00" + a, s);
     }
     for (int i = 0; i < nCrystals; i++)
     {
-      int a = Globals.RAND.nextInt(2) + 1;
-
-      int y = Globals.RAND.nextInt(20) - 10;
-      int r = 0;
-      int x = Globals.RAND.nextInt(8000) - 1500;
-      int z = Globals.RAND.nextInt(8000) - 1500;
-      while (r < 1000000 || r > 4000000)
-      {
-        x = Globals.RAND.nextInt(8000) - 1500;
-        z = Globals.RAND.nextInt(8000) - 1500;
-        r = x * x + z * z;
-      }
-
-      startString = startString.concat("CryP" + "," + x + "," + y + "," + z
-          + ",0,0,0," + crystalSize + ";");
+      addEntity(ents, "CryP", crystalSize);
     }
-    return startString;
+
+    return ents;
   }
 
   public static void main(String[] args)
