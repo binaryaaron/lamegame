@@ -6,7 +6,8 @@ import world.BoundingBox;
 import java.util.Random;
 
 /**
- * Created by carlyhendrickson on 11/22/14.
+ * Handy class for holding the various constants that the game needs, as well
+ * as other convenience static methods
  */
 public class Globals
 {
@@ -35,10 +36,6 @@ public class Globals
    * @see java.util.Random#nextInt(int)
    */
   public static int randInt(int max, int min) {
-
-    // NOTE: Usually this should be a field rather than a method
-    // variable so that it is not re-seeded every call.
-
     // nextInt is normally exclusive of the top value,
     // so add 1 to make it inclusive
     return RAND.nextInt((max - min) + 1) + min;
@@ -52,13 +49,8 @@ public class Globals
    * @see java.util.Random#nextInt(int)
    */
   public static float randInt() {
-
-    // NOTE: Usually this should be a field rather than a method
-    // variable so that it is not re-seeded every call.
-    Random rand = new Random();
-
     // nextInt is normally exclusive of the top value,
     // so add 1 to make it inclusive
-    return rand.nextInt((WORLD_SIZE - WORLD_SIZE*-1) + 1) + WORLD_SIZE*-1;
+    return RAND.nextInt((WORLD_SIZE - WORLD_SIZE*-1) + 1) + WORLD_SIZE*-1;
   }
 }
