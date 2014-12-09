@@ -75,32 +75,51 @@ public class Menu
     }
   }
   
+  /**
+   * What happens when a button is clicked
+   * @return
+   */
   public static int choose()
   {
     return choose(currentButton);
   }
   
+  /**
+   * Moving up on the menu
+   */
   public static void up()
   {
     currentButton--;
     if(currentButton < 0) currentButton = finalButtonID;
   }
   
+  /**
+   * Moving down on the menu
+   */
   public static void down()
   {
     currentButton++;
     if(currentButton > finalButtonID) currentButton = 0;
   }
   
+  /**
+   * Initialize the menu
+   * If we want to go back to the menu after losing, call this
+   */
   public static void startMainMenu()
   {
     currentButton = 0;
   }
 
+  /**
+   * Returns the position of the button on a 1.0 to -1.0 point system
+   * @return
+   */
   public static float getYPos()
   {
     return (float) ((1.0/(finalButtonID)*currentButton)-0.5f)*0.5f;
   }
+  
   /**
    * The current button ID
    * @return
