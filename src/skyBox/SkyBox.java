@@ -1,12 +1,11 @@
 package skyBox;
 
+import models.TexturedModel;
+
 import org.lwjgl.util.vector.Vector3f;
 
-import entities.Entity;
-import models.RawModel;
-import models.TexturedModel;
 import renderEngine.Loader;
-import textures.ModelTexture;
+import entities.Entity;
 
 public class SkyBox {
 

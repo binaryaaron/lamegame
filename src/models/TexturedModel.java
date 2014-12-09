@@ -1,9 +1,9 @@
 package models;
 
 import textures.ModelTexture;
-import world.BoundingBox;
 
-public class TexturedModel {
+public class TexturedModel 
+{
 	
 	private RawModel rawModel;
 	private ModelTexture texture;

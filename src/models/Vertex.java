@@ -1,8 +1,5 @@
 package models;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
 public class Vertex implements Comparable
 {
 

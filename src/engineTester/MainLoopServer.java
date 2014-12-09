@@ -16,7 +16,6 @@ import models.RawModel;
 import models.TexturedModel;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -37,13 +36,11 @@ import com.ra4king.opengl.util.math.Vector3;
 import entities.Camera;
 import entities.Entity;
 import entities.Globals;
-import entities.Light;
 import entities.Player;
 
 public class MainLoopServer
 {
   public ServerMaster myServer;
-  private int loop = 0;
   float crystalSize = 100f;
   Player player0;
   Player player1;
@@ -79,8 +76,6 @@ public class MainLoopServer
 
     // create lights and camera for the player. camera position should be set in
     // parsing routine
-    Light light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
-        1.0f, 1.0f));
     MasterRenderer renderer = new MasterRenderer(new Camera());
 
     String outputToClient;
@@ -93,7 +88,6 @@ public class MainLoopServer
     {
       e.printStackTrace();
     }
-    String startString;
 
     List<Entity> renderList = createInitialGame(modelMap);
 
@@ -101,7 +95,6 @@ public class MainLoopServer
     deadPlayers = new LinkedList<>();
     long lastTime = System.currentTimeMillis();
 
-    float scale;
     while (!Display.isCloseRequested())
     {
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
@@ -177,7 +170,6 @@ public class MainLoopServer
       List<Entity> renderList, List<Entity> missileList,
       Camera camera, Player player)
   {
-    float scale;
     Quaternion orientation;
     Vector3 position;
     Vector3 cameraPos;
@@ -185,11 +177,6 @@ public class MainLoopServer
     String[] clientInput = inputFromClient.split(";");
     for (String input : clientInput)
     {
-
-      if (input.equals("KEY_LSHIFT"))
-      {
-        scale = 0.01f;
-      }
 
       orientation = player.orientation;
       position = new Vector3(player.position.x, player.position.y,
@@ -204,7 +191,6 @@ public class MainLoopServer
       float rotSpeed = 1f;
 
       // pitch
-      int dy = Mouse.getDY();
       if (input.equals("KEY_W"))
       {
         orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(1, 0, 0)).mult(
@@ -216,7 +202,6 @@ public class MainLoopServer
             orientation);
       }
       // yaw
-      int dx = Mouse.getDX();
       if (input.equals("KEY_A"))
       {
         orientation = Utils.angleAxisDeg(-rotSpeed, new Vector3(0, 1, 0)).mult(
@@ -438,7 +423,6 @@ public class MainLoopServer
   private Entity randEntity(String id, float size)
   {
 
-    int a = Globals.RAND.nextInt(2) + 1;
 
     int r = 0;
     int x = Globals.RAND.nextInt(8000) - 1500;
@@ -563,7 +547,6 @@ public class MainLoopServer
   {
     // start with first element in walker thread, expand to multiplayer
     String input = ServerMaster.threadList.get(i).getClientInput();
-    loop++;
     return input;
   }
   

@@ -54,8 +54,7 @@ public class MainLoopClient
    */
   public MainLoopClient(String[] args)
   {
-	AudioManager.createAudio();
-    Entity player = null;
+    AudioManager.createAudio();
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     ModelMap modelMap = new ModelMap();
@@ -422,7 +421,6 @@ public class MainLoopClient
         //any ship
         else if (object.startsWith("S"))
         {
-          float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);
@@ -522,7 +520,6 @@ public class MainLoopClient
         s = Float.parseFloat(currentLine[8]);
         if (object.startsWith("S"))
         {
-          float speed = Float.parseFloat(currentLine[11]);
           playerID = Integer.parseInt(currentLine[9]);
           tmp_Entity = new Entity(id, modelMap.getTexturedModelList().get(id),
               new Vector3f(x, y, z), xr, yr, zr, s, playerID);

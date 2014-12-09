@@ -52,7 +52,6 @@ public class ServerMaster extends Thread
       {
         newThread=new ServerThread(myServerSocket.accept(),IDgen);
         String input="";
-        String output="";
         inputFromClient.add(input);
       } catch (IOException e)
       {

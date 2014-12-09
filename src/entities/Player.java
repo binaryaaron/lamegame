@@ -1,8 +1,8 @@
 package entities;
 
 import models.TexturedModel;
+
 import org.lwjgl.util.vector.Vector3f;
-import world.BoundingBox;
 
 /**
  *
@@ -13,7 +13,6 @@ public class Player extends Entity
   //private final short playerId;
   private Boolean alive = true;
   private Boolean playing = true;
-  private static Boolean DEBUG = true;
 
   public static final float playerScale = 3f;
   /**
