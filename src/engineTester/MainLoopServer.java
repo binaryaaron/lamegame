@@ -9,13 +9,16 @@ package engineTester;
 import com.ra4king.opengl.util.Utils;
 import com.ra4king.opengl.util.math.Quaternion;
 import com.ra4king.opengl.util.math.Vector3;
+
 import entities.*;
 import models.RawModel;
 import models.TexturedModel;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+
 import physics.PhysicsUtilities;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
@@ -37,13 +40,16 @@ public class MainLoopServer
 {
   public WalkerServer myServer;
   private int loop = 0;
+  float crystalSize=100f;
   Player player0;
   Player player1;
   Player player2;
   Player player3;
+  ModelMap modelMap;
   List<Player> deadPlayers;
 
   private static final int nAsteroids = 200;
+  private static final int nCrystals = 5;
   TexturedModel texturedLaser;
   List<Entity> killList = new LinkedList<>();
   long nextStep = 4;
@@ -54,7 +60,7 @@ public class MainLoopServer
 
     DisplayManager.createDisplay();
     Loader loader = new Loader();
-    ModelMap modelMap = new ModelMap();
+    modelMap = new ModelMap();
 //    Camera camera = new Camera();
 //    camera.followObj = player0;
     // create skybox, this is not an entity so it is seperate
@@ -109,7 +115,7 @@ public class MainLoopServer
         for (int i = 0; i < WalkerServer.threadList.size(); i++)
         {
           int playerID= WalkerServer.threadList.get(i).ID;
-          Entity currentPlayer=null;
+          Player currentPlayer=null;
           switch (playerID)
           {
             case 0: currentPlayer=player0;
@@ -126,8 +132,7 @@ public class MainLoopServer
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, renderList, missileList, new Camera(), currentPlayer);
-//            parseClientInput(inputFromClient, renderList, camera, player0);
+            parseClientInput(inputFromClient, modelMap, renderList, missileList, new Camera(), currentPlayer);
           }
         }
         lastTime = time;
@@ -155,8 +160,8 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
-  public void parseClientInput(String inputFromClient, List<Entity> renderList, List<Entity> missileList,
-      Camera camera, Entity player)
+  public void parseClientInput(String inputFromClient, ModelMap modelMap, List<Entity> renderList, List<Entity> missileList,
+      Camera camera, Player player)
   {
     float scale;
     Quaternion orientation;
@@ -234,6 +239,21 @@ public class MainLoopServer
 
       if (input.equals("KEY_SPACE")) delta.y(-speed);
       if (input.equals("KEY_LCONTROL")) delta.y(delta.y() + speed);
+      if (player.getHitPoints() <= 0)
+      {
+      if(input.equals("KEY_P"))
+      {
+        if(deadPlayers.contains(player))
+        {
+          player.respawn(new Vector3f(1100,1100,0));
+          deadPlayers.remove(player);
+          if(!renderList.contains(player))
+          {
+            renderList.add(player);
+          }
+        }
+      }
+      }
       if (input.equals("KEY_RSHIFT"))
       {
 
@@ -301,47 +321,76 @@ public class MainLoopServer
     for (int i = 0; i < renderList.size(); i++)
     {
       ent = renderList.get(i);
+      PhysicsUtilities.gameWorldCollision(ent);
       for (int j = i + 1; j < renderList.size(); j++)
       {
         other = renderList.get(j);
         if (BoxUtilities.collision(ent.getBox(), other.getBox()))
         {
-          PhysicsUtilities.elasticCollision(ent, other);
-          if (ent.getHitPoints() <= 0)
+          if (ent.type == Entity.EntityType.SHIP && other.type == Entity.EntityType.CRYSTAL)
           {
-            killList.add(ent);
-          }
-          if (other.getHitPoints() <= 0)
-          {
+            ent.score++;
             killList.add(other);
+            addCrystal(renderList);
           }
-          if (ent.getClass().equals(Player.class))
+          else if (ent.type == Entity.EntityType.CRYSTAL && other.type == Entity.EntityType.SHIP)
           {
-            deadPlayers.add((Player) ent);
+            other.score++;
+            killList.add(ent);
+            addCrystal(renderList);
+          } else {
+            PhysicsUtilities.elasticCollision(ent, other);
           }
-
-          if (other.getClass().equals(Player.class))
-          {
-            deadPlayers.add((Player) other);
-          }
-
+        }
+      }
+      if (ent.getHitPoints() <= 0)
+      {
+        killList.add(ent);
+        if (ent.getId().startsWith("S") && !deadPlayers.contains(ent))
+        {
+          deadPlayers.add((Player) ent);
         }
       }
     }
   }
 
+  
+  private void addCrystal(List<Entity> renderList){
+	
+	  int a = Globals.RAND.nextInt(2) + 1;
+
+      int y = Globals.RAND.nextInt(20) - 10;
+      int r = 0;
+      int x = Globals.RAND.nextInt(8000) - 1500;
+      int z = Globals.RAND.nextInt(8000) - 1500;
+      while (r < 1000000 || r > 4000000)
+      {
+        x = Globals.RAND.nextInt(8000) - 1500;
+        z = Globals.RAND.nextInt(8000) - 1500;
+        r = x * x + z * z;
+      }
+      crystalSize*=0.75;
+      Entity crystal =new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
+	            new Vector3f(x, y, z), 0, 0, 0, crystalSize);
+	  renderList.add(crystal);
+  }
+  
+  
+  
+  
+  
   private String createInitialGameString(ModelMap modelMap)
   {
-    String startString = "Plan,0,0,0,0,0,0,100;gCry,1000,1000,1000,0,0,0,100;";
+    String startString = "Plan,0,0,0,0,0,0,100;";
 
     player0 = new Player("S001", modelMap.getTexturedModelList().get("S001"),
-        new Vector3f(1000, 1010, 1500), 0, 0, 0, 1f, 0);
+        new Vector3f(1000, 1050, 0), 0, 0, 0, 0);
     player1 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 1000, 0), 0, 0, 0, 1f, 1);
+        new Vector3f(1000, 1000, 0), 0, 0, 0, 1);
     player2 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 990, 0), 0, 0, 0, 1f, 2);
+        new Vector3f(1000, 950, 0), 0, 0, 0, 2);
     player3 = new Player("S002", modelMap.getTexturedModelList().get("S002"),
-        new Vector3f(1000, 980, 0), 0, 0, 0, 1f, 3);
+        new Vector3f(1000, 900, 0), 0, 0, 0, 3);
     startString += player0.toString() + ";";
     startString += player1.toString() + ";";
     startString += player2.toString() + ";";
@@ -364,6 +413,24 @@ public class MainLoopServer
       float s = Globals.RAND.nextFloat() * 100;
       startString = startString.concat("A00" + a + "," + x + "," + y + "," + z
           + ",0,0,0," + s + ";");
+    }
+    for (int i = 0; i < nCrystals; i++)
+    {
+      int a = Globals.RAND.nextInt(2) + 1;
+
+      int y = Globals.RAND.nextInt(20) - 10;
+      int r = 0;
+      int x = Globals.RAND.nextInt(8000) - 1500;
+      int z = Globals.RAND.nextInt(8000) - 1500;
+      while (r < 1000000 || r > 4000000)
+      {
+        x = Globals.RAND.nextInt(8000) - 1500;
+        z = Globals.RAND.nextInt(8000) - 1500;
+        r = x * x + z * z;
+      }
+      
+      startString = startString.concat("CryP"+ "," + x + "," + y + "," + z
+          + ",0,0,0," + crystalSize + ";");
     }
     return startString;
   }
