@@ -21,13 +21,20 @@ public class StaticShader extends ShaderProgram
   private int location_reflectivity;
   private int location_drawShadow;
 
-  public StaticShader()
+  /**
+ * Static Shader is used on in-game Entities
+ * It applies shaders that create shadows, shine, and textures
+ */
+public StaticShader()
   {
     super(VERTEX_FILE, FRAGMENT_FILE);
 
   }
 
-  @Override
+  /* (non-Javadoc)
+ * @see shaders.ShaderProgram#bindAttributes()
+ */
+@Override
   protected void bindAttributes()
   {
     super.bindAttribute(0, "position");
@@ -36,7 +43,10 @@ public class StaticShader extends ShaderProgram
 
   }
 
-  @Override
+  /* (non-Javadoc)
+ * @see shaders.ShaderProgram#getAllUniformLocations()
+ */
+@Override
   protected void getAllUniformLocations()
   {
     location_TransformationMatrix = super
@@ -50,33 +60,50 @@ public class StaticShader extends ShaderProgram
     location_drawShadow = super.getUniformLocation("drawShadow");
   }
 
-  public void loadDrawShadow(boolean drawShadow){
+  /**
+   * 
+ * @param drawShadow
+ */
+public void loadDrawShadow(boolean drawShadow){
     super.loadBoolean(location_drawShadow, drawShadow);
 
   }
 
-  public void loadShineVariables(float shineDamper, float reflectivity)
+  /**
+ * @param shineDamper
+ * @param reflectivity
+ */
+public void loadShineVariables(float shineDamper, float reflectivity)
   {
     super.loadFloat(location_shineDamper, shineDamper);
     super.loadFloat(location_reflectivity, reflectivity);
 
   }
 
-  public void loadTransformationMatrix(Matrix4f matrix)
+  /**
+ * @param matrix
+ */
+public void loadTransformationMatrix(Matrix4f matrix)
   {
 
     super.loadMatrix(location_TransformationMatrix, matrix);
 
   }
 
-  public void loadLight(Light light)
+  /**
+ * @param light
+ */
+public void loadLight(Light light)
   {
     super.loadVector(location_lightPosition, light.getPosition());
     super.loadVector(location_lightColor, light.getColor());
 
   }
 
-  public void loadViewMatrix(Camera camera)
+  /**
+ * @param camera
+ */
+public void loadViewMatrix(Camera camera)
   {
 
     Matrix4f viewMatrix = MathUtil.createViewMatrix(camera);
@@ -84,7 +111,10 @@ public class StaticShader extends ShaderProgram
 
   }
 
-  public void loadProjectionMatrix(Matrix4f matrix)
+  /**
+ * @param matrix
+ */
+public void loadProjectionMatrix(Matrix4f matrix)
   {
 
     super.loadMatrix(location_ProjectionMatrix, matrix);
