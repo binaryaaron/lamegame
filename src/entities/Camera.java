@@ -1,6 +1,5 @@
 package entities;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ra4king.opengl.util.math.Quaternion;
@@ -19,6 +18,9 @@ public class Camera
   private Vector3f zAxis;
   public Entity followObj;
 
+  /**
+   * Create a camera loaded in the default position
+   */
   public Camera()
   {
     orientation = new Quaternion();
@@ -27,6 +29,10 @@ public class Camera
     zAxis = new Vector3f(0f, 0f, 1f);
   }
 
+  /**
+   * Move the camera to another location
+   * @param vec3
+   */
   public void quadTranslate(Vector3 vec3)
   {
     this.position.x = vec3.x();
@@ -34,6 +40,10 @@ public class Camera
     this.position.z = vec3.z();
   }
 
+  /**
+   * Getters/setters
+   * @return
+   */
   public Vector3f getPosition()
   {
     return position;
