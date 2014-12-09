@@ -5,17 +5,24 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class WalkerServer extends Thread
+/*@Author Hans Weeks
+ * 
+ * Main server object. Listens for Client Connection and creates ServerThreads
+ * to communicate with ClientThreads as they connect. Created by MainLoopServer
+ */
+
+public class ServerMaster extends Thread
 {  
   private static final int PORT=4444;
   private static ServerSocket myServerSocket;
   private static boolean listening=true;
-  public static LinkedList<WalkerThread> threadList=new LinkedList<>();
-  public static ArrayList<String> inputFromClient=new ArrayList<>();
-  
+  public static LinkedList<ServerThread> threadList=new LinkedList<>();
+  public static ArrayList<String> inputFromClient=new ArrayList<>();  
   private static int IDgen=0;
  
-  public WalkerServer() throws IOException
+  /*Constructor
+   * starts ServerMaster Thread, and waits for first connection before returning*/
+  public ServerMaster() throws IOException
   {
     try
     {
@@ -32,14 +39,18 @@ public class WalkerServer extends Thread
     }
   }
   
+  /*run
+   * Description: listens for new client Connections. Removes dead
+   * ServerThreads from threadList.
+   */
   public void run()
   {
     while(listening)
     {
-      WalkerThread newThread=null;
+      ServerThread newThread=null;
       try
       {
-        newThread=new WalkerThread(myServerSocket.accept(),IDgen);
+        newThread=new ServerThread(myServerSocket.accept(),IDgen);
         String input="";
         String output="";
         inputFromClient.add(input);
@@ -54,7 +65,7 @@ public class WalkerServer extends Thread
       threadList.add(newThread);
       for(int i=0; i<threadList.size();i++)
       {
-        WalkerThread wt=threadList.get(i);
+        ServerThread wt=threadList.get(i);
         if(!wt.isAlive())
         {
           threadList.remove(wt);
@@ -63,6 +74,8 @@ public class WalkerServer extends Thread
     }
   }
   
+  /*getNumConnections
+   * Description: synchronized method returns size of threadList*/
   public synchronized int getNumConnections()
   {
     return threadList.size();
