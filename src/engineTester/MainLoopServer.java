@@ -1,15 +1,12 @@
 /*** 
- * Thanks to youtube user ThinMatrix
  * Generates board and fills it with objects, such as asteroids and ships.
  * Updates the position of the objects and camera.
- * Updates the GUI
+ * Updates the GUI.
+ * Send information to clients.
+ * Run this once to make the server.
  */
 package engineTester;
 
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector;
-import com.ra4king.opengl.util.math.Vector3;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -30,9 +27,12 @@ import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
 import server.ServerMaster;
 import server.ServerThread;
-import skyBox.SkyBox;
 import textures.ModelTexture;
 import world.BoxUtilities;
+
+import com.ra4king.opengl.util.Utils;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
 
 import entities.Camera;
 import entities.Entity;
@@ -59,9 +59,12 @@ public class MainLoopServer
   long nextStep = 4;
   long killStep = 4;
 
+  /**
+   * Creates a server and a black Window that represents the server
+   * @param args
+   */
   public MainLoopServer(String[] args)
   {
-
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     modelMap = new ModelMap();
@@ -141,15 +144,12 @@ public class MainLoopServer
         performPhysics(renderList);
       }
 
-      // ///instead of rendering, build strings and send them to the client
+      //instead of rendering, build strings and send them to the client
       outputToClient = "";// clear the String
       for (Entity ent : renderList)
       {
         outputToClient += ent.toString() + ";";
       }
-      // outputToClient += camera.toString();
-
-      // for (WalkerThread wt : myServer.threadList)
       for (int i = 0; i < ServerMaster.threadList.size(); i++)
       {
         ServerThread wt = ServerMaster.threadList.get(i);
@@ -163,6 +163,16 @@ public class MainLoopServer
     DisplayManager.closeDisplay();
   }
 
+  /**
+   * Parse data passed in from the client
+   * Generally in the form of keystrokes
+   * @param inputFromClient
+   * @param modelMap
+   * @param renderList
+   * @param missileList
+   * @param camera
+   * @param player
+   */
   public void parseClientInput(String inputFromClient, ModelMap modelMap,
       List<Entity> renderList, List<Entity> missileList,
       Camera camera, Player player)
@@ -307,6 +317,10 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Calculates how objects move in the game world
+   * @param renderList
+   */
   private void performPhysics(List<Entity> renderList)
   {
     int crystalsNeeded = 0;
@@ -387,6 +401,12 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Adds an entity to the renderlist
+   * @param renderList
+   * @param id
+   * @param size
+   */
   private void addEntity(List<Entity> renderList, String id, float size)
   {
     while (true)
@@ -409,6 +429,12 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Creates a random entity inside the game world
+   * @param id
+   * @param size
+   * @return
+   */
   private Entity randEntity(String id, float size)
   {
 
@@ -432,6 +458,12 @@ public class MainLoopServer
     return ent;
   }
 
+  /**
+   * Calculates a good way to spawn the player
+   * @param renderList
+   * @param id
+   * @return
+   */
   private Vector3f goodPlayerPos(List<Entity> renderList, String id)
   {
     while (true)
@@ -461,6 +493,12 @@ public class MainLoopServer
     }
   }
 
+  /**
+   * Creates a random player spawning position
+   * @param id
+   * @param clientID
+   * @return
+   */
   private Player randPlayer(String id, int clientID)
   {
     int r = 1000 + Globals.RAND.nextInt(1000);
@@ -473,6 +511,11 @@ public class MainLoopServer
     return player;
   }
 
+  /**
+   * Creates the start of the game, spawning necessary objects
+   * @param modelMap
+   * @return
+   */
   private List<Entity> createInitialGame(ModelMap modelMap)
   {
     Entity planet = new Entity("Plan", modelMap.getTexturedModelList().get("Plan"), new Vector3f(0,0,0), 0, 0, 0, 100);
@@ -511,13 +554,11 @@ public class MainLoopServer
 
     return ents;
   }
-
-  public static void main(String[] args)
-  {
-    new MainLoopServer(args);
-
-  }
-
+  /**
+   * Way to shorten code (receiving input from a thread)
+   * @param i
+   * @return
+   */
   public String getInput(int i)
   {
     // start with first element in walker thread, expand to multiplayer
@@ -525,4 +566,11 @@ public class MainLoopServer
     loop++;
     return input;
   }
+  
+  public static void main(String[] args)
+  {
+    new MainLoopServer(args);
+
+  }
+
 }

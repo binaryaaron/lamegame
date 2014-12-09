@@ -1,8 +1,8 @@
 /*** 
  * Thanks to youtube user ThinMatrix
- * Generates board and fills it with objects, such as asteroids and ships.
- * Updates the position of the objects and camera.
- * Updates the GUI
+ * Recieves information from Main Loop server
+ * Draws scenes based on server information/offline information
+ * Run this once for each client.
  */
 package engineTester;
 
