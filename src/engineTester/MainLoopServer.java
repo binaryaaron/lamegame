@@ -12,7 +12,6 @@ import com.ra4king.opengl.util.math.Vector;
 import com.ra4king.opengl.util.math.Vector3;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,8 +66,6 @@ public class MainLoopServer
     DisplayManager.createDisplay();
     Loader loader = new Loader();
     modelMap = new ModelMap();
-    //    Camera camera = new Camera();
-    //    camera.followObj = player0;
     RawModel laser = OBJLoader.loadObjModel("missle", loader, true);
     ModelTexture laserTexture = new ModelTexture(loader.loadTexture("Missle"));
     texturedLaser = new TexturedModel("laser", laser, laserTexture);
@@ -96,11 +93,7 @@ public class MainLoopServer
 
     List<Entity> renderList = createInitialGame(modelMap);
 
-    HashMap<Integer, List<Entity>> missileMap = new HashMap<>();
-    for (int i = 0; i < 4; i++)
-    {
-      missileMap.put(i, new LinkedList<>());
-    }
+    List<Entity> missileList = new ArrayList<>();
     deadPlayers = new LinkedList<>();
     long lastTime = System.currentTimeMillis();
 
@@ -115,10 +108,6 @@ public class MainLoopServer
       long time = System.currentTimeMillis();
       if (time - lastTime > 17)
       {
-        player0.missileSound = 0;
-        player1.missileSound = 0;
-        player2.missileSound = 0;
-        player3.missileSound = 0;
         for (int i = 0; i < ServerMaster.threadList.size(); i++)
         {
           int playerID= ServerMaster.threadList.get(i).ID;
@@ -143,7 +132,7 @@ public class MainLoopServer
           inputFromClient = getInput(i);
           if (inputFromClient != null)
           {
-            parseClientInput(inputFromClient, modelMap, renderList, missileMap.get(playerID),
+            parseClientInput(inputFromClient, modelMap, renderList, missileList,
                 new Camera(), currentPlayer);
           }
         }
@@ -276,38 +265,31 @@ public class MainLoopServer
       }
       if (input.equals("KEY_RSHIFT"))
       {
-        long time = System.currentTimeMillis();
-        // Limit missile to 4 per second
-        if (time - player.lastFired > 250)
+
+        // fire a missile
+        if (missileList.size() > 200)
         {
-          player.lastFired = time;
-          player.missileSound = 1;
-          // fire a missile (100 per player active)
-          if (missileList.size() > 100)
-          {
-            renderList.remove(missileList.get(0));
-            missileList.remove(0);
-          }
-
-          Vector3 deltaMis = delta.copy();
-          deltaMis.y(0 * player.getScale());
-          deltaMis.z(7 * player.getScale());
-
-          missilePos.add(inverse.mult(deltaMis));
-
-          Entity missle = new Entity("lase", texturedLaser,
-              new Vector3f(0, 0, 0), 0, 0, 0, 5f);
-          // missle.setPosition(player.position);
-          missle.quadTranslate(missilePos);
-
-          missle.orientation = player.orientation.copy();
-          float pv = 20f;
-          missle.vel = player.vel.copy()
-              .add(inverse.mult(new Vector3(0, 0, pv)));
-
-          renderList.add(missle);
-          missileList.add(missle);
+          renderList.remove(missileList.get(0));
+          missileList.remove(0);
         }
+
+        Vector3 deltaMis = delta.copy();
+        deltaMis.y(0 * player.getScale());
+        deltaMis.z(7 * player.getScale());
+
+        missilePos.add(inverse.mult(deltaMis));
+
+        Entity missle = new Entity("lase", texturedLaser,
+            new Vector3f(0, 0, 0), 0, 0, 0, 5f);
+        // missle.setPosition(player.position);
+        missle.quadTranslate(missilePos);
+
+        missle.orientation = player.orientation.copy();
+        float pv = 20f;
+        missle.vel = player.vel.copy().add(inverse.mult(new Vector3(0, 0, pv)));
+
+        renderList.add(missle);
+        missileList.add(missle);
       }
 
       Vector3 deltaCam = delta.copy();
@@ -357,10 +339,12 @@ public class MainLoopServer
         other = renderList.get(j);
         if (ent.type == Entity.EntityType.PLANET)
         {
+          if(gameOver) continue;
           PhysicsUtilities.planetCollision(ent, other);
         }
         else if (other.type == Entity.EntityType.PLANET)
         {
+          if(gameOver) continue;
           PhysicsUtilities.planetCollision(other, ent);
         }
         else if (BoxUtilities.collision(ent.getBox(), other.getBox()))
@@ -372,7 +356,7 @@ public class MainLoopServer
             {
               ent.score++;
               ent.entScoreStep = nextStep;
-              if(ent.score>Globals.WINPOINTS){
+              if(ent.score>=Globals.WINPOINTS){
             	  gameOver=true;
             	  winner=ent;}
               killList.add(other);
@@ -387,7 +371,7 @@ public class MainLoopServer
             {
               other.score++;
               other.entScoreStep = nextStep;
-              if(other.score>Globals.WINPOINTS){
+              if(other.score>=Globals.WINPOINTS){
             	  gameOver=true;
             	  winner=other;
             	  }
