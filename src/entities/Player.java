@@ -5,7 +5,9 @@ import org.lwjgl.util.vector.Vector3f;
 import world.BoundingBox;
 
 /**
- *
+ * Player is the main class for a given player. It extends Entity and is build
+ * take advantage of the work entities do with some added methods for handling
+ * player-specific things.
  */
 public class Player extends Entity
 {
@@ -20,8 +22,14 @@ public class Player extends Entity
   public int missileSound = 0;
 
   /**
-   * Default constructor for a Player. Initializes position to
-   * 0,0,0
+   * Creates a new Player object
+   * @param id player's id
+   * @param model player's ship model
+   * @param position vector3f of position
+   * @param rotX rotation value x
+   * @param rotY rotation value y
+   * @param rotZ rotation value z
+   * @param clientId the client's id (unique from id)
    */
   public Player(String id, TexturedModel model, Vector3f position, float rotX,
       float rotY, float rotZ, int clientId)
@@ -31,37 +39,6 @@ public class Player extends Entity
     box.scale(playerScale * 0.9f);
     box.translate(position);
   }
-
-  //  /**
-  //   * Initializes the first player's position. Will be updated to handle creating
-  //   * in non-asteroid or on top of another player, but for now, player one gets
-  //   * the center of the world. Can also get selected model.
-  //   */
-  //  private void initPlayerOne()
-  //  {
-  //    this.position.set(0,0,0);
-  //    this.model = true;
-  //
-  //    this.bbox = new BoundingBox(position, SIZE, SIZE, SIZE);
-  //    //this.bbox = new BoundingBox(new Vector3f(-10, -10, -10), new Vector3f(10,10,10));
-  //
-  //  }
-  //
-  //  /**
-  //   * Initializes a player other than player one's position. Likewise
-  //   * initPlayerOne(), it should check to make sure it doesn't put the player
-  //   * on top of another player or asteroid.
-  //   *
-  //   * Currently set to put a new player at 50x in a new direction based on player
-  //   * count. All ships should be on the same plane. Also used to initialize a
-  //   * player's model.
-  //   */
-  //  private void initPlayer()
-  //  {
-  //    this.position.set(PLAYER_COUNT*50, 0, 0);
-  //    this.model = true;
-  //    this.bbox = new BoundingBox(position, SIZE, SIZE, SIZE);
-  //  }
 
   /**
    * Gets the player's health.
@@ -116,19 +93,8 @@ public class Player extends Entity
     this.playing = playing;
   }
 
-  //  /**
-  //   * Provides natural sorting for players based on id. Can easily be changed.
-  //   * @param otherPlayer another player object
-  //   * @return player with lower id
-  //   */
-  //  @Override
-  //  public int compareTo(Player otherPlayer)
-  //  {
-  //    return (this.getPlayerId() > otherPlayer.getPlayerId() ) ? -1: (this.getPlayerId() > otherPlayer
-  //        .getPlayerId()) ? 1:0 ;
-  //  }
-
   /**
+   * @DEPRECATED
    * Kills this player object. Should send a signal to the screen and say
    * that the player is dead, allowing the player to respawn or something
    * could assign a new player with the same ID as this one ...?
@@ -145,6 +111,11 @@ public class Player extends Entity
     return clientId;
   }
 
+  /**
+   * Overrides Entity's tostring method for passing info back and forth from
+   * the server
+   * @return
+   */
   @Override
   public String toString()
   {
@@ -166,5 +137,4 @@ public class Player extends Entity
     result.append(missileSound).append(delimiter);
     return result.toString();
   }
-
 }

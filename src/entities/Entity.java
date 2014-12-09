@@ -13,6 +13,11 @@ import world.BoundingBox;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Entity is the basic object of a game. Each object has various parameters
+ * that dictate its position and movement throughout the world, as well as the
+ * amount of damage it can take and so on. Parent class for Asteroid and Player.
+ */
 public class Entity
 {
   private static final float initialMass = 100f;
@@ -53,6 +58,10 @@ public class Entity
     hitPoints = 0;
   }
 
+  /**
+   * Serves as a short listing of various amounts of health, mass, and damage
+   * an entity may have.
+   */
   public enum EntityType {
     SHIP(100, 20, 1000),
     CRYSTAL(10000, 0, 20000),
@@ -72,6 +81,9 @@ public class Entity
     }
   }
 
+  /**
+   * Lookup table for damage done when an entity is hit
+   */
   private static Map<String, EntityType> entMap;
 
   static {
@@ -83,11 +95,25 @@ public class Entity
     entMap.put("C", EntityType.CRYSTAL);
   }
 
+  /**
+   * default constructor
+   */
   public Entity()
   {
     
   }
 
+  /**
+   * Returns a new entity built with the following parameters
+   * @param id
+   * @param model
+   * @param position
+   * @param rotX
+   * @param rotY
+   * @param rotZ
+   * @param scale
+   * @param clientId
+   */
   public Entity(String id, TexturedModel model, Vector3f position, float rotX,
       float rotY, float rotZ, float scale, int clientId)
   {
@@ -198,6 +224,10 @@ public class Entity
     this.position.z = vec3.z();
   }
 
+  /**
+   * Moves the player using a vector3, elementwise addition
+   * @param vec3 the vector of velocity to increase the entity by
+   */
   public void move(Vector3 vec3)
   {
     box.translate(vec3.x(), vec3.y(), vec3.z());
@@ -209,9 +239,9 @@ public class Entity
   /**
    * Translates the position vector using three floats
    * 
-   * @param dx
-   * @param dy
-   * @param dz
+   * @param dx x direction
+   * @param dy y direction
+   * @param dz z direction
    */
   public void translate(float dx, float dy, float dz)
   {
@@ -423,7 +453,8 @@ public class Entity
 
   /**
    * toString allows the entity to be parsed by the server's string handlers. it
-   * builds the string by id, position, and hitpoints
+   * builds the string by the id, positions, orientations, scale, and if needed,
+   * the client id, hit points, and velocity length
    * 
    * @return String
    */
@@ -500,6 +531,9 @@ public class Entity
     // unimplemented in GameObject()
   }
 
+  /**
+   * Updates the object with a random inital velocity - used for creation
+   */
   public void randomVel()
   {
     vel.set(Globals.RAND.nextFloat()* 2 - 1,Globals.RAND.nextFloat()* 2 - 1,Globals.RAND.nextFloat()* 2 - 1);
@@ -516,6 +550,11 @@ public class Entity
     return id;
   }
 
+  /**
+   * Damages the entity.
+   * @param first
+   * @param second
+   */
   public static void inflictDamage(Entity first, Entity second)
   {
     first.damageObject(second.damage);
