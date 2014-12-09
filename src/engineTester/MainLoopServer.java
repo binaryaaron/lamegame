@@ -594,6 +594,13 @@ public class MainLoopServer
 
   }
 
+  /**
+   * Ends the current game when a player reaches the allotted number of crystals.
+   * user who wins can reset the game; everyone else "dies" and the world
+   * shrinks
+   * @param renderList
+   * @param winner
+   */
   public void endGameStep(List<Entity> renderList, Entity winner)
   {
     for (Entity ent : renderList)

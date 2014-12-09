@@ -85,9 +85,9 @@ public class FontLoader
         textures.add(uv_up_right);
         textures.add(uv_up_left);
       }
+      //normals set to 0 (text has all normals facing same direction
       for(int i = 0; i < text.length(); i++)
       {
-        //normals are garbage
         normals.add(new Vector3f(0,0,1));
         normals.add(new Vector3f(0,0,1));
         normals.add(new Vector3f(0,0,1));
@@ -183,7 +183,7 @@ public class FontLoader
   
   /**
    * Processes a vertex given normals and texture data into the normals array list,
-   * indices, texture array list and process verticies
+   * indices, texture array list and process vertices
    * @param vertexData
    * @param indices
    * @param textures

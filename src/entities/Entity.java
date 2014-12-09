@@ -53,10 +53,10 @@ public class Entity
   public long entScoreStep = 0;
 
   /**
-   * Serves as a short listing of various amounts of health, mass, and damage
-   * an entity may have.
+   * An enum to hold different entity's mass, damage, and health
    */
-  public enum EntityType {
+  public enum EntityType 
+  {
     SHIP(100, 20, 1000),
     CRYSTAL(10000, 0, 20000),
     LASER(50, 1000, 3),
@@ -99,7 +99,7 @@ public class Entity
   }
 
   /**
-   * Returns a new entity built with the following parameters
+   * Create a complete entity with a model, position, rotation, scale and client ID
    * @param id
    * @param model
    * @param position
@@ -263,7 +263,7 @@ public class Entity
   }
 
   /**
-   * Getters and setters
+   * getter
    * @return
    */
   public float getSize()
@@ -271,22 +271,21 @@ public class Entity
     return size;
   }
 
-  public float getHalfSize()
-  {
-    return halfSize;
-  }
-
-  public void translate(Vector3f vel)
-  {
-    position.translate(vel.x, vel.y, vel.z);
-    box.translate(vel);
-  }
-
+  /**
+   * Move this based on this entity's velocity
+   */
   public void move()
   {
     move(vel);
   }
 
+  /**
+   * Creates a new basis for the entity, rotating the model
+   * @param rotX
+   * @param rotY
+   * @param rotZ
+   * @return
+   */
   public Matrix4f setNewBasis(float rotX, float rotY, float rotZ)
   {
     Matrix4f rotMat = new Matrix4f();
@@ -308,96 +307,69 @@ public class Entity
     return rotMat;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public BoundingBox getBox()
   {
     return box;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public float getScale()
   {
     return scale;
   }
 
-  public void setScale(float scale)
-  {
-    this.scale = scale;
-  }
-
+  /**
+   * getter
+   * @return
+   */
   public TexturedModel getModel()
   {
     return model;
   }
 
+  /**
+   * setter
+   * @param model
+   */
   public void setModel(TexturedModel model)
   {
     this.model = model;
   }
 
+  /**
+   * getter
+   * @return
+   */
   public Vector3f getPosition()
   {
     return position;
   }
 
+  /**
+   * setter
+   * sets both the position of the entity and the bounding box
+   * @param position
+   */
   public void setPosition(Vector3f position)
   {
     this.position = new Vector3f(position);
     this.box.setPosition(position);
   }
 
-  public float getRotX()
-  {
-    return rotX;
-  }
-
+  /**
+   * setter
+   * @param rotX
+   */
   public void setRotX(float rotX)
   {
     this.rotX = rotX;
-  }
-
-  /**
-   * Increases the x vel by a constant factor.
-   *
-   * @param increase
-   *          an integer amount for increasing
-   */
-  public void increaseVx(float increase)
-  {
-    vel.x(vel.x() + increase);
-  }
-
-  /**
-   * Increases the y vel by a constant factor.
-   *
-   * @param increase
-   *          an integer amount for increasing
-   */
-  public void increaseVy(float increase)
-  {
-    vel.y(vel.y() + increase);
-  }
-
-  /**
-   * Increases the z vel by a constant factor.
-   *
-   * @param increase
-   *          an integer amount for increasing
-   */
-  public void increaseVz(float increase)
-  {
-    vel.z(vel.z() + increase);
-  }
-
-  public Vector3 getVelocity()
-  {
-    return vel;
-  }
-
-  /**
-   * Generic method to return the type of object.
-   */
-  public String getType()
-  {
-    return "GameObject";
   }
 
   /**
@@ -457,16 +429,6 @@ public class Entity
   public void kill()
   {
     hitPoints = 0;
-  }
-
-  /**
-   * Heals the hit points of the object
-   *
-   * @param heal
-   */
-  public void healEntity(int heal)
-  {
-    this.hitPoints += heal;
   }
 
   /**
