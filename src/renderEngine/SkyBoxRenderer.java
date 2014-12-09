@@ -36,11 +36,11 @@ public class SkyBoxRenderer
     shader.start();
     shader.loadProjectionMatrix(projectionMatrix);
     shader.stop();
-
   }
 
-  /*
+  /**
    * Render each plane
+   * @param sky
    */
   public void render(SkyBox sky)
   {
@@ -50,9 +50,6 @@ public class SkyBoxRenderer
       GL11.glDrawElements(GL11.GL_TRIANGLES, sky.getModel().getRawModel()
           .getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
       unbindTexturedModel();
-      // System.out.println(terrain.getModel().getVertexCount()+";"+terrain.getTexture().getTextureID());
-    
-
   }
 
   /**
@@ -92,11 +89,8 @@ public class SkyBoxRenderer
    */
   private void loadModelMatrix(SkyBox sky)
   {
-   
     Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(
         camera.getPosition(), 0f, 0f, 0f, sky.getSkyEntity().getScale());
     shader.loadTransformationMatrix(transformationMatrix);
-
   }
-
 }
