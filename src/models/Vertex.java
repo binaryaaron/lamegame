@@ -2,31 +2,36 @@ package models;
 
 public class Vertex implements Comparable
 {
-
   public int vertexInd;
   public int normalInd;
   public int textureInd;
 
+  /**
+   * Represents a single vertex on a model
+   * remembers texture, has a normal
+   * @param vertex
+   * @param texture
+   * @param normal
+   */
   public Vertex(int vertex, int texture, int normal)
   {
     this.vertexInd = vertex;
     this.textureInd = texture;
     this.normalInd = normal;
-
   }
-@Override
-  public boolean equals(Object o){
-    
   
-  
-  return this.vertexInd==((Vertex) o).vertexInd;
-    
-    
-    
+  @Override
+  public boolean equals(Object o)
+  {
+    return this.vertexInd==((Vertex) o).vertexInd;
   }
   
   
-  // This calls two verticies identical if they
+  /**
+   * Compares two vertices
+   * @param vIn
+   * @return
+   */
   public int compareTo(Vertex vIn)
   {
     if (this.vertexInd == vIn.vertexInd)
@@ -46,7 +51,6 @@ public class Vertex implements Comparable
   @Override
   public int compareTo(Object arg0)
   {
-    // TODO Auto-generated method stub
     return 0;
   }
 
