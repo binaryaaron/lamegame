@@ -37,12 +37,13 @@ public class Menu
         return -1;
       }
     }
-    //options
+    //help
     else if(buttonID == 1)
     {
-      String controlsString = "CONTROLS:\n"+
+      String controlsString = "Collect diamonds to win!!\n\n" +
+          "CONTROLS:\n"+
           "WASD:: Turn\n"+
-          "B:: Brake\n"+
+          "F:: Brake\n"+
           "Arrow Keys:: Move\n"+
           "QE:: Tilt\n"+
           "L-Control:: Sink\n"+
@@ -50,6 +51,7 @@ public class Menu
           "R-Shift:: Shoot\n"+
           "F1:: Fullscreen\n"+
           "F2:: Resolution\n"+
+          "M:: Mute\n"+
           "Escape:: Exit Game";
       JOptionPane.showMessageDialog(null,controlsString);
       return 1;
@@ -57,11 +59,11 @@ public class Menu
     //credits
     else if(buttonID == 2)
     {
-      String creditsString = "\nAaron Gonzalez: Git Manager, Misc. Help\n\n"+
+      String creditsString = "\nAaron Gonzalez: Project Manager, Executive Help\n\n"+
           "Robert Nicholson: Graphics Co-Lead\n\n"+
           "Weston Ortiz: Physics Expert\n\n"+
           "Paige Stephen Romero: Graphics Lead\n\n"+
-          "Hans Week: Server Master";
+          "Hans Weeks: Server Master";
       JOptionPane.showMessageDialog(null,creditsString);
       
       return 2;
@@ -73,32 +75,51 @@ public class Menu
     }
   }
   
+  /**
+   * What happens when a button is clicked
+   * @return
+   */
   public static int choose()
   {
     return choose(currentButton);
   }
   
+  /**
+   * Moving up on the menu
+   */
   public static void up()
   {
     currentButton--;
     if(currentButton < 0) currentButton = finalButtonID;
   }
   
+  /**
+   * Moving down on the menu
+   */
   public static void down()
   {
     currentButton++;
     if(currentButton > finalButtonID) currentButton = 0;
   }
   
+  /**
+   * Initialize the menu
+   * If we want to go back to the menu after losing, call this
+   */
   public static void startMainMenu()
   {
     currentButton = 0;
   }
 
+  /**
+   * Returns the position of the button on a 1.0 to -1.0 point system
+   * @return
+   */
   public static float getYPos()
   {
     return (float) ((1.0/(finalButtonID)*currentButton)-0.5f)*0.5f;
   }
+  
   /**
    * The current button ID
    * @return

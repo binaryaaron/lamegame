@@ -35,7 +35,8 @@ public class ModelMap
   RawModel helpLabel;
   RawModel creditsLabel;
   RawModel quitLabel;
-  
+  RawModel deathLabel;
+  RawModel deathHelpLabel;
   ModelTexture textTx;
 
   public ModelMap()
@@ -52,14 +53,15 @@ public class ModelMap
     RawModel crystal = OBJLoader.loadObjModel("crystal", loader, true);
 
     //HUD TEXT
-    speedLabel = FontLoader.loadFontModel("78", loader, true, 1);
+    speedLabel = FontLoader.loadFontModel("0", loader, true, 1);
     healthLabel = FontLoader.loadFontModel("0%", loader, true, 1);
-    scoreLabel = FontLoader.loadFontModel("3 frags", loader, true, 1);
+    scoreLabel = FontLoader.loadFontModel("0", loader, true, 1);
     connectLabel = FontLoader.loadFontModel("Connect", loader, true, 1);
     helpLabel = FontLoader.loadFontModel("Help", loader, true, 1);
     creditsLabel = FontLoader.loadFontModel("Credits", loader, true, 1);
     quitLabel = FontLoader.loadFontModel("Exit", loader, true, 1);
-
+    deathLabel = FontLoader.loadFontModel("YOU ARE DEAD", loader, true, 1);
+    deathHelpLabel = FontLoader.loadFontModel("Press P to respawn!", loader, true, 1);
     ModelTexture shipTexture = new ModelTexture(
         loader.loadTexture("SciFi_FighterMK_diffuse"));
     ModelTexture ship2Texture = new ModelTexture(
@@ -84,6 +86,8 @@ public class ModelMap
     TexturedModel texturedhelp = new TexturedModel("H005", helpLabel, textTx);
     TexturedModel texturedCredits = new TexturedModel("H006", creditsLabel, textTx);
     TexturedModel texturedQuit = new TexturedModel("H007", quitLabel, textTx);
+    TexturedModel texturedDeath = new TexturedModel("H008", deathLabel, textTx);
+    TexturedModel texturedDeathHelp = new TexturedModel("H009", deathHelpLabel, textTx);
 
     TexturedModel texturedModelAsteroid = new TexturedModel("A001",
         modelAsteroid, asteroidTexture);
@@ -110,6 +114,8 @@ public class ModelMap
     texturedModelList.put("H005", texturedhelp);
     texturedModelList.put("H006", texturedCredits);
     texturedModelList.put("H007", texturedQuit);
+    texturedModelList.put("H008", texturedDeath);
+    texturedModelList.put("H009", texturedDeathHelp);
     
     texturedModelList.put("A001", texturedModelAsteroid);
     texturedModelList.put("A002", texturedModelAsteroid2);
