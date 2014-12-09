@@ -67,15 +67,9 @@ public class MainLoopServer
     modelMap = new ModelMap();
     //    Camera camera = new Camera();
     //    camera.followObj = player0;
-    // create skybox, this is not an entity so it is seperate
-    RawModel skyBox = OBJLoader.loadObjModel("SkyBox2", loader, true);
-    ModelTexture skyTexture = new ModelTexture(loader.loadTexture("SkyBox2"));
-    TexturedModel texturedSkyBox = new TexturedModel("SkyBox2", skyBox,
-        skyTexture);
     RawModel laser = OBJLoader.loadObjModel("missle", loader, true);
     ModelTexture laserTexture = new ModelTexture(loader.loadTexture("Missle"));
     texturedLaser = new TexturedModel("laser", laser, laserTexture);
-    SkyBox skyBoxEntity = new SkyBox(loader, texturedSkyBox);
 
     modelMap.getTexturedModelList().put("Play",
         modelMap.getTexturedModelList().get("S002"));
