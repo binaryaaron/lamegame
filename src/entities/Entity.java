@@ -47,6 +47,7 @@ public class Entity
   public int score = 0;
   public long entScoreStep = 0;
 
+  
   public void kill()
   {
     hitPoints = 0;
