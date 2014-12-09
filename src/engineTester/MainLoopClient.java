@@ -47,8 +47,13 @@ public class MainLoopClient
   private int score;
   private int health;
   private long previousTime=0,currentTime=0;
-  private  static int socketVal;
-
+  private static int socketVal;
+  private static boolean death = false;
+  /**
+   * What the client runs to connect to the main server
+   * Opens a menu first, then connects to a designated server
+   * @param args
+   */
   public MainLoopClient(String[] args)
   {
 	AudioManager.createAudio();
@@ -153,6 +158,7 @@ public class MainLoopClient
     renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
     renderList.get(0).setRotX(0.5f);
     AudioManager.playMusic();
+    /* Main Menu loop */
     while (!exitRequest&&inMenu)
     {
       if(Display.isCloseRequested())
@@ -171,6 +177,21 @@ public class MainLoopClient
         if(keyReleased)
         {
           Menu.up();
+          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+        }
+        keyPressed = true;
+        keyReleased = false;
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_F2))
+      {
+        currentResolution++;
+        DisplayManager.changeResolution(currentResolution);
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_M))
+      {
+        if(keyReleased)
+        {
+          AudioManager.muteOrUnmute();
           renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
         }
         keyPressed = true;
@@ -235,10 +256,7 @@ public class MainLoopClient
       DisplayManager.closeDisplay();
       return;
     }
-    // controls for physics testing with two asteroids
-    // wasd control leftest asteroid, arrows control rightmost.
-    // holding shift will slow down the shifting speed.
-
+    
     //Hud Objects
     hud1 = new Entity("H001", modelMap.getTexturedModelList().get(
         "H001"), new Vector3f(0.7f, 0.37f, 1f), 0f, 0f, 0f, 0.05f);
@@ -246,16 +264,23 @@ public class MainLoopClient
     hud2 = new Entity("H002", modelMap.getTexturedModelList().get(
         "H002"), new Vector3f(0.7f, 0.07f, 1f), 0f, 0f, 0f, 0.05f);
     hud2.drawShadow = false;
-     hud3 = new Entity("H003", modelMap.getTexturedModelList().get(
+    hud3 = new Entity("H003", modelMap.getTexturedModelList().get(
         "H003"), new Vector3f(0.05f, 0.3f, 0.8f), 0f, 0f, 0f, 0.05f);
     hud3.drawShadow = false;
 
+    Entity hud5 = new Entity("H008", modelMap.getTexturedModelList().get(
+        "H008"), new Vector3f(0.3f, -0.1f, 0.8f), 0f, 0f, 0f, 0.06f);
+    hud5.drawShadow = false;
+    Entity hud6 = new Entity("H009", modelMap.getTexturedModelList().get(
+        "H009"), new Vector3f(0.4f, 0.0f, 0.8f), 0f, 0f, 0f, 0.05f);
+    hud6.drawShadow = false;
     light = new Light(new Vector3f(10f, 5f, 2000f), new Vector3f(1.0f,
         1.0f, 1.0f));
     hudRenderList = new ArrayList<>();
     hudRenderList.add(hud1);
     hudRenderList.add(hud2);
     hudRenderList.add(hud3);
+    //attempt to connect to server
     try
     {
       myClient = new ClientThread(args);
@@ -265,8 +290,22 @@ public class MainLoopClient
       System.err.println("Couldn't get I/O for the connection to: " + hostName);
       System.exit(1);
     }
-    /* Perform object movement as long as the window exists */while (!Display.isCloseRequested())
+
+    keyReleased = true;
+    /* In-game loop */
+    while (!Display.isCloseRequested())
     {
+      if(death && hudRenderList.size() < 4)
+      {
+        hudRenderList.add(hud5);
+        hudRenderList.add(hud6);
+      }
+      else if(!death&& hudRenderList.size() > 4)
+      {
+       hudRenderList.remove(hud5);
+       hudRenderList.remove(hud6);
+      }
+      boolean keyPressed = false;
       if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
       {
         break;
@@ -279,6 +318,16 @@ public class MainLoopClient
       if(Keyboard.isKeyDown(Keyboard.KEY_F1))
       {
         DisplayManager.changeFullScreen();
+      }
+      if(Keyboard.isKeyDown(Keyboard.KEY_M))
+      {
+        if(keyReleased)
+        {
+          AudioManager.muteOrUnmute();
+          renderList.get(1).setPosition(new Vector3f(xDiff+0.1f,Menu.getYPos(),1));
+        }
+        keyPressed = true;
+        keyReleased = false;
       }
       // Get render/objects from server
       getServerState(renderList, camera, modelMap);
@@ -324,6 +373,10 @@ public class MainLoopClient
         pu.updateFPS();
         System.out.println(pu.getFPS());
       }
+      if(!keyPressed)
+      {
+        keyReleased = true;
+      }
     }
     renderer.cleanUp();
     loader.cleanUp();
@@ -331,6 +384,12 @@ public class MainLoopClient
     AudioManager.closeAudio();
   }
 
+  /**
+   * Parses the incoming server info into renderlist
+   * @param renderList
+   * @param camera
+   * @param modelMap
+   */
   public void getServerState(List<Entity> renderList,
       Camera camera,
       ModelMap modelMap)
@@ -356,6 +415,7 @@ public class MainLoopClient
         zr = Float.parseFloat(currentLine[6]);
         w = Float.parseFloat(currentLine[7]);
         s = Float.parseFloat(currentLine[8]);
+        //laser parsing
         if (object.startsWith("l"))
         {
           Entity tmp_laser = new Entity(id,
@@ -365,6 +425,7 @@ public class MainLoopClient
           tmp_laser.drawShadow = false;
           renderList.add(tmp_laser);
         }
+        //any ship
         else if (object.startsWith("S"))
         {
           float speed = Float.parseFloat(currentLine[11]);
@@ -379,11 +440,19 @@ public class MainLoopClient
               new Vector3f(x, y, z), xr, yr, zr, s);
           tmp_Entity.orientation.w(w);
         }
-
-        if (object.startsWith("S")
-            && playerID == myClient.ID)// &&playerID==myClient.ID
+        //ship representing current player
+        if (object.startsWith("S")&& playerID == myClient.ID)
         {
           health = Integer.parseInt(currentLine[10]);
+          if(health <=0)
+          {
+            health = 0;
+            death = true;
+          }
+          else if(death && health >0)
+          {
+            death = false;
+          }
           speed = Float.parseFloat(currentLine[11]);
           score = Integer.parseInt(currentLine[12]);
           int missileSound = Integer.parseInt(currentLine[13]);
@@ -401,7 +470,9 @@ public class MainLoopClient
           camera.move(deltaCam);
           camera.orientation = tmp_Entity.orientation.copy();
         }
-        else if(object.startsWith("S")&&playerID!=myClient.ID){
+        //ship representing not the current player
+        else if(object.startsWith("S")&&playerID!=myClient.ID)
+        {
         	Vector3f scaleVec=new Vector3f();
         	Vector3f.sub(new Vector3f(x, y-2, z), camera.position, scaleVec);
         	float tagScale=scaleVec.length();
@@ -410,21 +481,16 @@ public class MainLoopClient
           renderList.add(playerTag);
           playerTag.drawShadow=false;
         }
-        else if(object.startsWith("CryP")){
-        	
-        	
+        //purple crystal parsing
+        else if(object.startsWith("CryP"))
+        {  	
         	Entity crystal=  new Entity("CryP", modelMap.getTexturedModelList().get("CryP"),
-                    new Vector3f(x, y, z), xr, yr, zr, s);
-                renderList.add(crystal);
-              //  crystal.drawShadow=false;
-                
-                
-                Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
-                        new Vector3f(x, y-s, z), xr, yr, zr, 10);
-                    renderList.add(crystalTag);
-                    crystalTag.drawShadow=false;
-        
-        	
+        	    new Vector3f(x, y, z), xr, yr, zr, s);
+        	renderList.add(crystal);
+        	Entity crystalTag=  new Entity("gCone", modelMap.getTexturedModelList().get("gCone"),
+        	    new Vector3f(x, y-s, z), xr, yr, zr, 10);
+        	renderList.add(crystalTag);
+        	crystalTag.drawShadow=false;
         }
 
         if (tmp_Entity != null)
@@ -435,6 +501,14 @@ public class MainLoopClient
     }
   }
 
+  /**
+   * Add things to render based on a string passed in
+   * Does NOT work well with rotated models
+   * @param renderList
+   * @param camera
+   * @param modelMap
+   * @param data
+   */
   public void getOfflineState(List<Entity> renderList, Camera camera,
       ModelMap modelMap,String data)
   {
@@ -473,22 +547,14 @@ public class MainLoopClient
               new Vector3f(x, y, z), xr, yr, zr, s);
         }
         tmp_Entity.orientation.w(w);
-        
-        /*if (object.startsWith("S"))
-        {
-          System.out.print("here:");
-          Quaternion inverse = tmp_Entity.orientation.copy().inverse();
-          Vector3 deltaCam = new Vector3(0, -2 * tmp_Entity.getScale(), -9
-              * tmp_Entity.getScale());
-          deltaCam = inverse.mult(deltaCam);
-          camera.setPosition(new Vector3f(x, y, z));
-          camera.move(deltaCam);
-          camera.orientation = tmp_Entity.orientation.copy();
-        }*/
         renderList.add(tmp_Entity);
       }
     }
   }
+  
+  /**
+   * Sends keyboard input to the server
+   */
   public void sendKeyBoard()
   {
     String toSend = ";";
@@ -554,6 +620,7 @@ public class MainLoopClient
     }
     else
     {
+      //Respawn player
       if (Keyboard.isKeyDown(Keyboard.KEY_P))
       {
         currentTime=System.currentTimeMillis();

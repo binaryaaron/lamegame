@@ -20,25 +20,32 @@ public class MainEntryPoint
     {
       System.out.println(s);
     }
-    if (args.length <= 0)
+    try
     {
-      System.out.println("Please enter either 'server' or 'client' to start the game");
-    }
-    else if (args[0].equals("server"))
-    {
-        System.out
-            .println("Starting server on current machine");
+      if (args.length <= 0)
+      {
+        System.out.println(
+            "Please enter either 'server' or <hostname> 'client' to start the game");
+      }
+      else if (args[0].equals("server"))
+      {
+        System.out.println("Starting server on current machine");
         new MainLoopServer(args);
-    }
-  else if (args[0].equals("client"))
-  {
-    System.out.println("Starting client");
-    new MainLoopClient(args);
-  }
-    else
+      }
+      else if (args[1].equals("client"))
+      {
+        System.out.println("Starting client");
+        new MainLoopClient(args);
+      }
+      else
+      {
+        System.out.println("no args; Exiting");
+      }
+      System.out.println("Exiting program");
+    } catch (ArrayIndexOutOfBoundsException e)
     {
-      System.out.println("no args; Exiting");
+      System.out.println("Please enter the proper number of args");
     }
-    System.out.println("Exiting program");
+
   }
 }
