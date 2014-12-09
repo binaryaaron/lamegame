@@ -70,7 +70,8 @@ public class Entity
 
   private static Map<String, EntityType> entMap;
 
-  static {
+  static 
+  {
     entMap = new HashMap<>();
     entMap.put("l", EntityType.LASER);
     entMap.put("A", EntityType.ASTEROID);
@@ -79,6 +80,11 @@ public class Entity
     entMap.put("C", EntityType.CRYSTAL);
   }
 
+  public Entity()
+  {
+    
+  }
+  
   public Entity(String id, TexturedModel model, Vector3f position, float rotX,
       float rotY, float rotZ, float scale, int clientId)
   {
