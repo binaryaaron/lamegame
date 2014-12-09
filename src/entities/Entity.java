@@ -37,7 +37,6 @@ public class Entity
   protected BoundingBox box;
   public Vector3 vel = new Vector3(0f, 0f, 0f);
   public Vector3 qPos = new Vector3(0f, 0f, 0f);
-  private static Boolean DEBUG = true;
   protected int hitPoints = 1000;
   protected int damage = 1;
   protected String id;
@@ -253,13 +252,6 @@ public class Entity
 
   public Matrix4f setNewBasis(float rotX, float rotY, float rotZ)
   {
-    float cx = (float) Math.cos(rotX);
-    float sx = (float) Math.sin(rotX);
-    float cy = (float) Math.cos(rotY);
-    float sy = (float) Math.sin(rotY);
-    float cz = (float) Math.cos(rotZ);
-    float sz = (float) Math.sin(rotZ);
-
     Matrix4f rotMat = new Matrix4f();
     rotMat.m00 = (float) (Math.cos(rotX) * Math.cos(rotZ) - Math.sin(rotX)
         * Math.cos(rotY) * Math.sin(rotZ));

@@ -32,12 +32,10 @@ import com.ra4king.opengl.util.math.Vector3;
 
 import entities.Camera;
 import entities.Entity;
-import entities.Laser;
 import entities.Light;
 
 public class MainLoopClient
 {
-  private final boolean HUD_DEBUG = false;
   private boolean exitRequest = false;
   private static String hostName;
   public final boolean PRINT_FPS = false;
@@ -85,16 +83,12 @@ public class MainLoopClient
 
     // this will be information read from a socket
     // format: ID,x,y,z,rotx,rot,y,rotz,scale
-    String outputToServer = null;
-    String inputFromServer = null;
 
-    long startTime = System.currentTimeMillis();
     long lastTime = System.currentTimeMillis();
     long hudDelay = 100;
     long hudStart = 0;
     //Hud Objects
     List<Entity> renderList = new ArrayList<>();
-    List<Laser> lasers = new ArrayList<>();
 
     List<Entity> hudRenderList = new ArrayList<>();
     

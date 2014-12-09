@@ -26,7 +26,6 @@ public class ClientThread extends Thread
   BufferedReader in = null;
 
   private volatile String inputFromServer = "";
-  private String outputToServer;
   private static final boolean DEBUG = false;
 
   /* Constructor 

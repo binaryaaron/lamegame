@@ -15,7 +15,8 @@ public class EntityGroup{
 
 	public List<Entity> entities=new ArrayList<>();
 	
-	public EntityGroup( Vector3f position, Vector3f rotation, float scale) {
+	public EntityGroup( Vector3f position, Vector3f rotation, float scale) 
+	{
 		 xAxis = new Vector3f(1f,0f,0f);
 		 yAxis = new Vector3f(0f,1f,0f);
 		 zAxis = new Vector3f(0f,0f,1f);
