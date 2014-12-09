@@ -68,6 +68,21 @@ public class PhysicsUtilities
     }
   }
 
+  public static boolean planetCollide(Entity planet, Entity ent)
+  {
+    Vector3 ppos = new Vector3(planet.position.x, planet.position.y, planet.position.z);
+    Vector3 epos = new Vector3(ent.position.x, ent.position.y, ent.position.z);
+    Vector3 dist = epos.copy();
+    dist.sub(ppos);
+
+    if (dist.length() < Globals.PLANET_RADIUS)
+    {
+      return true;
+    }
+
+    return false;
+  }
+
   public static void planetCollision(Entity planet, Entity ent)
   {
     Vector3 ppos = new Vector3(planet.position.x, planet.position.y, planet.position.z);
