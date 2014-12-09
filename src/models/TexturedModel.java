@@ -10,6 +10,7 @@ public class TexturedModel
 	
 	/**
 	 * Create a textured model with an id, model and texture
+	 * a textured model is a rawmodel with a texture mapped to the rawmodel's data
 	 * @param id
 	 * @param model
 	 * @param texture
@@ -22,17 +23,26 @@ public class TexturedModel
 	}
 
 	/**
-	 * Getters
+	 * getter
 	 * @return
 	 */
 	public String getId()
 	{
 		return id;
 	}
+	
+	/**
+	 * getter
+	 * @return
+	 */
 	public RawModel getRawModel() {
 		return rawModel;
 	}
 
+	/**
+	 * getter
+	 * @return
+	 */
 	public ModelTexture getTexture() {
 		return texture;
 	}

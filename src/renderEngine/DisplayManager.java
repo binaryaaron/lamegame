@@ -18,13 +18,13 @@ public class DisplayManager
    */
   public static void createDisplay()
   {
-
+    //Force opengl 3.2, with forward compatability and core profiling
     ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(
         true).withProfileCore(true);
-
     try
     {
       Display.setTitle("LameGame");
+      //create an array of possible display modes
       modes = Display.getAvailableDisplayModes();
       DisplayMode initialMode = modes[0];
       
@@ -52,6 +52,7 @@ public class DisplayManager
    */
   public static void changeResolution(int i)
   {
+    //if the resolution count exceeds possible resolutions, loop around
     i%=modes.length;
     try 
     {
@@ -83,7 +84,7 @@ public class DisplayManager
   }
   
   /**
-   * updates the display
+   * Updates the display
    */
   public static void updateDisplay()
   {

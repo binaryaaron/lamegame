@@ -183,7 +183,7 @@ public class FontLoader
   
   /**
    * Processes a vertex given normals and texture data into the normals array list,
-   * indices, texture array list and process verticies
+   * indices, texture array list and process vertices
    * @param vertexData
    * @param indices
    * @param textures

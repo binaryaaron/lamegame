@@ -20,6 +20,9 @@ public class Vertex implements Comparable
     this.normalInd = normal;
   }
   
+  /**
+   * checks if two vertices have the same index
+   */
   @Override
   public boolean equals(Object o)
   {
@@ -48,10 +51,12 @@ public class Vertex implements Comparable
     }
   }
 
+  /**
+   * necessary compareTo override, vertex is never equal to a non-vertex
+   */
   @Override
   public int compareTo(Object arg0)
   {
     return 0;
   }
-
 }

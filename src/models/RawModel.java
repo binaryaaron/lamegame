@@ -7,8 +7,10 @@ public class RawModel
 	private int vaoID;
 	private int vertexCount;
 	private BoundingBox box;
+	
 	/**
 	 * Create a RawModel with an ID, vertex count and bounding box
+	 * A rawModel is essentially a blank statue compressed into data
 	 * @param vaoIDin
 	 * @param vertexCountIn
 	 * @param box
@@ -56,6 +58,10 @@ public class RawModel
 		return vertexCount;
 	}
 
+	/**
+	 * getter
+	 * @param vertexCount
+	 */
 	public void setVertexCount(int vertexCount) 
 	{
 		this.vertexCount = vertexCount;
