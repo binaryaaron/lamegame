@@ -85,9 +85,9 @@ public class FontLoader
         textures.add(uv_up_right);
         textures.add(uv_up_left);
       }
+      //normals set to 0 (text has all normals facing same direction
       for(int i = 0; i < text.length(); i++)
       {
-        //normals are garbage
         normals.add(new Vector3f(0,0,1));
         normals.add(new Vector3f(0,0,1));
         normals.add(new Vector3f(0,0,1));

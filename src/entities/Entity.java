@@ -47,13 +47,18 @@ public class Entity
   public int score = 0;
   public long entScoreStep = 0;
 
+  public void kill()
+  {
+    hitPoints = 0;
+  }
+
   public enum EntityType 
   {
     SHIP(100, 20, 1000),
-    CRYSTAL(10000, 0, 2000000),
+    CRYSTAL(10000, 0, 20000),
     LASER(50, 1000, 3),
     PLANET(100000, 50, 20000000),
-    ASTEROID(500, 20, 200000);
+    ASTEROID(500, 20, 20000);
 
     public final float mass;
     public final int damage;
@@ -223,6 +228,14 @@ public class Entity
     this.position.y += dy;
     this.position.z += dz;
     box.translate(dx, dy, dz);
+  }
+
+  public void multPos(float s)
+  {
+    position.x *= s;
+    position.y *= s;
+    position.z *= s;
+    box.setPosition(position);
   }
   
   /**

@@ -21,7 +21,7 @@ public class RawModel
 	}
 
 	/**
-	 * Getters and setters
+	 * getter
 	 * @return
 	 */
 	public BoundingBox getBoundingBox()
@@ -29,16 +29,28 @@ public class RawModel
 		return box;
 	}
 
+	/**
+	 * getter
+	 * @return
+	 */
 	public int getVaoID() 
 	{
 		return vaoID;
 	}
 
+	/**
+	 * setter
+	 * @param vaoID
+	 */
 	public void setVaoID(int vaoID) 
 	{
 		this.vaoID = vaoID;
 	}
 
+	/**
+	 * getter
+	 * @return
+	 */
 	public int getVertexCount() 
 	{
 		return vertexCount;

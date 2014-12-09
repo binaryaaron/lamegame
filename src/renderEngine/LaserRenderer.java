@@ -78,7 +78,5 @@ public class LaserRenderer
   {
     Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(laser);
     shader.loadTransformationMatrix(transformationMatrix);
-
   }
-
 }
