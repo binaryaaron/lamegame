@@ -6,11 +6,11 @@
  */
 package engineTester;
 
-import com.ra4king.opengl.util.Utils;
-import com.ra4king.opengl.util.math.Quaternion;
-import com.ra4king.opengl.util.math.Vector3;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import entities.*;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -30,11 +30,15 @@ import skyBox.SkyBox;
 import textures.ModelTexture;
 import world.BoxUtilities;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import com.ra4king.opengl.util.Utils;
+import com.ra4king.opengl.util.math.Quaternion;
+import com.ra4king.opengl.util.math.Vector3;
+
+import entities.Camera;
+import entities.Entity;
+import entities.Globals;
+import entities.Light;
+import entities.Player;
 
 public class MainLoopServer
 {
@@ -262,8 +266,8 @@ public class MainLoopServer
         }
 
         Vector3 deltaMis = delta.copy();
-        deltaMis.y(20 * player.getScale());
-        deltaMis.z(-40 * player.getScale());
+        deltaMis.y(0 * player.getScale());
+        deltaMis.z(40 * player.getScale());
 
         missilePos.add(inverse.mult(deltaMis));
 
