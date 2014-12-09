@@ -148,8 +148,8 @@ public class MainLoopServer
       for (int i = 0; i < ServerMaster.threadList.size(); i++)
       {
         ServerThread wt = ServerMaster.threadList.get(i);
-        outputToClient=wt.ID+";"+outputToClient;
-        wt.updateServerGameState(outputToClient);
+        String IDAndOutput=wt.ID+";"+outputToClient;
+        wt.updateServerGameState(IDAndOutput);
       }
     }// end of while(!display...)
 
