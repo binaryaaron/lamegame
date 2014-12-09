@@ -21,7 +21,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import server.WalkerClient;
+import server.ClientThread;
 import skyBox.SkyBox;
 import textures.ModelTexture;
 import toolbox.PerformanceUtilities;
@@ -37,18 +37,17 @@ import entities.Light;
 
 public class MainLoopClient
 {
-  public final boolean PRINT_FPS = false;
-  public final boolean HUD_DEBUG = true;
+  private final boolean HUD_DEBUG = false;
   private boolean exitRequest = false;
-  public WalkerClient myClient = null;
+  private static String hostName;
+  public final boolean PRINT_FPS = false;
 
-  private static String hostName = "";
-  private static int socketVal = -1;
-  
+  public ClientThread myClient = null;
   private float speed;
   private int score;
   private int health;
   private long previousTime=0,currentTime=0;
+  private  static int socketVal;
 
   public MainLoopClient(String[] args)
   {
@@ -259,23 +258,7 @@ public class MainLoopClient
     hudRenderList.add(hud3);
     try
     {
-      if(args.length > 0)
-      {
-
-        myClient = new WalkerClient(args);
-        hostName = args[0];
-      }
-      else if(hostName.length()<1 || socketVal < 0)
-      {
-        hostName = "localhost";
-        socketVal = 4444;
-        myClient = new WalkerClient(args);
-      }
-      else
-      {
-        String [] clientArgs = new String[]{hostName, ""+socketVal};
-        myClient = new WalkerClient(clientArgs);
-      }
+      myClient = new ClientThread(args);
     }
     catch (IOException e)
     {
@@ -313,15 +296,17 @@ public class MainLoopClient
         renderer.processEntity(ent);
       }
       //render HUD
-      if (HUD_DEBUG && hudDelay + hudStart < System.currentTimeMillis())
+      if (hudDelay + hudStart < System.currentTimeMillis())
       {
         hudStart = System.currentTimeMillis();
 
         hudRenderList.get(2).setModel(
             modelMap.setScoreText(("" + score)));
+        modelMap.setScoreText("" + score);
         hudRenderList.get(1).setModel(modelMap.setHealthText("" + health));
-
+        modelMap.setHealthText("" + health);
         hudRenderList.get(0).setModel(modelMap.setSpeedText("" + speed));
+        modelMap.setSpeedText("" + speed);
       }
       for (Entity ent : hudRenderList)
       {
