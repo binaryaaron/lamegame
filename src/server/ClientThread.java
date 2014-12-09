@@ -131,4 +131,10 @@ public class ClientThread extends Thread
     }
     return inputFromServer.substring(2);
   }
+
+  public static void setConnection(String server, int socket)
+  {
+    hostName = server;
+    socketVal = socket;
+  }
 }

@@ -53,7 +53,7 @@ public class MainLoopServer
 	  List<Player> deadPlayers;
 	 
 	  private static final int nAsteroids = 200;
-	  private static final int nCrystals = 5;
+	  private static final int nCrystals = 10;
 	  private boolean gameOver=false;
 	  Entity winner;
 	  TexturedModel texturedLaser;
@@ -279,9 +279,10 @@ public class MainLoopServer
         if (gameOver && player == winner)
         {
           renderList.clear();
-          renderList.addAll(createInitialGame(modelMap));
+          crystalSize = 100f;
           gameOver = false;
           winner = null;
+          renderList.addAll(createInitialGame(modelMap));
         }
       }
       if (input.equals("KEY_RSHIFT"))
