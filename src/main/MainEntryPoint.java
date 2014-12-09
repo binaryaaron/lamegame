@@ -26,17 +26,9 @@ public class MainEntryPoint
     }
     else if (args[0].equals("server"))
     {
-      if (args.length == 2)
-      {
-        System.out.println("Starting server on the following machine: " + args[1]);
-        new MainLoopServer(args);
-      }
-      else
-      {
         System.out
-            .println("Starting server on localhost ");
+            .println("Starting server on current machine");
         new MainLoopServer(args);
-      }
     }
   else if (args[0].equals("client"))
   {
