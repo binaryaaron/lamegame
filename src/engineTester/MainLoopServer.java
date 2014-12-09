@@ -307,7 +307,7 @@ public class MainLoopServer
     {
       renderList.removeAll(killList);
       killList.clear();
-      killStep+=4;
+      killStep+=1;
     }
     nextStep++;
     for (int i = 0; i < renderList.size(); i++)
@@ -326,13 +326,20 @@ public class MainLoopServer
         {
           if (ent.type == Entity.EntityType.SHIP && other.type == Entity.EntityType.CRYSTAL)
           {
-            ent.score++;
-            killList.add(other);
+            if (ent.entScoreStep != nextStep)
+            {
+              ent.score++;
+              ent.entScoreStep = nextStep;
+              killList.add(other);
+            }
           }
           else if (ent.type == Entity.EntityType.CRYSTAL && other.type == Entity.EntityType.SHIP)
           {
-            other.score++;
-            killList.add(ent);
+            if (other.entScoreStep != nextStep)
+            {
+              other.score++;
+              killList.add(ent);
+            }
           } else {
             PhysicsUtilities.elasticCollision(ent, other);
           }

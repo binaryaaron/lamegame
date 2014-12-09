@@ -46,6 +46,7 @@ public class Entity
   protected int clientId = -1;
   public EntityType type;
   public int score = 0;
+  public long entScoreStep = 0;
 
   public enum EntityType {
     SHIP(100, 20, 1000),
