@@ -267,7 +267,7 @@ public class MainLoopServer
 
         Vector3 deltaMis = delta.copy();
         deltaMis.y(0 * player.getScale());
-        deltaMis.z(40 * player.getScale());
+        deltaMis.z(10 * player.getScale());
 
         missilePos.add(inverse.mult(deltaMis));
 
