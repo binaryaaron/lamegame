@@ -123,7 +123,7 @@ public class ModelMap
   }
 
   /**
-   * Getter and text setters
+   * getter
    * @return
    */
   public Map<String, TexturedModel> getTexturedModelList()
@@ -131,18 +131,33 @@ public class ModelMap
     return texturedModelList;
   }
 
+  /**
+   * setter
+   * @param input
+   * @return
+   */
   public TexturedModel setSpeedText(String input)
   {
     this.speedLabel = FontLoader.loadFontModel(input, loader, true, 1);
     return (new TexturedModel("H001", this.speedLabel, textTx));
   }
 
+  /**
+   * setter
+   * @param input
+   * @return
+   */
   public TexturedModel setHealthText(String input)
   {
     this.healthLabel = FontLoader.loadFontModel(input, loader, true, 1);
     return (new TexturedModel("H002", this.healthLabel, textTx));
   }
 
+  /**
+   * setter
+   * @param input
+   * @return
+   */
   public TexturedModel setScoreText(String input)
   {
     this.scoreLabel = FontLoader.loadFontModel(input, loader, true, 1);
