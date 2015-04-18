@@ -9,7 +9,7 @@ Running lamegame is simple, though it does require two instances (a 'server'
     resources and source code within it and needs to be unzipped. You can do this
     by running. Source code is in the 'src' folder. 
 
-``` unzip lamegame.jar
+``` unzip lamegame.jar```
 
 4. run the jar file in the background (on linux) as a server:
 java -jar -Djava.library.path='<path-to-lwjgl-natives' lamegame.jar server 
@@ -19,7 +19,7 @@ window that opens.
 
 5. run the jar file again as a client (no args):
 
-``` java -jar -Djava.library.path='<path-to-lwjgl-natives>' lamegame.jar 
+``` java -jar -Djava.library.path='<path-to-lwjgl-natives>' lamegame.jar ```
 
 6. after the client window starts, select 'new game' and enter in 'localhost'
 or the name of the computer that is running the server. then enter the port
@@ -113,13 +113,6 @@ importance, perhaps.
   * Documentation
   * pedantic musings
   * possibly build a neural network AI for an adversary in single player
-
-
-
-
-# installtion
-
-
 
 
 
